@@ -1,0 +1,157 @@
+.main-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.navbar-container {
+  width: 100%;
+  background-color: white;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 45px;
+  margin-bottom: 20px;
+}
+
+.links {
+  margin-left: 80px;
+  font-size: 21px;
+  color: black;
+  cursor: pointer;
+}
+
+.auth {
+  background-color: #00B0EA;
+  padding: 20px 36px;
+  border-radius: 15px;
+  color: white;
+}
+
+.content-container {
+  width: 100%;
+  margin: 0 auto;
+  background-color: white;
+  padding: 0 45px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.content {
+  padding: 75px 45px;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.test-button {
+  max-width: 110px;
+  padding: 20px 36px;
+  background-color: #00B0EA;
+  color: white;
+  border-radius: 15px;
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-container img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+  .navbar-container {
+    padding: 15px 30px;
+  }
+
+  .links {
+    margin-left: 40px;
+    font-size: 18px;
+  }
+
+  .content-container {
+    flex-direction: column;
+    padding: 0 30px;
+  }
+
+  .content {
+    padding: 50px 30px;
+  }
+
+  .image-container {
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: column;
+    padding: 10px 20px;
+  }
+
+  .logo-container {
+    margin-bottom: 20px;
+  }
+
+  .links {
+    margin-left: 20px;
+    font-size: 16px;
+  }
+
+  .auth {
+    padding: 15px 30px;
+  }
+
+  .content-container {
+    flex-direction: column;
+  }
+
+  .content {
+    padding: 40px 20px;
+  }
+
+  .test-button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .image-container img {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 10px 15px;
+  }
+
+  .links {
+    margin-left: 10px;
+    font-size: 14px;
+  }
+
+  .auth {
+    padding: 10px 20px;
+  }
+
+  .content {
+    padding: 30px 15px;
+  }
+
+  .test-button {
+    padding: 15px 20px;
+  }
+
+  .image-container img {
+    width: 100%;
+    height: auto;
+  }
+}

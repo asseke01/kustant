@@ -1,11 +1,11 @@
 .main-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 20px 0;
+  padding: 30px 0;
 }
 
 .navbar-container {
-  width: 100%;
+  width: calc(100% - 90px);
   background-color: white;
   border-radius: 15px;
   display: flex;
@@ -29,22 +29,21 @@
   color: white;
 }
 
-.content-container {
-  width: 100%;
+.content-container{
+  width: calc(100% - 90px);
   margin: 0 auto;
   background-color: white;
-  padding: 0 45px;
+  padding:0 45px;
   border-radius: 15px;
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
 }
 
 .content {
   padding: 75px 45px;
   display: flex;
   flex-direction: column;
-  max-width: 100%;
+  width: calc(100% - 90px);
 }
 
 .test-button {
@@ -59,6 +58,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 750px;
 }
 
 .image-container img {
@@ -66,9 +66,13 @@
   height: auto;
 }
 
-/* Адаптивность */
 @media (max-width: 1200px) {
+  .main-container{
+    padding: 20px;
+  }
+
   .navbar-container {
+    width: calc(100% - 60px);
     padding: 15px 30px;
   }
 
@@ -78,22 +82,30 @@
   }
 
   .content-container {
+    width: calc(100% - 60px);
     flex-direction: column;
     padding: 0 30px;
   }
 
   .content {
+    width: 100%;
     padding: 50px 30px;
   }
 
   .image-container {
     margin-top: 30px;
+    width: 100%;
   }
 }
 
 @media (max-width: 768px) {
+  .main-container{
+    padding: 10px;
+  }
+
   .navbar-container {
     flex-direction: column;
+    width: calc(100% - 40px);
     padding: 10px 20px;
   }
 
@@ -111,10 +123,14 @@
   }
 
   .content-container {
+    width: calc(100% - 40px);
+    padding: 10px 20px;
+
     flex-direction: column;
   }
 
   .content {
+    width: 100%;
     padding: 40px 20px;
   }
 
@@ -130,6 +146,7 @@
 
 @media (max-width: 480px) {
   .navbar-container {
+    width: calc(100% - 30px);
     padding: 10px 15px;
   }
 
@@ -143,6 +160,7 @@
   }
 
   .content {
+    width: 100%;
     padding: 30px 15px;
   }
 

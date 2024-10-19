@@ -1,1 +1,37 @@
-<p>login-page works!</p>
+<div class="main-container">
+
+  <div class="image-container">
+    <h1>Авторизация</h1>
+    <p>Жеке кабинетіңізге кіру сізге нәтижелеріңіз сақталып, прогресіңізді бақылауға мүмкіндік береді.</p>
+  </div>
+
+  <div class="form-container">
+
+    <div class="back-container">
+      <img src="assets/img/left_arrow_ico.svg" width="7" height="15">
+      <span>Артқа</span>
+    </div>
+
+    <form class="form" (ngSubmit)="onSubmit()" [formGroup]="authForm">
+      <h1>Авторизация</h1>
+      <span>Қош келдіңіз, төмендегі ақпараттарды толтырыңыз.</span>
+
+      <div class="submit">
+        <label for="phone">Телефон номер</label>
+        <input type="tel" id="phone" placeholder="+7 (___) ___ __ __" required>
+
+        <div class="button-wrapper">
+          <button type="submit" [disabled]="loading">Енгізу</button>
+          <div class="loader" *ngIf="loading"></div>
+        </div>
+
+      </div>
+
+    </form>
+
+    <img src="assets/img/login_loco_ico.svg" class="logo">
+
+
+  </div>
+
+</div>

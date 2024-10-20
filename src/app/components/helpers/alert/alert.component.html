@@ -1,0 +1,11 @@
+<div *ngIf="message" class="alert-container"
+     [@fadeInOut]
+     [ngClass]="{'success': type === 'success', 'error': type === 'error', 'info': type === 'info', 'warning': type === 'warning'}">
+  <div class="alert-content">
+    <span *ngIf="type === 'success'" class="icon"><i class="bi bi-check-circle-fill"></i></span>
+    <span *ngIf="type === 'error'" class="icon"><i class="bi bi-x-circle-fill"></i></span>
+    <span *ngIf="type === 'info'" class="icon"><i class="bi bi-info-circle-fill"></i></span>
+    <span *ngIf="type === 'warning'" class="icon"><i class="bi bi-exclamation-triangle-fill"></i></span>
+    <span class="message">{{ message }}</span>
+  </div>
+</div>

@@ -1,33 +1,68 @@
 <div class="main-container">
 
-  <div class="image-container">
+
+
+  <div class="image-container" [ngStyle]="{'background-image': 'url(' + imageUrl + ')'}">
     <h1>Авторизация</h1>
     <p>Жеке кабинетіңізге кіру сізге нәтижелеріңіз сақталып, прогресіңізді бақылауға мүмкіндік береді.</p>
   </div>
 
   <div class="form-container">
 
-    <div class="back-container">
+    <div class="back-container" (click)="goBack()">
       <img src="assets/img/left_arrow_ico.svg" width="7" height="15">
       <span>Артқа</span>
     </div>
 
-    <form class="form" (ngSubmit)="onSubmit()" [formGroup]="authForm">
-      <h1>Авторизация</h1>
-      <span>Қош келдіңіз, төмендегі ақпараттарды толтырыңыз.</span>
+    <ng-container>
+      <form class="form" *ngIf="!isPhoneSubmitted" @slideLeftRight (ngSubmit)="onSubmitPhone()" [formGroup]="phoneForm">
+        <h1>Авторизация</h1>
+        <span>Қош келдіңіз, төмендегі ақпараттарды толтырыңыз.</span>
 
-      <div class="submit">
-        <label for="phone">Телефон номер</label>
-        <input type="tel" id="phone" placeholder="+7 (___) ___ __ __" required>
+        <div class="submit">
+          <label for="phone">Телефон номер</label>
+          <input type="tel" id="phone"
+                 placeholder="+7 (___) ___ __ __" required
+                 formControlName="phone"
+                 class="input"
+                 [mask]="'(000) 000 00 00'"
+                 prefix="+7 "
+                 [ngClass]="{'invalid': phoneForm.get('phone')?.invalid && phoneForm.get('phone')?.touched}">
 
-        <div class="button-wrapper">
-          <button type="submit" [disabled]="loading">Енгізу</button>
-          <div class="loader" *ngIf="loading"></div>
+
+
+          <div class="button-wrapper">
+            <button type="submit" [disabled]="loading">Енгізу</button>
+            <div class="loader" *ngIf="loading"></div>
+          </div>
+
         </div>
 
-      </div>
+      </form>
+    </ng-container>
 
-    </form>
+    <ng-container>
+
+      <form class="form" *ngIf="isPhoneSubmitted" @slideLeftRight (ngSubmit)="onSubmitCode()" [formGroup]="codeForm">
+        <h1>Код</h1>
+        <span>SMS хабарламадағы 6 санды кодты жазыңыз.</span>
+
+        <div class="submit">
+          <label for="code">SMS код</label>
+          <input type="tel" id="code" placeholder="_ _ _ _ _ _" required formControlName ="code">
+
+          <div class="button-wrapper">
+            <button type="submit" [disabled]="loading">Енгізу</button>
+            <div class="loader" *ngIf="loading"></div>
+          </div>
+
+        </div>
+
+      </form>
+
+    </ng-container>
+
+
 
     <img src="assets/img/login_loco_ico.svg" class="logo">
 

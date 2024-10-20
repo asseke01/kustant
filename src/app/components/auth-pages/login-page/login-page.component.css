@@ -8,7 +8,6 @@
 }
 
 .image-container{
-  background-image: url("/assets/img/auth_ico.svg");
   background-color: rgba(0, 0, 0, 0.3);
   background-blend-mode: darken;
   background-size: cover;
@@ -30,8 +29,11 @@
   border-radius: 22px;
   color: white;
 
-  transition: 0.5s;
+  transition: background-image 0.5s ease-in-out;
+
   z-index: 2;
+
+
 }
 
 .image-container h1{
@@ -51,21 +53,27 @@
 .form-container {
   padding: 20px 0 0 0;
   position: relative;
+  transition: transform 0.5s, opacity 0.5s;
+}
+
+.form {
+  position: absolute;
+  top: 130px;
+  left: 0;
+  box-sizing: border-box;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .back-container {
   display: flex;
   gap: 10px;
   align-items: center;
+  cursor: pointer;
 }
 
 .back-container img {
   width: 7px;
   height: 15px;
-}
-
-.form {
-  margin-top: 65px;
 }
 
 .form h1 {
@@ -108,6 +116,9 @@
   color: #999;
 }
 
+.submit input.invalid {
+  border: 1px solid red;
+}
 
 .button-wrapper {
   display: flex;
@@ -162,6 +173,19 @@
 }
 
 
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.5s ease;
+}
+
+
 @media (max-width: 1024px) {
   .main-container {
     padding: 30px;
@@ -169,7 +193,7 @@
   }
 
   .form-container{
-    margin: 0 65px;
+    margin: 0 25px;
   }
 
   .image-container {
@@ -195,7 +219,7 @@
   }
 
   .form {
-    margin-top: 20px;
+    width:350px
   }
 
   .form h1 {

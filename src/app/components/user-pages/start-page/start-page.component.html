@@ -1,26 +1,7 @@
 <div class="main-container">
 
-  <div class = "white-container">
-    <div class="nav-bar">
-      <div class="logo-container">
-        <img src="assets/img/logo_ico.svg" alt="logo" >
-      </div>
+  <app-nav-bar></app-nav-bar>
 
-      <div class="burger-menu" [ngClass]="{'burger-active': isMenuOpen}" (click)="toggleMenu()">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-      </div>
-
-      <div class="links-container" [ngClass]="{'burger-active': isMenuOpen}">
-        <a class="links">Тақырыптық тесттер</a>
-        <a class="links">Нәтижелерім</a>
-        <a class="links auth" routerLink="login">Кіру</a>
-      </div>
-    </div>
-
-
-  </div>
 
   <div class="white-container">
 
@@ -40,7 +21,7 @@
       </div>
 
       <div class="image-container">
-        <img src="assets/img/start_ico.svg" width="750" height="600">
+        <img src="../../../../assets/img/start_ico.svg" width="750" height="600">
       </div>
 
     </div>

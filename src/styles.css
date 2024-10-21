@@ -22,9 +22,36 @@ body {
 
 button, a {
   cursor: pointer;
+  font-family: "Gilroy-Medium", serif
 }
 
 h1, h2, h3, h4, h5, h6, b {
   font-family: "Gilroy-Medium", serif
 }
 
+a, p ,span{
+  font-family: "Gilroy-Regular", serif
+}
+
+table th{
+  font-family: "Gilroy-Medium", serif
+}
+
+table td{
+  font-family: "Gilroy-Medium", serif
+}
+
+li{
+  font-family: "Gilroy-Medium", serif
+}
+
+input{
+  font-family: "Gilroy-Medium", serif
+}
+
+label{
+  font-family: "Gilroy-Bold", serif
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

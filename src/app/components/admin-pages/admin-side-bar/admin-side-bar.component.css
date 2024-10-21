@@ -24,3 +24,7 @@ h2, li{
   padding: 15px 0;
   font-size: 14px;
 }
+
+.active-link {
+  color: #00FFF5; /* Белый текст для активного элемента */
+}

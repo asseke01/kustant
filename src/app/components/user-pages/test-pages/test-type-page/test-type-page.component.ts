@@ -37,6 +37,7 @@ import {animate, group, style, transition, trigger} from '@angular/animations';
 export class TestTypePageComponent {
   private router = inject(Router);
   testType = false;
+  themeTest = false;
 
   imageUrl = '/assets/img/history_ico.svg';
 
@@ -49,8 +50,18 @@ export class TestTypePageComponent {
     }
   }
 
+  onSelectType(){
+    this.themeTest = true;
+    this.imageUrl = '/assets/img/history_ico.svg';
+
+  }
+
   goBack(): void {
-    if (this.testType) {
+    if (this.themeTest) {
+      this.themeTest = false;
+      this.testType = true;
+      this.imageUrl = '/assets/img/level_ico.svg';
+    } else if (this.testType) {
       this.testType = false;
       this.imageUrl = '/assets/img/history_ico.svg';
     } else {

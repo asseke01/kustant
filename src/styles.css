@@ -1,15 +1,30 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@font-face {
+  font-family: Gilroy-Regular;
+  src: url(assets/fonts/Gilroy-Regular.ttf);
+}
 
+@font-face {
+  font-family: Gilroy-Medium;
+  src: url(assets/fonts/Geometria-Medium.ttf);
+}
 
-
-
+@font-face {
+  font-family: Gilroy-Bold;
+  src: url(assets/fonts/Geometria-Bold.ttf);
+}
 body {
   margin: 0;
   padding: 0;
   height: 100vh;
   background-color: #F5F5F5;
+  font-family: "Gilroy-Regular", serif;
 }
 
-* {
-  font-family: 'Montserrat', sans-serif;
+button, a {
+  cursor: pointer;
 }
+
+h1, h2, h3, h4, h5, h6, b {
+  font-family: "Gilroy-Medium", serif
+}
+

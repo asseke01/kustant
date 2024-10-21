@@ -94,8 +94,17 @@
 
 
 @media (max-width: 900px) {
+  .main-container {
+    padding: 0;
+  }
+
+  .test-container h2{
+    padding: 0 25px;
+  }
+
   .grid-container {
     grid-template-columns: repeat(2, 1fr);
+    padding:25px;
   }
 }
 

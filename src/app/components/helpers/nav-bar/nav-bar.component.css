@@ -4,7 +4,6 @@
   border-radius: 15px;
 }
 
-
 .nav-bar{
   display: flex;
   justify-content: space-between;
@@ -66,10 +65,12 @@
 }
 
 @media(max-width: 1023px) {
-
   .links-container{
     display: none;
   }
+
+
+
   .burger-menu {
     display: flex;
   }
@@ -81,3 +82,9 @@
 
 }
 
+@media (max-width: 900px) {
+  .nav-bar{
+    padding: 20px;
+    border-bottom: 1px solid black;
+  }
+}

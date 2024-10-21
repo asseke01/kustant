@@ -8,7 +8,7 @@
 }
 
 .image-container{
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: rgba(0, 0, 0, 0.4);
   background-blend-mode: darken;
   background-size: cover;
   background-repeat: no-repeat;
@@ -39,15 +39,10 @@
 .image-container h1{
   margin: 0;
   letter-spacing: 1px;
+  font-size: 48px;
 }
 
-.image-container p{
-  font-size: 19px;
-  opacity: 0.85;
-
-  margin-top: 12px;
-  line-height: 28px;
-}.image-container{
+.image-container{
   background-color: rgba(0, 0, 0, 0.3);
   background-blend-mode: darken;
   background-size: cover;
@@ -56,8 +51,8 @@
   min-height: calc(100% - 110px);
   max-height: calc(100% - 110px);
 
-  max-width: 570px;
-  width: 570px;
+  max-width: 650px;
+  width: 100%;
   padding: 55px;
 
   display: flex;
@@ -84,7 +79,7 @@
 .image-container p{
   font-size: 19px;
   opacity: 0.85;
-
+  font-family: Gilroy-Bold, serif;
   margin-top: 12px;
   line-height: 28px;
 }
@@ -93,6 +88,8 @@
 .form-container {
   padding: 20px 0 0 0;
   position: relative;
+  width: 100%;
+  max-width: 600px;
   transition: transform 0.5s, opacity 0.5s;
 }
 
@@ -104,11 +101,17 @@
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
+
+
 .back-container {
   display: flex;
   gap: 10px;
   align-items: center;
   cursor: pointer;
+}
+
+.back-container span{
+  font-size: 22px;
 }
 
 .back-container img {
@@ -118,12 +121,12 @@
 
 .form h1 {
   margin: 0 0 10px 0;
-  font-size: 32px;
+  font-size: 48px;
 }
 
 .form span {
-  font-size: 19px;
-  line-height: 28px;
+  font-size: 22px;
+  line-height: 22px;
   display: block;
   width: 440px;
 }
@@ -139,15 +142,17 @@
   font-size: 16px;
   margin-bottom: 5px;
   font-weight: 600;
+  font-family: Gilroy-Bold, serif;
+
 }
 
 .submit input {
-  padding: 10px;
+  padding: 15px;
   border: none;
   border-radius: 8px;
-  font-size: 18px;
-  width: 75%;
-  height:52px;
+  font-size: 22px;
+  width: 80%;
+  height:62px;
   box-sizing: border-box;
   outline: none;
 }
@@ -171,7 +176,7 @@
   padding: 12px;
   background-color: #00B0EA;
   color: white;
-  font-size: 18px;
+  font-size: 22px;
   border: none;
   width: 30%;
   border-radius: 8px;

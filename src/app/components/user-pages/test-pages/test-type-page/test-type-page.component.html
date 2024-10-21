@@ -14,7 +14,7 @@
     </div>
 
     <ng-container>
-      <div class="form" *ngIf="!testType" @slideLeftRight>
+      <div class="form" *ngIf="!testType && !themeTest" @slideLeftRight>
         <h1>Тарих</h1>
         <span>Тест түрін таңдаңыз:</span>
 
@@ -39,7 +39,7 @@
     </ng-container>
 
     <ng-container>
-      <div class="form" *ngIf="testType" @slideLeftRight>
+      <div class="form" *ngIf="testType && !themeTest" @slideLeftRight>
         <h1>Сынып деңгейі</h1>
         <span>Сынып деңгейін таңдаңыз:</span>
 
@@ -47,7 +47,7 @@
 
           <div class="level-box">
             <div class="scroll-box">
-              <ul>
+              <ul (click)="onSelectType()">
                 <li>6 сынып</li>
                 <li>7 сынып</li>
                 <li>8 сынып</li>
@@ -56,6 +56,38 @@
                 <li>11 сынып</li>
                 <li>11 сынып</li>
                 <li>11 сынып</li>
+                <li>11 сынып</li>
+                <li>11 сынып</li>
+                <li>Қазақ хандары</li>
+                <li>Контекст</li>
+              </ul>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </ng-container>
+
+    <ng-container>
+      <div class="form" *ngIf="themeTest" @slideLeftRight>
+        <h1>Тақырыптық тест</h1>
+        <span>Сынып деңгейін таңдаңыз:</span>
+
+        <div class="level-container">
+
+          <div class="level-box">
+            <div class="scroll-box">
+              <ul>
+                <li>1. Орта ғасырлық мәдениет</li>
+                <li>2. Әмір Темір мемлекет</li>
+                <li>3. Әбілқайыр хандығы</li>
+                <li>4. Ақ Орда мемлекеті</li>
+                <li>5. Моғолстан мемлекеті</li>
+                <li>6. Оғыз мемлекеті</li>
+                <li>7. Түргеш қағанаты</li>
+                <li>8. Батыс Түрік қағанатып</li>
                 <li>11 сынып</li>
                 <li>11 сынып</li>
                 <li>Қазақ хандары</li>

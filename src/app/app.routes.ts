@@ -4,6 +4,8 @@ import {LoginPageComponent} from './components/auth-pages/login-page/login-page.
 import {MainPageComponent} from './components/user-pages/main-page/main-page.component';
 import {TestTypePageComponent} from './components/user-pages/test-pages/test-type-page/test-type-page.component';
 import {StartTestPageComponent} from './components/user-pages/test-pages/start-test-page/start-test-page.component';
+import {AdminPagesComponent} from './components/admin-pages/admin-pages.component';
+import {AdminEmployeePageComponent} from './components/admin-pages/admin-employee-page/admin-employee-page.component';
 
 export const routes: Routes = [
 
@@ -21,6 +23,14 @@ export const routes: Routes = [
   },
   {
     path:'start-test', component:StartTestPageComponent
+  },
+  {
+    path:'admin', component:AdminPagesComponent,
+    children:[
+      {
+        path:'employee', component:AdminEmployeePageComponent
+      }
+    ]
   }
 
 ];

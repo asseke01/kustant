@@ -1,0 +1,26 @@
+.sidebar-container{
+  position: fixed;
+  width: 100%;
+  max-width: 220px;
+  height: 100%;
+  background-color: #1D1D42;
+  color: white;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-container h2{
+  padding:28px;
+  margin: 0;
+  font-size: 22px;
+}
+
+h2, li{
+  cursor: pointer;
+}
+
+.sidebar-container li{
+  list-style-type: none;
+  padding: 15px 0;
+  font-size: 14px;
+}

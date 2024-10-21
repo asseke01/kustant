@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {NavBarComponent} from '../../helpers/nav-bar/nav-bar.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-main-page',
@@ -11,5 +12,11 @@ import {NavBarComponent} from '../../helpers/nav-bar/nav-bar.component';
   styleUrl: './main-page.component.css'
 })
 export class MainPageComponent {
+  private router = inject(Router);
 
+
+
+  onClick(){
+    this.router.navigate(['test-type']);
+  }
 }

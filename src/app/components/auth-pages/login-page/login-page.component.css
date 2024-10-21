@@ -47,6 +47,46 @@
 
   margin-top: 12px;
   line-height: 28px;
+}.image-container{
+  background-color: rgba(0, 0, 0, 0.3);
+  background-blend-mode: darken;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  min-height: calc(100% - 110px);
+  max-height: calc(100% - 110px);
+
+  max-width: 570px;
+  width: 570px;
+  padding: 55px;
+
+  display: flex;
+  padding-right: 85px;
+
+  flex-direction: column;
+  justify-content: end;
+
+  border-radius: 22px;
+  color: white;
+
+  transition: background-image 0.5s ease-in-out;
+
+  z-index: 2;
+
+
+}
+
+.image-container h1{
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+.image-container p{
+  font-size: 19px;
+  opacity: 0.85;
+
+  margin-top: 12px;
+  line-height: 28px;
 }
 
 

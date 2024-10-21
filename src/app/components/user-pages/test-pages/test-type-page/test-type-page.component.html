@@ -1,0 +1,79 @@
+<div class="main-container">
+
+  <div class="image-container" [ngStyle]="{'background-image': 'url(' + imageUrl + ')'}">
+    <h1>Тарих</h1>
+    <p>XV-XXI ғғ.</p>
+  </div>
+
+
+  <div class="form-container">
+
+    <div class="back-container" (click)="goBack()">
+      <img src="assets/img/left_arrow_ico.svg" width="7" height="15">
+      <span>Артқа</span>
+    </div>
+
+    <ng-container>
+      <div class="form" *ngIf="!testType" @slideLeftRight>
+        <h1>Тарих</h1>
+        <span>Тест түрін таңдаңыз:</span>
+
+        <div class="type-container">
+
+          <div class="box-container test" (click)="onClick('startTest')">
+
+            <h2>Пәндік толық тест</h2>
+            <p>Тарих пәні бойынша толық тест түрі.</p>
+
+          </div>
+
+          <div class="box-container type" (click)="onClick('chooseLevel')">
+
+            <h2>Пәндік толық тест</h2>
+            <p>Тарих пәні бойынша толық тест түрі.</p>
+          </div>
+
+        </div>
+
+      </div>
+    </ng-container>
+
+    <ng-container>
+      <div class="form" *ngIf="testType" @slideLeftRight>
+        <h1>Сынып деңгейі</h1>
+        <span>Сынып деңгейін таңдаңыз:</span>
+
+        <div class="level-container">
+
+          <div class="level-box">
+            <div class="scroll-box">
+              <ul>
+                <li>6 сынып</li>
+                <li>7 сынып</li>
+                <li>8 сынып</li>
+                <li>9 сынып</li>
+                <li>10 сынып</li>
+                <li>11 сынып</li>
+                <li>11 сынып</li>
+                <li>11 сынып</li>
+                <li>11 сынып</li>
+                <li>11 сынып</li>
+                <li>Қазақ хандары</li>
+                <li>Контекст</li>
+              </ul>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </ng-container>
+
+    <img src="assets/img/login_loco_ico.svg" class="logo">
+
+
+  </div>
+
+
+</div>

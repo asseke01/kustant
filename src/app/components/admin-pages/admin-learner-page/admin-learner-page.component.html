@@ -1,1 +1,119 @@
-<p>admin-learner-page works!</p>
+<div class="navbar-container">
+  <h2>Оқушылар</h2>
+
+  <div class="navbar-menu">
+
+    <div class="search-menu">
+      <input type="text" placeholder="ФИО/Телефон (формат +7 (xxx) xxx xx xx)">
+      <button class="search-btn">Іздеу</button>
+    </div>
+
+
+    <button class="add-btn" (click)="openDialog('250ms', '250ms')">Оқушы қосу</button>
+    <button class="add-btn" >Группа қосу</button>
+
+  </div>
+</div>
+
+<div class="main-container">
+
+  <div class="content-container">
+
+    <div class="action-buttons">
+
+      <button class="action-button active">Оқушылар</button>
+      <button class="action-button">Группалар</button>
+
+    </div>
+
+    <div class="select-buttons">
+      <label>Группа:</label>
+      <select>
+        <option>Барлығы</option>
+      </select>
+    </div>
+
+    <div class="table-container">
+
+      <table>
+        <tr>
+          <th>#</th>
+          <th>ФИО</th>
+          <th>Телефон</th>
+          <th>Пән</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Alfreds Futterkiste</td>
+          <td>Maria Anders</td>
+          <td>Germany</td>
+        </tr>
+        <tr>
+          <td>Centro comercial Moctezuma</td>
+          <td>Francisco Chang</td>
+          <td>Mexico</td>
+        </tr>
+      </table>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+<ng-template #dialogTemplate>
+  <div class="dialog-header">
+    <h2 mat-dialog-title>Оқушы қосу</h2>
+    <button mat-icon-button (click)="closeDialog()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content>
+
+    <div class="content">
+
+      <div class="form-group">
+        <label for="fio">ФИО</label>
+        <input type="text" id="fio" name="fio">
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Телефон</label>
+        <input type="text" id="phone" name="phone" >
+      </div>
+
+      <div class="form-group">
+        <label for="subject1">Таңдау пәні #1</label>
+        <select id="subject1" name="role">
+          <option value="teacher">Мұғалім</option>
+          <option value="testologist">Тестолог</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="subject2">Таңдау пәні #2</label>
+        <select id="subject2" name="role">
+          <option value="teacher">Мұғалім</option>
+          <option value="testologist">Тестолог</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="group">Группа</label>
+        <select id="group" name="role">
+          <option value="teacher">Мұғалім</option>
+          <option value="testologist">Тестолог</option>
+        </select>
+      </div>
+
+
+    </div>
+
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button class="save-subject">Сақтау</button>
+  </mat-dialog-actions>
+</ng-template>

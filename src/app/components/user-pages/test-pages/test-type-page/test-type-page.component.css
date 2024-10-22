@@ -161,15 +161,16 @@
 @media (max-width: 1200px) {
   .main-container {
     padding: 30px;
+    height: 98vh;
   }
 
   .form-container{
-    width: 450px;
+    width: 300px;
   }
 
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1150px) {
   .main-container {
     padding: 30px;
   }

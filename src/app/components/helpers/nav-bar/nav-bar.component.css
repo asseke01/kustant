@@ -64,7 +64,7 @@
 
 }
 
-@media(max-width: 1023px) {
+@media(max-width:950px) {
   .links-container{
     display: none;
   }
@@ -80,11 +80,10 @@
     font-size: 14px;
   }
 
-}
-
-@media (max-width: 900px) {
   .nav-bar{
     padding: 20px;
     border-bottom: 1px solid black;
   }
+
 }
+

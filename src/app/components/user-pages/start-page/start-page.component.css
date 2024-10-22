@@ -48,7 +48,7 @@ p {
 
 
 
-@media(max-width: 1024px) {
+@media(max-width: 1350px) {
   .main-container {
     padding: 25px 38px;
   }
@@ -82,9 +82,9 @@ p {
   }
 }
 
-@media(max-width: 1023px) {
+@media(max-width:1000px) {
   .main-container {
-    padding: 25px 38px;
+    padding: 0;
   }
 
   .links-container{
@@ -93,6 +93,11 @@ p {
   .burger-menu {
     display: flex;
   }
+
+  .wrapper{
+    padding: 10px;
+  }
+
 
   .auth {
     padding: 15px 25px;

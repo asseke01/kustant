@@ -146,7 +146,7 @@
 
 }
 
-.submit input {
+.submit input, select{
   padding: 15px;
   border: none;
   border-radius: 8px;
@@ -155,6 +155,24 @@
   height:62px;
   box-sizing: border-box;
   outline: none;
+  background-color: #ffffff;
+}
+
+.submit select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, white 50%),
+    linear-gradient(135deg, white 50%, transparent 50%),
+    linear-gradient(to right, #f0f0f0, #f0f0f0);
+  background-position:
+    calc(100% - 25px) calc(1em + 3px),
+    calc(100% - 18px) calc(1em + 3px),
+    100% 0;
+  background-size:
+    7px 7px,
+    7px 7px,
+    2.5em 3.5em;
+  background-repeat: no-repeat;
 }
 
 .submit input::placeholder {

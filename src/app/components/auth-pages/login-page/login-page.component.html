@@ -9,13 +9,13 @@
 
   <div class="form-container">
 
-    <div class="back-container" (click)="goBack()">
+    <div class="back-container" (click)="goBack()" *ngIf="!isCodeSubmitted">
       <img src="assets/img/left_arrow_ico.svg" width="7" height="15">
       <span>Артқа</span>
     </div>
 
     <ng-container>
-      <form class="form" *ngIf="!isPhoneSubmitted" @slideLeftRight (ngSubmit)="onSubmitPhone()" [formGroup]="phoneForm">
+      <form class="form" *ngIf="!isPhoneSubmitted && !isCodeSubmitted" @slideLeftRight (ngSubmit)="onSubmitPhone()" [formGroup]="phoneForm">
         <h1>Авторизация</h1>
         <span>Қош келдіңіз, төмендегі ақпараттарды толтырыңыз.</span>
 
@@ -43,16 +43,54 @@
 
     <ng-container>
 
-      <form class="form" *ngIf="isPhoneSubmitted" @slideLeftRight (ngSubmit)="onSubmitCode()" [formGroup]="codeForm">
+      <form class="form" *ngIf="isPhoneSubmitted && !isCodeSubmitted" @slideLeftRight (ngSubmit)="onSubmitCode()" [formGroup]="codeForm">
         <h1>Код</h1>
         <span>SMS хабарламадағы 6 санды кодты жазыңыз.</span>
 
         <div class="submit">
           <label for="code">SMS код</label>
-          <input type="tel" id="code" placeholder="_ _ _ _ _ _" required formControlName ="code">
+          <input type="tel" id="code" placeholder="_ _ _ _ _ _" required formControlName ="code" mask="000 000">
 
           <div class="button-wrapper">
             <button type="submit" [disabled]="loading">Енгізу</button>
+            <div class="loader" *ngIf="loading"></div>
+          </div>
+
+        </div>
+
+      </form>
+
+    </ng-container>
+
+    <ng-container>
+
+      <form class="form" *ngIf="isCodeSubmitted" @slideLeftRight (ngSubmit)="onSubmitStudent()" [formGroup]="studentForm">
+        <h1>Ақпарат</h1>
+        <span>Төмендегі ақпараттарды толтырыңыз.</span>
+
+        <div class="submit">
+          <label for="name">Аты-жөні</label>
+          <input type="tel" id="name" placeholder="Аты-жөні" required formControlName ="fullname" >
+
+          <label for="select">Таңдау пәндері</label>
+          <select id="select" formControlName = "subjects">
+            <option value="physics-math" selected>Физика-Математика</option>
+            <option value="chemistry-biology">Химия-Биология</option>
+            <option value="biology-geography">Биология-География</option>
+            <option value="geography-en_lang">География-Шетел тілі</option>
+            <option value="world_history-geography">Дүниежүзі тарихы-География</option>
+            <option value="world_history-laws">Дүниежүзілік тарих-Құқық негіздері</option>
+            <option value="math-geography">Математика-География</option>
+            <option value="math-it">Математика-Информатика</option>
+            <option value="ru_lang-ru_literature">Орыс тілі-Орыс әдебиеті</option>
+            <option value="chemistry-physics">Химия-Физика</option>
+            <option value="en_lang-world_history">Шетел тілі-Дүниежүзі тарихы</option>
+            <option value="kz_lang-kz_literature">Қазақ тілі-Қазақ әдебиеті</option>
+            <option value="general_eng-en_lang">General English-Шетел тілі</option>
+          </select>
+
+          <div class="button-wrapper">
+            <button type="submit" [disabled]="loading">Тіркелу</button>
             <div class="loader" *ngIf="loading"></div>
           </div>
 

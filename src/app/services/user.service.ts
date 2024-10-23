@@ -24,16 +24,19 @@ export class UserService {
   }
 
   checkCode(phone: string | null | undefined, code: string | null | undefined): Observable<any> {
-    console.log('checkCode method called');
     const body = {
       phone_number: phone,
       code: code
     };
 
-    return this.http.post<any>(`${this.userUrl}check_code/`, body);
+    return this.http.post<any>(`${this.userUrl}check_code/`, body).pipe(
+      tap(response => {
+        if (response.token) {
+          this.authService.setToken(response.token);
+        }
+      }))
+
   }
-
-
 
   submitStudent(phone:string|null|undefined,
                 code:string|null|undefined,
@@ -49,9 +52,26 @@ export class UserService {
 
     return this.http.post<any>(`${this.userUrl}save_learner/`, body).pipe(
       tap(response => {
-        if (response.sessionId) {
-          }
+        if (response.token) {
+          this.authService.setToken(response.token);
+        }
       }))
+  }
 
+  logout(): Observable<any> {
+    return this.http.get<any>(`${this.userUrl}logout_api/`).pipe(
+      tap(response => {
+        if (response.success) {
+          this.authService.clearToken();
+          console.log('Выход выполнен успешно');
+        }
+      })
+    );
+  }
+
+
+
+  adminLogin(data: { password: string | null | undefined; username: string | null | undefined }): Observable<any> {
+    return this.http.post(`${this.userUrl}admin/login_api/`, data);
   }
 }

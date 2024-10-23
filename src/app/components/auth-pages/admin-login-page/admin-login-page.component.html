@@ -1,29 +1,29 @@
 <div class="login-container">
-  <form class="form-container">
+  <form class="form-container" [formGroup]="adminForm">
     <div class="box">
-      <img src="assets/img/logo_ico.svg" alt="logo" width="100">
+      <img src="assets/img/logo_ico.svg" alt="logo" width="250">
       <p>Войти</p>
     </div>
 
     <div class="box">
-      <label class="box-label" for="email">Email address</label>
-      <input type="email" class="box-input" id="email" placeholder="Enter email">
+      <label class="box-label" for="email">Номер телефона</label>
+      <input type="tel"
+             class="box-input"
+             id="email"
+             placeholder="+7 (___) ___ __ __" required
+             [mask]="'(000) 000 00 00'"
+             prefix="+7 "
+             formControlName = 'username'>
     </div>
 
     <div class="box">
-      <label class="box-label" for="password">Password</label>
-      <input type="password" class="box-input" id="password" placeholder="Password">
+      <label class="box-label" for="password">Пароль</label>
+      <input type="password" class="box-input" id="password" placeholder="Пароль" formControlName = 'password'>
     </div>
 
-    <div class="remember-me-container">
-      <div>
-        <input type="checkbox" id="remember" name="remember">
-        <label class="remember-me-label" for="remember">Remember me</label>
-      </div>
-    </div>
 
-    <button type="submit" class="btn-signin">Sign in</button>
+    <button type="submit" class="btn-signin" (click)="onSubmit()">Войти</button>
 
-    <footer>© 2017-2018</footer>
+    <footer>© Testant</footer>
   </form>
 </div>

@@ -118,23 +118,40 @@ export class LoginPageComponent {
       let phone = this.phoneForm.get('phone')?.value;
 
 
+      if (phone) {
+        phone = phone.replace(/\D/g, '');
+        phone = `+7 (${phone.slice(0, 3)}) ${phone.slice(3, 6)} ${phone.slice(6, 8)} ${phone.slice(8, 10)}`;
+      }
+
+      if (code) {
+        code = code.replace(/\D/g, '');
+        if (code.length === 6) {
+          code = `${code.slice(0, 3)} ${code.slice(3)}`;
+        }
+      }
+
+
       this.userService.checkCode(phone,code).subscribe(response =>{
         setTimeout(() => {
           this.loading = false;
-          if(!response.logged_in){
-            this.isCodeSubmitted = true;
-            this.changeImage('/assets/img/login_three_ico.svg');
-            this.alert.success('Код проверен! Пройдите регистрацию');
-          }else if (response.logged_in){
-            this.alert.success('Успешно авторизован!');
-            this.router.navigate(['main']).then(navigationSuccess => {
-              if (navigationSuccess) {
-                console.log('Navigation to /main successful');
-              } else {
-                console.log('Navigation to /main failed');
-              }
-            });
+          if(response.code_is_correct){
+            if(!response.logged_in){
+              this.isCodeSubmitted = true;
+              this.changeImage('/assets/img/login_three_ico.svg');
+              this.alert.success('Код проверен! Пройдите регистрацию');
+            }else if (response.logged_in){
+              this.alert.success('Успешно авторизован!');
+
+              this.router.navigate(['main']).then(navigationSuccess => {
+                if (navigationSuccess) {
+                } else {
+                }
+              });
+            }
+          }else{
+            this.alert.error('Неправилньый код');
           }
+
 
         }, 1000);
       },(error)=>{
@@ -149,8 +166,22 @@ export class LoginPageComponent {
     if(this.studentForm.valid){
       this.loading =true
 
-      let code = this.codeForm.get('code')?.value
+      let code = this.codeForm.get('code')?.value;
+
+      if (code) {
+        code = code.replace(/\D/g, '');
+        if (code.length === 6) {
+          code = `${code.slice(0, 3)} ${code.slice(3)}`;
+        }
+      }
+
       let phone = this.phoneForm.get('phone')?.value;
+
+      if (phone) {
+        phone = phone.replace(/\D/g, '');
+        phone = `+7 (${phone.slice(0, 3)}) ${phone.slice(3, 6)} ${phone.slice(6, 8)} ${phone.slice(8, 10)}`;
+      }
+
       let fullname = this.studentForm.get('fullname')?.value;
       let subjects = this.studentForm.get('subjects')?.value;
 

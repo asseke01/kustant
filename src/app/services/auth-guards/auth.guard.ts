@@ -1,63 +1,47 @@
-import {inject, Injectable} from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
-import {Observable, of, tap} from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-
   private authService = inject(AuthService);
-  private router = inject(Router);
-  private http = inject(HttpClient);
-
-  constructor() {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   canActivate(): Observable<boolean> {
-    const token = this.authService.getSessionId();
-    console.log('Session ID:', token);
+    const token = this.authService.getToken();
     if (token) {
-      return this.verifyToken().pipe(
-        catchError((error) => {
-          console.error('Verify error:', error);
-          this.router.navigate(['/login']);
-          return of(false);
-        })
-      );
+      return this.verifyToken();
     } else {
-      console.log('Session ID is missing or invalid');
       this.router.navigate(['/login']);
       return of(false);
     }
   }
 
   private verifyToken(): Observable<boolean> {
+
+
     return this.http.get<any>('http://127.0.0.1:8000/api/user/verify/').pipe(
-      tap(response => {
-        console.log('Verify response:', response);
-      }),
       map(response => {
         if (response && response.verified) {
-          console.log('Token verified successfully');
           return true;
         } else {
-          console.log('Token verification failed');
           this.router.navigate(['/login']);
           return false;
         }
       }),
       catchError((error) => {
-        console.log('Verify error:', error);
         this.router.navigate(['/login']);
         return of(false);
       })
     );
   }
-
-
-
-
 }
+
+
+
+

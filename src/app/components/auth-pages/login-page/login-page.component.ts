@@ -125,9 +125,15 @@ export class LoginPageComponent {
             this.isCodeSubmitted = true;
             this.changeImage('/assets/img/login_three_ico.svg');
             this.alert.success('Код проверен! Пройдите регистрацию');
-          }else{
+          }else if (response.logged_in){
             this.alert.success('Успешно авторизован!');
-            this.router.navigate(['main']);
+            this.router.navigate(['main']).then(navigationSuccess => {
+              if (navigationSuccess) {
+                console.log('Navigation to /main successful');
+              } else {
+                console.log('Navigation to /main failed');
+              }
+            });
           }
 
         }, 1000);

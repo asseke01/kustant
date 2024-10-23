@@ -3,7 +3,7 @@ import {NgClass} from '@angular/common';
 import {RouterLink} from '@angular/router';
 
 @Component({
-  selector: 'app-nav-bar',
+  selector: 'app-navbar',
   standalone: true,
   imports: [
     NgClass,

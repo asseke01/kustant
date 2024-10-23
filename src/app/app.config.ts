@@ -9,14 +9,15 @@ import {provideNgxMask} from 'ngx-mask';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import {provideHttpClient} from '@angular/common/http';
+import {provideHttpClient, withInterceptors} from '@angular/common/http';
+import {csrfInterceptor} from './services/auth-guards/csrf.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     importProvidersFrom(BrowserAnimationsModule),
     provideAnimations(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([csrfInterceptor])),
     provideNgxMask(), provideAnimationsAsync(), provideAnimationsAsync(),
 
   ]

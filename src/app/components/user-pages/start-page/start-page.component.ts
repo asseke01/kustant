@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {NgClass} from '@angular/common';
 import {RouterLink} from '@angular/router';
-import {NavBarComponent} from '../../helpers/nav-bar/nav-bar.component';
+import {NavBarComponent} from '../../helpers/./navbar/nav-bar.component';
 
 @Component({
   selector: 'app-start-page',

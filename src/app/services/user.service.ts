@@ -31,11 +31,13 @@ export class UserService {
 
     return this.http.post<any>(`${this.userUrl}check_code/`, body).pipe(
       tap(response => {
-        if (response.token) {
-          this.authService.setToken(response.token);
-        }
-      }))
+        if (response.sessionid) {
+          console.log('Received sessionid in checkCode:', response.sessionid);
+          this.authService.setToken(response.sessionid);
 
+        }
+      })
+    );
   }
 
   submitStudent(phone:string|null|undefined, code:string|null|undefined, fullname:string|null|undefined,subjects:string|null|undefined,):Observable<any>{
@@ -48,8 +50,8 @@ export class UserService {
 
     return this.http.post<any>(`${this.userUrl}save_learner/`, body).pipe(
       tap(response => {
-        if (response.token) {
-          this.authService.setToken(response.token);
+        if (response.sessionId) {
+          this.authService.setToken(response.sessionId);
         }
       }))
 

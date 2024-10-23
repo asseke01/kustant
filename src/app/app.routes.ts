@@ -13,6 +13,7 @@ import {AdminQuestionPageComponent} from './components/admin-pages/admin-questio
 import {
   AdminWrongQuestionPageComponent
 } from './components/admin-pages/admin-wrong-question-page/admin-wrong-question-page.component';
+import {AuthGuard} from './services/auth-guards/auth.guard';
 
 export const routes: Routes = [
 
@@ -23,7 +24,7 @@ export const routes: Routes = [
     path:'login', component:LoginPageComponent
   },
   {
-    path:'main',component:MainPageComponent
+    path:'main',component:MainPageComponent,  canActivate: [AuthGuard]
   },
   {
     path:'test-type', component:TestTypePageComponent

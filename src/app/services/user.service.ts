@@ -23,24 +23,23 @@ export class UserService {
     return this.http.post<any>(`${this.userUrl}send_code/`, body);
   }
 
-  checkCode(phone:string|null|undefined, code:string|null|undefined):Observable<any>{
+  checkCode(phone: string | null | undefined, code: string | null | undefined): Observable<any> {
+    console.log('checkCode method called');
     const body = {
       phone_number: phone,
-      code:code
-    }
+      code: code
+    };
 
-    return this.http.post<any>(`${this.userUrl}check_code/`, body).pipe(
-      tap(response => {
-        if (response.sessionid) {
-          console.log('Received sessionid in checkCode:', response.sessionid);
-          this.authService.setToken(response.sessionid);
-
-        }
-      })
-    );
+    return this.http.post<any>(`${this.userUrl}check_code/`, body);
   }
 
-  submitStudent(phone:string|null|undefined, code:string|null|undefined, fullname:string|null|undefined,subjects:string|null|undefined,):Observable<any>{
+
+
+  submitStudent(phone:string|null|undefined,
+                code:string|null|undefined,
+                fullname:string|null|undefined,
+                subjects:string|null|undefined,)
+  {
     const body = {
       phone_number: phone,
       code:code,
@@ -51,8 +50,7 @@ export class UserService {
     return this.http.post<any>(`${this.userUrl}save_learner/`, body).pipe(
       tap(response => {
         if (response.sessionId) {
-          this.authService.setToken(response.sessionId);
-        }
+          }
       }))
 
   }

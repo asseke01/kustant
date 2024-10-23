@@ -5,25 +5,34 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
   private tokenKey = 'authToken';
-  private csrfTokenKey = 'csrfToken';
+  private csrfTokenKey = 'csrftoken';
 
-  constructor() { }
-
-  setToken(sessionId: string) {
-    const expirationDate = new Date();
-    expirationDate.setFullYear(expirationDate.getFullYear() + 1);
-    const expiresString = expirationDate.toUTCString();
-
-    document.cookie = `sessionId=${sessionId}; path=/; secure; SameSite=Lax; expires=${expiresString}`;
-
+  constructor() {
   }
 
-  getToken(): string | null {
-    const match = document.cookie.match(new RegExp('(^| )sessionId=([^;]+)'));
-    return match ? match[2] : null;
+  setSessionId(sessionId: string): void {
+    console.log('Saving Session ID:', sessionId);
+    localStorage.setItem('sessionid', sessionId);
+  }
+  // Метод для получения SessionID
+  getSessionId(): string | null {
+    return localStorage.getItem('sessionid');
   }
 
-  clearToken() {
-    document.cookie = 'sessionId=; path=/; secure; SameSite=Lax; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+  // Метод для сохранения CSRF токена
+  setCsrfToken(csrfToken: string): void {
+    console.log('Saving CSRF Token:', csrfToken);
+    localStorage.setItem('csrftoken', csrfToken);
+  }
+
+  // Метод для получения CSRF токена
+  getCsrfToken(): string | null {
+    return localStorage.getItem('csrftoken');
+  }
+
+  // Метод для очистки данных
+  clearTokens(): void {
+    localStorage.removeItem('csrftoken');
+    localStorage.removeItem('sessionid');
   }
 }

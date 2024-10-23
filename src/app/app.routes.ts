@@ -14,6 +14,7 @@ import {
   AdminWrongQuestionPageComponent
 } from './components/admin-pages/admin-wrong-question-page/admin-wrong-question-page.component';
 import {AuthGuard} from './services/auth-guards/auth.guard';
+import {AdminLoginPageComponent} from './components/auth-pages/admin-login-page/admin-login-page.component';
 
 export const routes: Routes = [
 
@@ -22,6 +23,9 @@ export const routes: Routes = [
   },
   {
     path:'login', component:LoginPageComponent
+  },
+  {
+    path:'admin-login', component:AdminLoginPageComponent
   },
   {
     path:'main',component:MainPageComponent,  canActivate: [AuthGuard]

@@ -1,22 +1,29 @@
-import { HttpInterceptorFn } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
-export const csrfInterceptor: HttpInterceptorFn = (req, next) => {
-  const csrftoken = getCookie('csrftoken');
+@Injectable()
+export class CustomInterceptor implements HttpInterceptor {
 
-  if (csrftoken) {
-    const cloned = req.clone({
-      setHeaders: {
-        'X-CSRFToken': csrftoken
-      }
-    });
+  constructor() {}
 
-    return next(cloned);
-  } else {
-    return next(req);
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+    console.log("outgoing request", request);
+    request = request.clone({ withCredentials: true });
+    console.log("new outgoing request", request);
+
+    return next
+      .handle(request)
+      .pipe(
+        tap((ev: HttpEvent<any>) => {
+          console.log("got an event", ev);
+          if (ev instanceof HttpResponse) {
+            console.log('event of type response', ev);
+          }
+        })
+      );
   }
-};
-
-function getCookie(name: string): string | null {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? match[2] : null;
 }
+

@@ -73,6 +73,7 @@
   padding: 5px 15px;
   border: 1px solid #1D1D42;
   font-weight: 500;
+  cursor: pointer;
 }
 
 
@@ -81,10 +82,7 @@
   color: white;
 }
 
-.action-button:hover {
-  background-color: #f0f0f0;
-  color: black;
-}
+
 
 .table-container{
   margin-top: 20px;
@@ -112,10 +110,26 @@ table td {
   border-bottom: 1px solid #ddd;
 }
 
+table td{
+  width: 100%;
+  max-width: 10%;
+}
+
 table th {
   background-color: transparent;
 }
 
+.delete-button {
+  font-size: 0.8em;
+  padding: 10px 15px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.delete-button i {
+  font-size: 1.5em;
+}
 
 .content{
   display: flex;
@@ -169,13 +183,16 @@ table th {
   color: red;
   font-weight: 600;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .add-subject{
+  margin-top: 10px;
   text-decoration: none;
   color: green;
   font-weight: 600;
   font-size: 16px;
+  cursor: pointer;
 }
 
 .save-subject{
@@ -197,3 +214,6 @@ table th {
   border-radius: 5px !important;
   background-color: white !important;
 }
+
+
+

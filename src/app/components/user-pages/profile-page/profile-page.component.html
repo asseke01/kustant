@@ -1,4 +1,4 @@
-<div class="main-container">
+<div class="main-container" *ngIf="userData">
 
   <app-navbar></app-navbar>
 
@@ -8,7 +8,7 @@
 
       <div class="profile-box">
         <div class="title">
-          <h1>Салем</h1>
+          <h1>Салем {{userData.fullname}}</h1>
           <span style="font-size: 15px">Таңдау пәндері:</span>
         </div>
 

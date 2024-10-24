@@ -4,12 +4,12 @@
   <div class="navbar-menu">
 
     <div class="search-menu">
-      <input type="text" placeholder="ФИО/Телефон (формат +7 (xxx) xxx xx xx)">
-      <button class="search-btn">Іздеу</button>
+      <input type="text" placeholder="ФИО/Телефон (формат +7 (xxx) xxx xx xx)" [(ngModel)]="searchQuery" (ngModelChange)="updateSearchQuery(searchQuery)">
+      <button class="search-btn" (click)="filterStaff()">Іздеу</button>
     </div>
 
 
-    <button class="add-btn" (click)="openDialog('250ms', '250ms')">Қызметкер қосу</button>
+    <button class="add-btn" (click)="openDialog('250ms', '250ms', 'create')">Қызметкер қосу</button>
 
   </div>
 </div>
@@ -20,32 +20,37 @@
 
     <div class="action-buttons">
 
-      <button class="action-button active">Мүғалімдер</button>
-      <button class="action-button">Тестологтар</button>
+      <button class="action-button" [class.active]="type === 'teacher'" (click)="changeType('teacher')">Мүғалімдер</button>
+      <button class="action-button" [class.active]="type === 'testers'" (click)="changeType('testers')">Тестологи</button>
+      <button class="action-button" [class.active]="type === 'moderators'" (click)="changeType('moderators')">Модераторы</button>
+      <button class="action-button" [class.active]="type === 'school_admins'" (click)="changeType('school_admins')">Представители школ</button>
+      <button class="action-button" [class.active]="type === 'super_admins'" (click)="changeType('super_admins')">Руководство</button>
 
     </div>
 
 
     <div class="table-container">
-
       <table>
         <tr>
           <th>#</th>
           <th>ФИО</th>
           <th>Телефон</th>
-          <th>Пән</th>
+          <th *ngIf="type !== 'super_admins' && type !== 'teacher'">Пән</th>
+          <th>Действие</th>
         </tr>
-        <tr>
-          <td>1</td>
-          <td>Alfreds Futterkiste</td>
-          <td>Maria Anders</td>
-          <td>Germany</td>
+        <tbody>
+        <tr *ngFor="let staffMember of filteredStaff; let i = index" (click)="openDialog('250ms', '250ms', 'update', staffMember.id)">
+          <td>{{ i + 1 }}</td>
+          <td>{{ staffMember.fullname }}</td>
+          <td>{{ staffMember.phone_number }}</td>
+          <td *ngIf="type !== 'super_admins' && type !== 'teacher'">{{ staffMember.subjects_displays }}</td>
+          <td>
+            <button class="delete-button" >
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
         </tr>
-        <tr>
-          <td>Centro comercial Moctezuma</td>
-          <td>Francisco Chang</td>
-          <td>Mexico</td>
-        </tr>
+        </tbody>
       </table>
 
     </div>
@@ -58,51 +63,118 @@
 
 <ng-template #dialogTemplate>
   <div class="dialog-header">
-    <h2 mat-dialog-title>Қызметкер қосу</h2>
+    <h2 mat-dialog-title *ngIf="selectedModal=='create'">Қызметкер қосу</h2>
+    <h2 mat-dialog-title *ngIf="selectedModal=='update'">Қызметкерді жаңарту</h2>
     <button mat-icon-button (click)="closeDialog()" class="close-button">
       <mat-icon>close</mat-icon>
     </button>
   </div>
   <mat-dialog-content>
 
-    <div class="content">
+    <ng-container *ngIf="selectedModal == 'create'">
+      <form [formGroup]="staffForm">
 
-      <div class="form-group">
-        <label for="role">Роль</label>
-        <select id="role" name="role">
-          <option value="teacher">Мұғалім</option>
-          <option value="testologist">Тестолог</option>
-        </select>
-      </div>
+        <div class="content">
 
-      <div class="form-group">
-        <label for="fio">ФИО</label>
-        <input type="text" id="fio" name="fio">
-      </div>
+          <div class="form-group">
+            <label for="role">Роль</label>
+            <select id="role" name="role" formControlName="type">
+              <option value="teacher">Мұғалім</option>
+              <option value="testologist">Тестолог</option>
+            </select>
+          </div>
 
-      <div class="form-group">
-        <label for="phone">Телефон</label>
-        <input type="text" id="phone" name="phone" >
-      </div>
+          <div class="form-group">
+            <label for="fio">ФИО</label>
+            <input type="text" id="fio" name="fio" formControlName="fullname">
+          </div>
 
-      <div *ngFor="let subject of subjects; let i = index" class="form-group subject-group">
-        <div class="form-inline">
-          <label [for]="'subject' + i">Пән #{{i + 1}}</label>
-          <a  (click)="removeSubject(i)" class="delete-subject">Удалить</a>
+          <div class="form-group">
+            <label for="phone">Телефон</label>
+            <input type="text" id="phone" name="phone" formControlName="phone_number"  [mask]="'(000) 000 00 00'" prefix="+7 ">
+          </div>
+
+          <div formArrayName="subjects">
+            <div *ngFor="let subject of subjects.controls; let i = index" [formGroupName]="i" class="form-group subject-group">
+              <div class="form-inline">
+                <label [for]="'subject' + i">Пән #{{ i + 1 }}</label>
+                <a (click)="removeSubject(i)" class="delete-subject">Удалить</a>
+              </div>
+              <select [id]="'subject' + i" formControlName="name">
+                <option value="math">Математика</option>
+                <option value="physics">Физика</option>
+                <option value="history">Қазақстан тарихы</option>
+              </select>
+            </div>
+            <a  (click)="addSubject()" class="add-subject">Пән қосу</a>
+          </div>
+
+
+
         </div>
-        <select [id]="'subject' + i" [(ngModel)]="subject.name">
-          <option value="math">Математика</option>
-          <option value="physics">Физика</option>
-          <option value="history">Қазақстан тарихы</option>
-        </select>
-      </div>
+      </form>
+    </ng-container>
 
-      <a  (click)="addSubject()" class="add-subject">Пән қосу</a>
-    </div>
+    <ng-container *ngIf="selectedModal == 'update'">
+      <form [formGroup]="staffForm">
 
+        <div class="content">
+
+          <div class="form-group">
+            <label for="role-update">Роль</label>
+            <select id="role-update" name="role" formControlName="type">
+              <option value="teacher">Мұғалім</option>
+              <option value="testers">Тестолог</option>
+              <option value="moderators">Модераторы</option>
+              <option value="school_admins">Представители школ</option>
+              <option value="super_admins">Руководство курсанта</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fio-update">ФИО</label>
+            <input type="text" id="fio-update" name="fio" formControlName="fullname">
+          </div>
+
+          <div class="form-group">
+            <label for="phone-update">Телефон</label>
+            <input type="text" id="phone-update" name="phone" formControlName="phone_number"  [mask]="'(000) 000 00 00'" prefix="+7 ">
+          </div>
+
+          <div formArrayName="subjects">
+            <div *ngFor="let subject of subjects.controls; let i = index" [formGroupName]="i" class="form-group subject-group">
+              <div class="form-inline">
+                <label [for]="'subject' + i">Пән #{{ i + 1 }}</label>
+                <a (click)="removeSubject(i)" class="delete-subject">Удалить</a>
+              </div>
+              <select [id]="'subject' + i" formControlName="name">
+                <option value="math">Математика</option>
+                <option value="physics">Физика</option>
+                <option value="math_grammar">Мат. сауаттылық</option>
+                <option value="reading_grammar">Оқу сауаттылығы</option>
+                <option value="world_history">Дүниежүзі тарихы</option>
+                <option value="history">Қазақстан тарихы</option>
+                <option value="chemistry">Химия</option>
+                <option value="biology">Биология</option>
+                <option value="geography">География</option>
+                <option value="en_lang">Ағылшын тілі</option>
+                <option value="it">Информатика</option>
+                <option value="laws">Құқық негіздері</option>
+                <option value="kz_lang">Қазақ тілі</option>
+                <option value="ru_lang">Орыс тілі</option>
+                <option value="kz_literature">Қазақ әдебиеті</option>
+                <option value="ru_literature">Орыс әдебиеті</option>
+                <option value="general_eng">General English</option>
+              </select>
+            </div>
+            <a (click)="addSubject()" class="add-subject">Пән қосу</a>
+          </div>
+        </div>
+      </form>
+    </ng-container>
 
   </mat-dialog-content>
   <mat-dialog-actions>
-      <button class="save-subject">Сақтау</button>
+      <button class="save-subject" (click)="saveStaff()">Сақтау</button>
   </mat-dialog-actions>
 </ng-template>

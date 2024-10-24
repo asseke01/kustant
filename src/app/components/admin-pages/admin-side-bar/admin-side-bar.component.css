@@ -3,10 +3,13 @@
   width: 100%;
   max-width: 220px;
   height: 100%;
+  max-height: 100%;
   background-color: #1D1D42;
   color: white;
   padding: 0;
   margin: 0;
+  top:0;
+  z-index: 1;
 }
 
 .sidebar-container h2{
@@ -26,5 +29,5 @@ h2, li{
 }
 
 .active-link {
-  color: #00FFF5; /* Белый текст для активного элемента */
+  color: #00FFF5;
 }

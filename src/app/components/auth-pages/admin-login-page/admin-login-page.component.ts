@@ -1,8 +1,8 @@
 import {Component, inject} from '@angular/core';
 import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgxMaskDirective} from "ngx-mask";
-import {AlertService} from '../../../services/alert.service';
-import {UserService} from '../../../services/user.service';
+import {AlertService} from '../../../services/helper-services/alert.service';
+import {UserService} from '../../../services/user-services/user.service';
 import {Router} from '@angular/router';
 
 @Component({
@@ -30,8 +30,17 @@ export class AdminLoginPageComponent {
 
   onSubmit() {
     if (this.adminForm.valid) {
+
+      let phone = this.adminForm.get('username')?.value;
+
+
+      if (phone) {
+        phone = phone.replace(/\D/g, '');
+        phone = `+7 (${phone.slice(0, 3)}) ${phone.slice(3, 6)} ${phone.slice(6, 8)} ${phone.slice(8, 10)}`;
+      }
+
       const formData = {
-        username: this.adminForm.value.username,
+        username: phone,
         password: this.adminForm.value.password
       };
 

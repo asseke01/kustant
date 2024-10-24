@@ -13,7 +13,12 @@
     <div class="links-container" [ngClass]="{'burger-active': isMenuOpen}">
       <a class="links">Тақырыптық тесттер</a>
       <a class="links">Нәтижелерім</a>
-      <a class="links auth" routerLink="login">Кіру</a>
+      <ng-container *ngIf="userData; else loginLink">
+        <a class="links auth" routerLink="../profile">{{ userData.fullname }}</a>
+      </ng-container>
+      <ng-template #loginLink>
+        <a class="links auth" routerLink="login">Кіру</a>
+      </ng-template>
     </div>
   </div>
 

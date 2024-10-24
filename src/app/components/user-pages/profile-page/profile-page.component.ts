@@ -1,22 +1,28 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {NavBarComponent} from "../../helpers/navbar/nav-bar.component";
 import {MatProgressBar} from '@angular/material/progress-bar';
-import {UserService} from '../../../services/user.service';
-import {AlertService} from '../../../services/alert.service';
+import {UserService} from '../../../services/user-services/user.service';
+import {AlertService} from '../../../services/helper-services/alert.service';
+import {AuthService} from '../../../services/auth-services/auth.service';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-profile-page',
   standalone: true,
   imports: [
     NavBarComponent,
-    MatProgressBar
+    MatProgressBar,
+    NgIf
   ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.css'
 })
-export class ProfilePageComponent {
+export class ProfilePageComponent implements OnInit{
   private userService = inject(UserService)
   private alert = inject(AlertService)
+  private authService = inject(AuthService)
+
+  userData:any;
 
 
   onLogout() {
@@ -28,5 +34,9 @@ export class ProfilePageComponent {
         this.alert.error('Ошибка при выходе')
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.userData = this.authService.getUserData()
   }
 }

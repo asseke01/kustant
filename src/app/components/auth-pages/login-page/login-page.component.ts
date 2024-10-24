@@ -2,10 +2,10 @@ import {Component, inject} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgClass, NgIf, NgStyle} from '@angular/common';
 import {animate, group, keyframes, state, style, transition, trigger} from '@angular/animations';
-import {AlertService} from '../../../services/alert.service';
+import {AlertService} from '../../../services/helper-services/alert.service';
 import {Router} from '@angular/router';
 import {NgxMaskDirective} from 'ngx-mask';
-import {UserService} from '../../../services/user.service';
+import {UserService} from '../../../services/user-services/user.service';
 
 
 @Component({
@@ -150,13 +150,14 @@ export class LoginPageComponent {
             }
           }else{
             this.alert.error('Неправилньый код');
+            this.loading = false;
           }
 
 
         }, 1000);
       },(error)=>{
           this.alert.error('Ошибка при проверке смс кода')
-
+          this.loading = false;
         }
       )
     }

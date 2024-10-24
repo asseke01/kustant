@@ -13,7 +13,7 @@ import {AdminQuestionPageComponent} from './components/admin-pages/admin-questio
 import {
   AdminWrongQuestionPageComponent
 } from './components/admin-pages/admin-wrong-question-page/admin-wrong-question-page.component';
-import {AuthGuard} from './services/auth-guards/auth.guard';
+import {AuthGuard} from './services/auth-services/auth.guard';
 import {AdminLoginPageComponent} from './components/auth-pages/admin-login-page/admin-login-page.component';
 import {ProfilePageComponent} from './components/user-pages/profile-page/profile-page.component';
 
@@ -40,8 +40,10 @@ export const routes: Routes = [
   {
     path:'start-test', component:StartTestPageComponent
   },
+
+
   {
-    path:'admin', component:AdminPagesComponent,
+    path:'admin', component:AdminPagesComponent,canActivate: [AuthGuard],
     children:[
       {
         path:'employee', component:AdminEmployeePageComponent

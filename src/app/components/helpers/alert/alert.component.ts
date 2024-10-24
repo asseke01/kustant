@@ -1,6 +1,6 @@
 import {Component, inject, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {AlertService} from '../../../services/alert.service';
+import {AlertService} from '../../../services/helper-services/alert.service';
 import {NgClass, NgIf} from '@angular/common';
 import {animate, style, transition, trigger} from '@angular/animations';
 

@@ -9,8 +9,8 @@
     </div>
 
 
-    <button class="add-btn" (click)="openDialog('250ms', '250ms')">Оқушы қосу</button>
-    <button class="add-btn" >Группа қосу</button>
+    <button class="add-btn" (click)="openDialog('250ms', '250ms', 'create')">Оқушы қосу</button>
+    <button class="add-btn" (click)="openDialog('250ms', '250ms', 'group')">Группа қосу</button>
 
   </div>
 </div>
@@ -21,39 +21,58 @@
 
     <div class="action-buttons">
 
-      <button class="action-button active">Оқушылар</button>
-      <button class="action-button">Группалар</button>
+      <button class="action-button" [class.active]="type === 'learner'" (click)="changeType('learner')">Оқушылар</button>
+      <button class="action-button" [class.active]="type === 'group'" (click)="changeType('group')">Группалар</button>
 
     </div>
 
-    <div class="select-buttons">
+    <div class="select-buttons" *ngIf="type === 'learner'">
       <label>Группа:</label>
-      <select>
-        <option>Барлығы</option>
-      </select>
+      <div class="select" *ngIf="group">
+        <span>{{ getSelectedGroupName() }}</span>
+        <span><i class="bi bi-caret-down-fill"></i> </span>
+        <select [(ngModel)]="groupId" (ngModelChange)="loadData()">
+          <option *ngFor="let item of group" [value]="item.id">{{ item.name }}</option>
+        </select>
+      </div>
     </div>
+
 
     <div class="table-container">
+      <ng-container *ngIf="type == 'learner'">
+        <table>
+          <tr>
+            <th>#</th>
+            <th>ФИО</th>
+            <th>Телефон</th>
+            <th>Пән</th>
+          </tr>
+          <tbody >
+          <tr *ngFor="let leaner of learner; let i = index" (click)="openDialog('250ms', '250ms', 'update', leaner.id)">
+            <td>{{ i + 1 }}</td>
+            <td>{{ leaner.fullname }}</td>
+            <td>{{ leaner.phone_number }}</td>
+            <td>{{ leaner.subject1_display }} <br>{{leaner.subject2_display}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </ng-container>
 
-      <table>
-        <tr>
-          <th>#</th>
-          <th>ФИО</th>
-          <th>Телефон</th>
-          <th>Пән</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>Alfreds Futterkiste</td>
-          <td>Maria Anders</td>
-          <td>Germany</td>
-        </tr>
-        <tr>
-          <td>Centro comercial Moctezuma</td>
-          <td>Francisco Chang</td>
-          <td>Mexico</td>
-        </tr>
-      </table>
+      <ng-container *ngIf="type == 'group'">
+        <table>
+          <tr>
+            <th>#</th>
+            <th>Название</th>
+          </tr>
+          <tbody >
+          <tr *ngFor="let item of group; let i = index" (click)="openDialog('250ms', '250ms', 'group-update', item.id)">
+            <td>{{ i + 1 }}</td>
+            <td>{{ item.name }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </ng-container>
+
 
     </div>
 
@@ -65,55 +84,169 @@
 
 <ng-template #dialogTemplate>
   <div class="dialog-header">
-    <h2 mat-dialog-title>Оқушы қосу</h2>
+    <h2 mat-dialog-title *ngIf="selectedModal=='create'">Оқушы қосу</h2>
+    <h2 mat-dialog-title *ngIf="selectedModal=='update'">Оқушыны жаңарту</h2>
     <button mat-icon-button (click)="closeDialog()" class="close-button">
       <mat-icon>close</mat-icon>
     </button>
   </div>
   <mat-dialog-content>
 
-    <div class="content">
+    <ng-container *ngIf="selectedModal === 'create'">
+      <form [formGroup]="studentForm">
+      <div class="content">
+        <div class="form-group">
+          <label for="fio">ФИО</label>
+          <input type="text" id="fio" name="fio" formControlName = "fullname">
+        </div>
 
-      <div class="form-group">
-        <label for="fio">ФИО</label>
-        <input type="text" id="fio" name="fio">
+        <div class="form-group">
+          <label for="phone">Телефон</label>
+          <input type="text" id="phone" name="phone" formControlName = "phone_number" [mask]="'(000) 000 00 00'" prefix="+7 ">
+        </div>
+
+        <div class="form-group">
+          <label for="subject1">Таңдау пәні #1</label>
+          <select id="subject1" formControlName="subject1">
+            <option value="math">Математика</option>
+            <option value="physics">Физика</option>
+            <option value="math_grammar">Мат. сауаттылық</option>
+            <option value="reading_grammar">Оқу сауаттылығы</option>
+            <option value="world_history">Дүниежүзі тарихы</option>
+            <option value="history">Қазақстан тарихы</option>
+            <option value="chemistry">Химия</option>
+            <option value="biology">Биология</option>
+            <option value="geography">География</option>
+            <option value="en_lang">Ағылшын тілі</option>
+            <option value="it">Информатика</option>
+            <option value="laws">Құқық негіздері</option>
+            <option value="kz_lang">Қазақ тілі</option>
+            <option value="ru_lang">Орыс тілі</option>
+            <option value="kz_literature">Қазақ әдебиеті</option>
+            <option value="ru_literature">Орыс әдебиеті</option>
+            <option value="general_eng">General English</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="subject2">Таңдау пәні #2</label>
+          <select id="subject2" formControlName="subject2">
+            <option value="math">Математика</option>
+            <option value="physics">Физика</option>
+            <option value="math_grammar">Мат. сауаттылық</option>
+            <option value="reading_grammar">Оқу сауаттылығы</option>
+            <option value="world_history">Дүниежүзі тарихы</option>
+            <option value="history">Қазақстан тарихы</option>
+            <option value="chemistry">Химия</option>
+            <option value="biology">Биология</option>
+            <option value="geography">География</option>
+            <option value="en_lang">Ағылшын тілі</option>
+            <option value="it">Информатика</option>
+            <option value="laws">Құқық негіздері</option>
+            <option value="kz_lang">Қазақ тілі</option>
+            <option value="ru_lang">Орыс тілі</option>
+            <option value="kz_literature">Қазақ әдебиеті</option>
+            <option value="ru_literature">Орыс әдебиеті</option>
+            <option value="general_eng">General English</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="group">Группа</label>
+          <select id = "group" formControlName = "group_id">
+            <option *ngFor="let item of groupForForm" [value]="item.id" >{{ item.name }}</option>
+          </select>
+        </div>
+
       </div>
+      </form>
+    </ng-container>
 
-      <div class="form-group">
-        <label for="phone">Телефон</label>
-        <input type="text" id="phone" name="phone" >
-      </div>
+    <ng-container *ngIf="selectedModal === 'update'">
+      <form [formGroup]="studentForm">
+        <div class="content">
+          <div class="form-group">
+            <label for="fio-update">ФИО</label>
+            <input type="text" id="fio-update" name="fio" formControlName = "fullname">
+          </div>
 
-      <div class="form-group">
-        <label for="subject1">Таңдау пәні #1</label>
-        <select id="subject1" name="role">
-          <option value="teacher">Мұғалім</option>
-          <option value="testologist">Тестолог</option>
-        </select>
-      </div>
+          <div class="form-group">
+            <label for="phone-update">Телефон</label>
+            <input type="text" id="phone-update" name="phone" formControlName = "phone_number" [mask]="'(000) 000 00 00'" prefix="+7 ">
+          </div>
 
-      <div class="form-group">
-        <label for="subject2">Таңдау пәні #2</label>
-        <select id="subject2" name="role">
-          <option value="teacher">Мұғалім</option>
-          <option value="testologist">Тестолог</option>
-        </select>
-      </div>
+          <div class="form-group">
+            <label for="subject1-update">Таңдау пәні #1</label>
+            <select id="subject1-update" formControlName="subject1">
+              <option value="math">Математика</option>
+              <option value="physics">Физика</option>
+              <option value="math_grammar">Мат. сауаттылық</option>
+              <option value="reading_grammar">Оқу сауаттылығы</option>
+              <option value="world_history">Дүниежүзі тарихы</option>
+              <option value="history">Қазақстан тарихы</option>
+              <option value="chemistry">Химия</option>
+              <option value="biology">Биология</option>
+              <option value="geography">География</option>
+              <option value="en_lang">Ағылшын тілі</option>
+              <option value="it">Информатика</option>
+              <option value="laws">Құқық негіздері</option>
+              <option value="kz_lang">Қазақ тілі</option>
+              <option value="ru_lang">Орыс тілі</option>
+              <option value="kz_literature">Қазақ әдебиеті</option>
+              <option value="ru_literature">Орыс әдебиеті</option>
+              <option value="general_eng">General English</option>
+            </select>
+          </div>
 
-      <div class="form-group">
-        <label for="group">Группа</label>
-        <select id="group" name="role">
-          <option value="teacher">Мұғалім</option>
-          <option value="testologist">Тестолог</option>
-        </select>
-      </div>
+          <div class="form-group">
+            <label for="subject2-update">Таңдау пәні #2</label>
+            <select id="subject2-update" formControlName="subject2">
+              <option value="math">Математика</option>
+              <option value="physics">Физика</option>
+              <option value="math_grammar">Мат. сауаттылық</option>
+              <option value="reading_grammar">Оқу сауаттылығы</option>
+              <option value="world_history">Дүниежүзі тарихы</option>
+              <option value="history">Қазақстан тарихы</option>
+              <option value="chemistry">Химия</option>
+              <option value="biology">Биология</option>
+              <option value="geography">География</option>
+              <option value="en_lang">Ағылшын тілі</option>
+              <option value="it">Информатика</option>
+              <option value="laws">Құқық негіздері</option>
+              <option value="kz_lang">Қазақ тілі</option>
+              <option value="ru_lang">Орыс тілі</option>
+              <option value="kz_literature">Қазақ әдебиеті</option>
+              <option value="ru_literature">Орыс әдебиеті</option>
+              <option value="general_eng">General English</option>
+            </select>
+          </div>
 
+          <div class="form-group">
+            <label for="group-update">Группа</label>
+            <select id = "group-update" formControlName = "group_id">
+              <option *ngFor="let item of groupForForm" [value]="item.id" >{{ item.name }}</option>
+            </select>
+          </div>
 
-    </div>
+        </div>
+      </form>
+    </ng-container>
+
+    <ng-container *ngIf="selectedModal === 'group' || selectedModal =='group-update'">
+      <form [formGroup]="groupFrom">
+        <div class="content">
+          <div class="form-group">
+            <label for="name">Аты</label>
+            <input type="text" id="name" name="name" formControlName = "name">
+          </div>
+        </div>
+      </form>
+    </ng-container>
 
 
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button class="save-subject">Сақтау</button>
+    <button class="save-subject" (click)="saveForm()" *ngIf="selectedModal=='create'|| selectedModal=='update'">Сақтау</button>
+    <button class="save-subject" (click)="saveGroup()" *ngIf="selectedModal=='group'|| selectedModal=='group-update'">Сақтау</button>
   </mat-dialog-actions>
 </ng-template>

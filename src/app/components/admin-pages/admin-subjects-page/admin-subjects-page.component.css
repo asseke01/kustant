@@ -1,0 +1,127 @@
+.navbar-container {
+  top: 0;
+  position: sticky;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 27px 30px;
+}
+
+.navbar-container h2{
+  padding: 0;
+  margin: 0;
+  font-size: 22px;
+}
+
+.navbar-menu{
+  display: flex;
+  gap: 20px;
+}
+
+.main-container{
+  padding: 27px 30px;
+}
+
+.grid-container{
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) minmax(100px, 1fr) minmax(100px, 1fr);
+  gap:20px;
+}
+
+.profile-box{
+  background-color: #D4E6F1;
+  color:black;
+  border-radius: 10px;
+  padding: 25px;
+}
+
+.profile-box h1{
+  padding: 0;
+  margin: 0;
+}
+
+.details{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.button{
+  margin-top: 30px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 5px 10px;
+  background-color: #464646;
+  width: 100%;
+  max-width: 70px;
+}
+
+
+.content{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialog-header h2{
+  font-weight: 600;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.form-group{
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group input[type="text"], select{
+  padding: 8px;
+  border: 1px solid #4A4A4A;
+  border-radius: 3px;
+}
+
+.form-group label{
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: black;
+}
+
+
+.save-subject{
+  padding: 5px 11px;
+  border: none;
+  background-color: #4A4A4A;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+}
+
+.mat-mdc-dialog-actions {
+  display: flex;
+  justify-content: flex-start;
+
+}
+
+::ng-deep .mat-mdc-dialog-surface {
+  border-radius: 5px !important;
+  background-color: white !important;
+  height: 100% !important;
+  max-height: 800px !important;
+}
+
+

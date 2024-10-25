@@ -13,16 +13,32 @@
 }
 
 .sidebar-container h2{
-  padding:28px;
+  display: flex;
+  gap:10px;
+  padding:20px 0 0 30px;
   margin: 0;
   font-size: 22px;
+}
+
+.sidebar-container h5{
+  display: flex;
+  gap:10px;
+  padding:20px 0 0 30px;
+  margin: 0;
+  font-size: 14px;
 }
 
 h2, li{
   cursor: pointer;
 }
 
+.sidebar-container ul{
+  padding: 0 0 0 30px;
+}
+
 .sidebar-container li{
+  display: flex;
+  gap:10px;
   list-style-type: none;
   padding: 15px 0;
   font-size: 14px;
@@ -31,3 +47,10 @@ h2, li{
 .active-link {
   color: #00FFF5;
 }
+
+.active-link img {
+  filter: invert(81%) sepia(66%) saturate(2533%) hue-rotate(170deg) brightness(245%) contrast(108%);
+}
+
+
+

@@ -1,1 +1,91 @@
-<p>admin-subjects-page works!</p>
+<div class="navbar-container">
+  <h2>Пәндік тесттер</h2>
+
+  <div class="navbar-menu">
+
+  </div>
+</div>
+
+<div class="main-container">
+
+
+  <div class="grid-container">
+
+    <div class="profile-box" *ngFor="let items of subjects">
+      <div class="details">
+        <h1>{{items.displayName}}</h1>
+
+        <a class="button" (click)="openDialog('250ms', '250ms', items.name, items.displayName)">{{items.editLabel}}</a>
+
+      </div>
+    </div>
+
+  </div>
+
+
+</div>
+
+
+<ng-template #dialogTemplate>
+  <div class="dialog-header">
+    <h2 mat-dialog-title >{{subjectName}}</h2>
+    <button mat-icon-button   class="close-button">
+      <mat-icon (click)="closeDialog()">close</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content>
+
+    <ng-container >
+      <form [formGroup]="subjectForm">
+        <div class="content">
+          <div class="form-group">
+            <label for="duration">Тест ұзақтығы</label>
+            <input type="text" id="duration" name="duration" formControlName = "duration">
+          </div>
+
+          <div class="form-group">
+            <label for="questions_count">Бір жауапты сұрақтар саны</label>
+            <input type="text" id="questions_count" name="questions_count" formControlName = "questions_count">
+          </div>
+
+          <div class="form-group">
+            <label for="contexts_count">Көп жауапты сұрақтар саны</label>
+            <input type="text" id="contexts_count" name="question-many" formControlName = "contexts_count">
+          </div>
+
+          <div class="form-group">
+            <label for="questions_with_many_answers_count">Сәйкестендіру сұрақтар саны</label>
+            <input type="text" id="questions_with_many_answers_count" name="questions_with_many_answers_count" formControlName = "questions_with_many_answers_count">
+          </div>
+
+          <div class="form-group">
+            <label for="matchings_count">Контексттер саны (1 контекст = 5 сұрақ)</label>
+            <input type="text" id="matchings_count" name="matchings_count" formControlName = "matchings_count">
+          </div>
+
+          <div class="form-group">
+            <label for="lvl_a_percent">А деңгейіндегі сұрақтардың шығу проценті</label>
+            <input type="text" id="lvl_a_percent" name="lvl_a_percent" formControlName = "lvl_a_percent">
+          </div>
+
+          <div class="form-group">
+            <label for="lvl_b_percent">Б деңгейіндегі сұрақтардың шығу проценті</label>
+            <input type="text" id="lvl_b_percent" name="lvl_b_percent" formControlName = "lvl_b_percent" >
+          </div>
+
+          <div class="form-group">
+            <label for="lvl_c_percent">С деңгейіндегі сұрақтардың шығу проценті</label>
+            <input type="text" id="lvl_c_percent" name="lvl_c_percent" formControlName = "lvl_c_percent">
+          </div>
+
+        </div>
+      </form>
+    </ng-container>
+
+
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button class="save-subject" (click)="saveForm()">Сақтау</button>
+  </mat-dialog-actions>
+</ng-template>

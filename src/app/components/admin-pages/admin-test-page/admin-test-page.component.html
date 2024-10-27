@@ -1,1 +1,48 @@
-<p>admin-test-page works!</p>
+<div class="navbar-container">
+  <h2>Тақырыптық тесттер</h2>
+  <hr style="transform: scaleY(0.3);">
+
+  <div class="navbar-menu">
+    <div class="select" >
+      <span>Пән: {{ getDisplayName(selectedSubject) }} </span>
+      <span> <i class="bi bi-caret-down-fill"></i>  </span>
+      <select id="subject1" [(ngModel)]="selectedSubject" (change)="loadTest()">
+        <option *ngFor="let item of subjects" [value]="item.name">{{ item.displayName }}</option>
+      </select>
+    </div>
+
+    <div class="button-container">
+      <button class="plus-button">Бөлім қосу</button>
+      <button class="plus-button">Тақырып қосу</button>
+      <button class="plus-button">Тақырыпша қосу</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="main-container">
+  <div class="content-container">
+
+
+  <div class="table-container">
+    <table cdkDropList (cdkDropListDropped)="drop($event)">
+      <tr>
+        <th>#</th>
+        <th>ФИО</th>
+        <th>Пәндік тест(мин.)</th>
+        <th>Пәндік тест(макс.)</th>
+      </tr>
+      <tbody>
+      <tr *ngFor="let item of test; let i = index" cdkDrag>
+        <td><i class="bi bi-grid-fill"></i></td>
+        <td>{{item.name}}</td>
+        <td>{{item.min_questions_count_in_subject_test}}</td>
+        <td>{{item.max_questions_count_in_subject_test}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+</div>
+</div>

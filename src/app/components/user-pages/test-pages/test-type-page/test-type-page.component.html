@@ -14,98 +14,70 @@
     </div>
 
     <ng-container>
-      <div class="form" *ngIf="!testType && !themeTest" @slideLeftRight>
-        <h1>Тарих</h1>
-        <span>Тест түрін таңдаңыз:</span>
-
+      <div class="form" *ngIf="!levelTwo && !levelThree && !levelFour" @slideLeftRight>
+        <h1>{{ title }}</h1>
+        <h2>Тест түрін таңдаңыз:</h2>
         <div class="type-container">
-
-          <div class="box-container test" (click)="onClick('startTest')">
-
-            <h2>Пәндік толық тест</h2>
-            <p>Тарих пәні бойынша толық тест түрі.</p>
-
-          </div>
-
-          <div class="box-container type" (click)="onClick('chooseLevel')">
-
+          <div class="box-container test" (click)="onLevelTwo()">
             <h2>Пәндік толық тест</h2>
             <p>Тарих пәні бойынша толық тест түрі.</p>
           </div>
-
+          <div class="box-container type" (click)="onLevelTwo()">
+            <h2>Тақырыптық тест</h2>
+            <p>Тарих пәні бойынша толық тест түрі.</p>
+          </div>
         </div>
-
       </div>
     </ng-container>
 
     <ng-container>
-      <div class="form" *ngIf="testType && !themeTest" @slideLeftRight>
-        <h1>Сынып деңгейі</h1>
-        <span>Сынып деңгейін таңдаңыз:</span>
-
+      <div class="form" *ngIf="levelTwo" @slideLeftRight>
+        <h1>Бөлім</h1>
+        <h2>Бөлім таңдаңыз:</h2>
         <div class="level-container">
-
           <div class="level-box">
             <div class="scroll-box">
-              <ul (click)="onSelectType()">
-                <li>6 сынып</li>
-                <li>7 сынып</li>
-                <li>8 сынып</li>
-                <li>9 сынып</li>
-                <li>10 сынып</li>
-                <li>11 сынып</li>
-                <li>11 сынып</li>
-                <li>11 сынып</li>
-                <li>11 сынып</li>
-                <li>11 сынып</li>
-                <li>Қазақ хандары</li>
-                <li>Контекст</li>
+              <ul (click)="onLevelThree(lvl.id)" *ngFor="let lvl of lvlData">
+                <li>{{ lvl.name }}</li>
               </ul>
             </div>
-
           </div>
-
         </div>
-
       </div>
     </ng-container>
 
     <ng-container>
-      <div class="form" *ngIf="themeTest" @slideLeftRight>
-        <h1>Тақырыптық тест</h1>
-        <span>Сынып деңгейін таңдаңыз:</span>
-
+      <div class="form" *ngIf="levelThree" @slideLeftRight>
+        <h1>Тақырып</h1>
+        <span>Тақырып таңдаңыз:</span>
         <div class="level-container">
-
           <div class="level-box">
             <div class="scroll-box">
-              <ul (click)="onClick('startTest')">
-                <li>1. Орта ғасырлық мәдениет</li>
-                <li>2. Әмір Темір мемлекет</li>
-                <li>3. Әбілқайыр хандығы</li>
-                <li>4. Ақ Орда мемлекеті</li>
-                <li>5. Моғолстан мемлекеті</li>
-                <li>6. Оғыз мемлекеті</li>
-                <li>7. Түргеш қағанаты</li>
-                <li>8. Батыс Түрік қағанатып</li>
-                <li>11 сынып</li>
-                <li>11 сынып</li>
-                <li>Қазақ хандары</li>
-                <li>Контекст</li>
+              <ul (click)="onLevelFour(lvl.id)" *ngFor="let lvl of lvlData">
+                <li>{{ lvl.name }}</li>
               </ul>
             </div>
-
           </div>
-
         </div>
+      </div>
+    </ng-container>
 
+    <ng-container>
+      <div class="form" *ngIf="levelFour">
+        <h1>Тақырыпшалар</h1>
+        <h2>Тақырыпшаны таңдаңыз:</h2>
+        <div class="level-container">
+          <div class="level-box">
+            <div class="scroll-box">
+              <ul *ngFor="let lvl of lvlData">
+                <li>{{ lvl.name }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </div>
     </ng-container>
 
     <img src="assets/img/login_loco_ico.svg" class="logo">
-
-
   </div>
-
-
 </div>

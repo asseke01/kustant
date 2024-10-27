@@ -14,12 +14,12 @@
 
         <div class="details">
 
-            <div class="info">
-              <p> <span style="font-weight: 600">Группа:</span> ХБ-1</p>
-              <p> <span style="font-weight: 600">Уақыты:</span> 15:00</p>
-            </div>
+          <div class="info">
+            <p><span style="font-weight: 600">Группа:</span> ХБ-1</p>
+            <p><span style="font-weight: 600">Уақыты:</span> 15:00</p>
+          </div>
 
-            <a class="start">Бастау</a>
+          <a class="start">Бастау</a>
         </div>
 
       </div>
@@ -34,8 +34,8 @@
         <div class="details">
 
           <div class="info">
-            <p> <span style="font-weight: 600">Группа:</span> ХБ-1</p>
-            <p> <span style="font-weight: 600">Уақыты:</span> 15:00</p>
+            <p><span style="font-weight: 600">Группа:</span> ХБ-1</p>
+            <p><span style="font-weight: 600">Уақыты:</span> 15:00</p>
           </div>
 
           <img src="assets/img/lock_ico.svg">
@@ -53,8 +53,8 @@
         <div class="details">
 
           <div class="info">
-            <p> <span style="font-weight: 600">Группа:</span> ХБ-1</p>
-            <p> <span style="font-weight: 600">Уақыты:</span> 15:00</p>
+            <p><span style="font-weight: 600">Группа:</span> ХБ-1</p>
+            <p><span style="font-weight: 600">Уақыты:</span> 15:00</p>
           </div>
 
           <img src="assets/img/lock_ico.svg">
@@ -73,34 +73,14 @@
 
     <div class="grid-container">
 
-      <div class="test-box">
+      <div class="test-box" *ngFor="let subject of getLearnerSubjects">
 
-        <div class="title" (click)="onClick()">
-          <h3>Биология</h3>
-          <span style="font-size: 15px">Пәндік тест</span>
+        <div class="title" (click)="onClick(subject.name)">
+          <h3>{{ subject.name }}</h3>
+          <span style="font-size: 15px">{{ subject.name_display }}</span>
         </div>
 
       </div>
-
-      <div class="test-box">
-
-        <div class="title">
-          <h3>Биология</h3>
-          <span style="font-size: 15px">Пәндік тест</span>
-        </div>
-
-      </div>
-
-
-      <div class="test-box">
-
-        <div class="title">
-          <h3>Биология</h3>
-          <span style="font-size: 15px">Пәндік тест</span>
-        </div>
-
-      </div>
-
 
     </div>
 

@@ -16,11 +16,12 @@ import {
 import {AuthGuard} from './services/auth-services/auth.guard';
 import {AdminLoginPageComponent} from './components/auth-pages/admin-login-page/admin-login-page.component';
 import {ProfilePageComponent} from './components/user-pages/profile-page/profile-page.component';
+import {UnauthGuard} from './services/auth-services/unauth.guard';
 
 export const routes: Routes = [
 
   {
-    path:'', component:StartPageComponent
+    path:'', component:StartPageComponent, canActivate: [UnauthGuard]
   },
   {
     path:'login', component:LoginPageComponent
@@ -35,7 +36,7 @@ export const routes: Routes = [
     path:'profile', component:ProfilePageComponent
   },
   {
-    path:'test-type', component:TestTypePageComponent
+    path:'test-type/:subject_name', component:TestTypePageComponent
   },
   {
     path:'start-test', component:StartTestPageComponent

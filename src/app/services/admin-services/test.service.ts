@@ -20,9 +20,51 @@ export class TestService {
     return this.http.get(`${this.apiUrl}get_categories/`,{params});
   }
 
-  saveCategory(category: any): Observable<any> {
-
-    return this.http.post<any>(`${this.apiUrl}save_category/`, category);
+  saveCategory(categoryData: any[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}save_categories_order/`, categoryData, {
+      headers: { 'Content-Type': 'application/json' }
+    });
   }
 
+  saveThemes(categoryData: any[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}save_themes_order/`, categoryData, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  saveSubThemes(categoryData: any[]): Observable<any> {
+    return this.http.post(`${this.apiUrl}save_sub_themes_order/`, categoryData, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+
+  getThemes(subject:string, category_id?:number): Observable<any> {
+    let params: any = {};
+    if (subject) {
+      params.subject = subject;
+    }
+    if (category_id !== undefined) {
+      params.category_id = category_id;
+    }
+
+    return this.http.get(`${this.apiUrl}get_themes/`,{params});
+  }
+
+
+  getSubThemes(subject:string,theme_id?:number): Observable<any> {
+    let params: any = {};
+    if (subject) {
+      params.subject = subject;
+    }
+    if (theme_id !== undefined) {
+      params.theme_id = theme_id;
+    }
+
+    return this.http.get(`${this.apiUrl}get_sub_themes/`,{params});
+  }
+
+  saveCategoryData(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}save_category/`, data, );
+  }
 }

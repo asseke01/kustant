@@ -12,7 +12,7 @@
     </div>
 
     <div class="button-container">
-      <button class="plus-button">Бөлім қосу</button>
+      <button class="plus-button" (click)="openDialog('250ms', '250ms', 'bolim')">Бөлім қосу</button>
       <button class="plus-button">Тақырып қосу</button>
       <button class="plus-button">Тақырыпша қосу</button>
     </div>
@@ -23,26 +23,169 @@
 <div class="main-container">
   <div class="content-container">
 
+    <div class="action-buttons">
+
+      <button class="action-button" [class.active]="activeTab === 'bolimder'" (click)="changeType('bolimder')">Бөлімдер</button>
+      <button class="action-button" [class.active]="activeTab === 'takyptar'" (click)="changeType('takyptar')">Тақырыптар</button>
+      <button class="action-button" [class.active]="activeTab === 'takyrypwalar'" (click)="changeType('takyrypwalar')">Тақырыпшалар</button>
+
+    </div>
 
   <div class="table-container">
-    <table cdkDropList (cdkDropListDropped)="drop($event)">
-      <tr>
-        <th>#</th>
-        <th>ФИО</th>
-        <th>Пәндік тест(мин.)</th>
-        <th>Пәндік тест(макс.)</th>
-      </tr>
-      <tbody>
-      <tr *ngFor="let item of test; let i = index" cdkDrag>
-        <td><i class="bi bi-grid-fill"></i></td>
-        <td>{{item.name}}</td>
-        <td>{{item.min_questions_count_in_subject_test}}</td>
-        <td>{{item.max_questions_count_in_subject_test}}</td>
-      </tr>
-      </tbody>
-    </table>
+
+    <ng-container *ngIf="activeTab == 'bolimder'">
+      <table cdkDropList (cdkDropListDropped)="drop($event)">
+        <tr>
+          <th>#</th>
+          <th>Бөлім</th>
+          <th>Пәндік тест(мин.)</th>
+          <th>Пәндік тест(макс.)</th>
+        </tr>
+        <tbody>
+        <tr *ngFor="let item of test; let i = index" cdkDrag>
+          <td><i class="bi bi-grid-fill"></i></td>
+          <td>{{item.name}}</td>
+          <td>{{item.min_questions_count_in_subject_test}}</td>
+          <td>{{item.max_questions_count_in_subject_test}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </ng-container>
+
+    <ng-container *ngIf="activeTab == 'takyptar'">
+
+      <div class="select-themes" >
+        <span>Пән: {{getDisplayCategory(selectedCategory)}}</span>
+        <span> <i class="bi bi-caret-down-fill"></i>  </span>
+        <select id="subject2" [(ngModel)]="selectedCategory" (change)="onCategoryChange()">
+          <option [ngValue]="undefined" selected>Барлығы</option>
+          <option *ngFor="let item of test" [value]="item.id">{{ item.name }}</option>
+        </select>
+      </div>
+
+      <table cdkDropList (cdkDropListDropped)="dropThemes($event)" [cdkDropListDisabled]="selectedCategory === undefined">
+        <tr>
+          <th>#</th>
+          <th>Бөлім</th>
+          <th>Тақырып</th>
+        </tr>
+        <tbody>
+        <tr *ngFor="let item of themes; let i = index" cdkDrag>
+          <td>
+            <ng-container *ngIf="selectedCategory !== undefined; else showIndex">
+              <i class="bi bi-grid-fill"></i>
+            </ng-container>
+            <ng-template #showIndex>{{ i + 1 }}</ng-template>
+          </td>
+          <td>{{item.category_name}}</td>
+          <td>{{item.name}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </ng-container>
+
+
+    <ng-container *ngIf="activeTab == 'takyrypwalar'">
+
+      <div class="select-themes" >
+        <span>Пән: {{ getDisplayTheme(selectedThemes) }} </span>
+        <span> <i class="bi bi-caret-down-fill"></i>  </span>
+        <select id="subject3" [(ngModel)]="selectedThemes" (change)="loadSubThemes()">
+          <option [ngValue]="undefined" selected>Барлығы</option>
+          <option *ngFor="let item of themes" [value]="item.id">{{ item.category_name }}.{{item.name}}</option>
+        </select>
+      </div>
+
+      <table cdkDropList (cdkDropListDropped)="dropSubThemes($event)" [cdkDropListDisabled]="selectedThemes === undefined">
+        <tr>
+          <th>#</th>
+          <th>Тақырып</th>
+          <th>Тақырыпша</th>
+          <th>Ұзақтығы</th>
+          <th>Бір жауапты</th>
+          <th>Көп жауапты</th>
+          <th>Сәйкестендіру</th>
+          <th>А деңгейі</th>
+          <th>Б деңгейі</th>
+          <th>С деңгейі</th>
+        </tr>
+        <tbody>
+        <tr *ngFor="let item of subThemes; let i = index" cdkDrag>
+          <td>
+            <ng-container *ngIf="selectedThemes !== undefined; else showIndex">
+              <i class="bi bi-grid-fill"></i>
+            </ng-container>
+            <ng-template #showIndex>{{ i + 1 }}</ng-template>
+          </td>
+          <td>{{item.theme_name}}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.duration}} минут</td>
+          <td>{{item.questions_count}} сұрақ</td>
+          <td>{{item.questions_with_many_answers_count}} сұрақ</td>
+          <td>{{item.matchings_count}} сұрақ</td>
+          <td>{{item.lvl_a_percent}} %</td>
+          <td>{{item.lvl_b_percent}} %</td>
+          <td>{{item.lvl_c_percent}} %</td>
+        </tr>
+        </tbody>
+      </table>
+    </ng-container>
+
   </div>
 
 
 </div>
 </div>
+
+
+<ng-template #dialogTemplate>
+  <div class="dialog-header">
+    <h2 mat-dialog-title >Қызметкер қосу</h2>
+    <button mat-icon-button  class="close-button">
+      <mat-icon (click)="closeDialog()">close</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content>
+
+    <ng-container >
+      <form >
+
+        <div class="content">
+
+          <div class="form-group">
+            <label for="subject">Пән</label>
+            <select
+              id="subject"
+              [(ngModel)]="selectedSubject"
+              name="subject"
+              disabled>
+              <option *ngFor="let item of subjects" [value]="item.name">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="fio">Аты</label>
+            <input type="text" id="fio" name="fio" >
+          </div>
+
+          <div class="form-group">
+            <label for="test1">Пәндік тест кездегі минимум шығу керек сұрақ саны</label>
+            <input type="text" id="test1" name="test1" >
+          </div>
+
+          <div class="form-group">
+            <label for="test2">Пәндік тест кездегі максимум шығу керек сұрақ саны</label>
+            <input type="text" id="test2" name="test2" >
+          </div>
+
+
+        </div>
+      </form>
+    </ng-container>
+
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button class="save-subject" *ngIf="selectedType == 'bolim'" (click)="onSubmitCategory()">Сақтау</button>
+  </mat-dialog-actions>
+</ng-template>

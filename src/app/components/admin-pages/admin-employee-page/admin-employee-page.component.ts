@@ -182,7 +182,13 @@ export class AdminEmployeePageComponent implements OnInit {
       return;
     }
 
-    this.staffService.saveStaff(this.staffForm.value).subscribe(
+    const formData = { ...this.staffForm.value };
+
+    if (!formData.id) {
+      delete formData.id;
+    }
+
+    this.staffService.saveStaff(formData).subscribe(
       (response) => {
         if (response.success) {
           this.alert.success('Данные успешно сохранены');

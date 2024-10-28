@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {AuthService} from '../auth-services/auth.service';
 import {Observable} from 'rxjs';
 
@@ -64,7 +64,40 @@ export class TestService {
     return this.http.get(`${this.apiUrl}get_sub_themes/`,{params});
   }
 
+
+  getTestById(category_id: number | undefined) {
+    if (category_id === undefined) {
+      throw new Error("Invalid learnerId: 'undefined' is not allowed.");
+    }
+    const params = new HttpParams().set('category_id', category_id.toString());
+    return this.http.get(`${this.apiUrl}get_category/`, { params });
+  }
+
+  getThemeById(theme_id: number | undefined) {
+    if (theme_id === undefined) {
+      throw new Error("Invalid learnerId: 'undefined' is not allowed.");
+    }
+    const params = new HttpParams().set('theme_id', theme_id.toString());
+    return this.http.get(`${this.apiUrl}get_theme/`, { params });
+  }
+
+  getSubThemeById(sub_theme_id: number | undefined) {
+    if (sub_theme_id === undefined) {
+      throw new Error("Invalid learnerId: 'undefined' is not allowed.");
+    }
+    const params = new HttpParams().set('sub_theme_id', sub_theme_id.toString());
+    return this.http.get(`${this.apiUrl}get_sub_theme/`, { params });
+  }
+
   saveCategoryData(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}save_category/`, data, );
+  }
+
+  saveThemeData(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}save_theme/`, data, );
+  }
+
+  saveSubThemeData(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}save_sub_theme/`, data, );
   }
 }

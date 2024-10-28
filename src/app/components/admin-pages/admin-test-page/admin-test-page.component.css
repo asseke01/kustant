@@ -155,7 +155,9 @@ table th {
   flex-direction: column;
 }
 
-.form-group input[type="text"], select{
+.form-group input[type="text"],
+.form-group input[type="number"],
+select{
   padding: 8px;
   border: 1px solid #4A4A4A;
   border-radius: 3px;

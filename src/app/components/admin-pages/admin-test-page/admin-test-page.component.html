@@ -6,15 +6,15 @@
     <div class="select" >
       <span>Пән: {{ getDisplayName(selectedSubject) }} </span>
       <span> <i class="bi bi-caret-down-fill"></i>  </span>
-      <select id="subject1" [(ngModel)]="selectedSubject" (change)="loadTest()">
+      <select id="subject1" [(ngModel)]="selectedSubject" (change)="loadAll($event)">
         <option *ngFor="let item of subjects" [value]="item.name">{{ item.displayName }}</option>
       </select>
     </div>
 
     <div class="button-container">
       <button class="plus-button" (click)="openDialog('250ms', '250ms', 'bolim')">Бөлім қосу</button>
-      <button class="plus-button">Тақырып қосу</button>
-      <button class="plus-button">Тақырыпша қосу</button>
+      <button class="plus-button" (click)="openDialog('250ms', '250ms', 'takyryp')">Тақырып қосу</button>
+      <button class="plus-button" (click)="openDialog('250ms', '250ms', 'takyrypwalar')">Тақырыпша қосу</button>
     </div>
 
   </div>
@@ -26,7 +26,7 @@
     <div class="action-buttons">
 
       <button class="action-button" [class.active]="activeTab === 'bolimder'" (click)="changeType('bolimder')">Бөлімдер</button>
-      <button class="action-button" [class.active]="activeTab === 'takyptar'" (click)="changeType('takyptar')">Тақырыптар</button>
+      <button class="action-button" [class.active]="activeTab === 'takyryptar'" (click)="changeType('takyryptar')">Тақырыптар</button>
       <button class="action-button" [class.active]="activeTab === 'takyrypwalar'" (click)="changeType('takyrypwalar')">Тақырыпшалар</button>
 
     </div>
@@ -42,7 +42,7 @@
           <th>Пәндік тест(макс.)</th>
         </tr>
         <tbody>
-        <tr *ngFor="let item of test; let i = index" cdkDrag>
+        <tr *ngFor="let item of test; let i = index" cdkDrag (click)="openDialog('250ms', '250ms', 'bolim-update', item.id)">
           <td><i class="bi bi-grid-fill"></i></td>
           <td>{{item.name}}</td>
           <td>{{item.min_questions_count_in_subject_test}}</td>
@@ -52,12 +52,12 @@
       </table>
     </ng-container>
 
-    <ng-container *ngIf="activeTab == 'takyptar'">
+    <ng-container *ngIf="activeTab == 'takyryptar'">
 
       <div class="select-themes" >
         <span>Пән: {{getDisplayCategory(selectedCategory)}}</span>
         <span> <i class="bi bi-caret-down-fill"></i>  </span>
-        <select id="subject2" [(ngModel)]="selectedCategory" (change)="onCategoryChange()">
+        <select id="subject2" [(ngModel)]="selectedCategory" (change)="loadThemes()">
           <option [ngValue]="undefined" selected>Барлығы</option>
           <option *ngFor="let item of test" [value]="item.id">{{ item.name }}</option>
         </select>
@@ -70,7 +70,7 @@
           <th>Тақырып</th>
         </tr>
         <tbody>
-        <tr *ngFor="let item of themes; let i = index" cdkDrag>
+        <tr *ngFor="let item of themes; let i = index" cdkDrag (click)="openDialog('250ms', '250ms', 'takyryp-update', item.id)">
           <td>
             <ng-container *ngIf="selectedCategory !== undefined; else showIndex">
               <i class="bi bi-grid-fill"></i>
@@ -110,7 +110,7 @@
           <th>С деңгейі</th>
         </tr>
         <tbody>
-        <tr *ngFor="let item of subThemes; let i = index" cdkDrag>
+        <tr *ngFor="let item of subThemes; let i = index" cdkDrag (click)="openDialog('250ms', '250ms', 'takyrypwalar-update', item.id)">
           <td>
             <ng-container *ngIf="selectedThemes !== undefined; else showIndex">
               <i class="bi bi-grid-fill"></i>
@@ -140,15 +140,17 @@
 
 <ng-template #dialogTemplate>
   <div class="dialog-header">
-    <h2 mat-dialog-title >Қызметкер қосу</h2>
+    <h2 mat-dialog-title *ngIf="selectedType=='bolim'">Бөлім қосу</h2>
+    <h2 mat-dialog-title *ngIf="selectedType=='takyryp'">Тақырып қосу</h2>
+    <h2 mat-dialog-title *ngIf="selectedType=='takyrypwalar'">Тақырыпша қосу</h2>
     <button mat-icon-button  class="close-button">
       <mat-icon (click)="closeDialog()">close</mat-icon>
     </button>
   </div>
   <mat-dialog-content>
 
-    <ng-container >
-      <form >
+    <ng-container *ngIf="selectedType == 'bolim' || selectedType == 'bolim-update'">
+      <form [formGroup]="categoryForm">
 
         <div class="content">
 
@@ -156,26 +158,123 @@
             <label for="subject">Пән</label>
             <select
               id="subject"
-              [(ngModel)]="selectedSubject"
-              name="subject"
-              disabled>
+              formControlName="subject">
               <option *ngFor="let item of subjects" [value]="item.name">{{ item.displayName }}</option>
             </select>
           </div>
 
           <div class="form-group">
             <label for="fio">Аты</label>
-            <input type="text" id="fio" name="fio" >
+            <input type="text" id="fio" name="fio" formControlName = 'name'>
           </div>
 
           <div class="form-group">
             <label for="test1">Пәндік тест кездегі минимум шығу керек сұрақ саны</label>
-            <input type="text" id="test1" name="test1" >
+            <input type="text" id="test1" name="test1" formControlName = 'min_questions_count_in_subject_test'>
           </div>
 
           <div class="form-group">
             <label for="test2">Пәндік тест кездегі максимум шығу керек сұрақ саны</label>
-            <input type="text" id="test2" name="test2" >
+            <input type="text" id="test2" name="test2" formControlName = 'max_questions_count_in_subject_test'>
+          </div>
+
+
+        </div>
+      </form>
+    </ng-container>
+
+    <ng-container *ngIf="selectedType == 'takyryp'|| selectedType == 'takyryp-update'">
+      <form [formGroup]="themeForm">
+
+        <div class="content">
+
+          <div class="form-group">
+            <label for="subjectT">Пән</label>
+            <select
+              id="subjectT"
+              formControlName="subject">
+              <option *ngFor="let item of subjects" [value]="item.name">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="subjectT1">Бөлім</label>
+            <select id="subjectT1" formControlName = 'category_id'>
+              <option value="" disabled selected hidden>Бөлім таңдаңыз</option>
+              <option *ngFor="let item of test" [value]="item.id">{{ item.name }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="testT1">Аты</label>
+            <input type="text" id="testT1" name="testT1" formControlName = 'name'>
+          </div>
+
+
+        </div>
+      </form>
+    </ng-container>
+
+    <ng-container *ngIf="selectedType === 'takyrypwalar' || selectedType === 'takyrypwalar-update'">
+      <form [formGroup]="subThemeForm">
+
+        <div class="content">
+
+          <div class="form-group">
+            <label for="subjectTW">Пән</label>
+            <select
+              id="subjectTW"
+              formControlName="subject">
+              <option *ngFor="let item of subjects" [value]="item.name">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="subjectTW1">Бөлім</label>
+            <select id="subjectTW1" formControlName="theme_id">
+              <option value="" disabled selected hidden>Бөлім таңдаңыз</option>
+              <option *ngFor="let item of themes" [value]="item.id">{{ item.category_name }}.{{item.name}}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="name">Тақырыпша аты</label>
+            <input type="text" id="name" name="testT1" formControlName = 'name'>
+          </div>
+
+          <div class="form-group">
+            <label for="duration">Тест ұзақтығы (минутпен)</label>
+            <input type="number" id="duration" name="duration" formControlName = 'duration'>
+          </div>
+
+          <div class="form-group">
+            <label for="oneAnswer">Бір жауапты сұрақтар саны</label>
+            <input type="number" id="oneAnswer" name="oneAnswer" formControlName = 'questions_count'>
+          </div>
+
+          <div class="form-group">
+            <label for="manyAnswer">Көп жауапты сұрақтар саны</label>
+            <input type="number" id="manyAnswer" name="manyAnswer" formControlName = 'questions_with_many_answers_count'>
+          </div>
+
+          <div class="form-group">
+            <label for="identAnswer">Сәйкестендіру сұрақтар саны</label>
+            <input type="number" id="identAnswer" name="identAnswer" formControlName = 'matchings_count'>
+          </div>
+
+          <div class="form-group">
+            <label for="aAnswer">А деңгейі</label>
+            <input type="number" id="aAnswer" name="aAnswer" formControlName = 'lvl_a_percent'>
+          </div>
+
+          <div class="form-group">
+            <label for="bAnswer">B деңгейі</label>
+            <input type="number" id="bAnswer" name="bAnswer" formControlName = 'lvl_b_percent'>
+          </div>
+
+          <div class="form-group">
+            <label for="сAnswer">С деңгейі</label>
+            <input type="number" id="сAnswer" name="сAnswer" formControlName = 'lvl_c_percent'>
           </div>
 
 
@@ -186,6 +285,8 @@
 
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button class="save-subject" *ngIf="selectedType == 'bolim'" (click)="onSubmitCategory()">Сақтау</button>
+    <button class="save-subject" *ngIf="selectedType == 'bolim' || selectedType == 'bolim-update'" (click)="onSubmitCategory()">Сақтау</button>
+    <button class="save-subject" *ngIf="selectedType == 'takyryp' || selectedType == 'takyryp-update'" (click)="onSubmitTheme()">Сақтау</button>
+    <button class="save-subject" *ngIf="selectedType == 'takyrypwalar' || selectedType === 'takyrypwalar-update'" (click)="onSubmitSubTheme()">Сақтау</button>
   </mat-dialog-actions>
 </ng-template>

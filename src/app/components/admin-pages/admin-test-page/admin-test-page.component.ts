@@ -1,5 +1,5 @@
 import {Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {NgForOf, NgIf} from "@angular/common";
 import {TestService} from '../../../services/admin-services/test.service';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -7,6 +7,7 @@ import {MatDialog, MatDialogActions, MatDialogContent, MatDialogTitle} from '@an
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {NgxMaskDirective} from 'ngx-mask';
+import {AlertService} from '../../../services/helper-services/alert.service';
 
 @Component({
   selector: 'app-admin-test-page',
@@ -34,6 +35,8 @@ export class AdminTestPageComponent implements OnInit{
 
   private testService = inject(TestService);
   private fb = inject(FormBuilder);
+  private alert = inject(AlertService);
+
 
   selectedType:string = '';
   selectedSubject: string = 'history';
@@ -65,12 +68,40 @@ export class AdminTestPageComponent implements OnInit{
   ];
 
 
-  public category = this.fb.group({
+
+  ngOnInit(): void {
+    this.loadTest()
+
+  }
+
+
+  public categoryForm = this.fb.group({
     id:[null],
     name: ['', Validators.required],
-    subject:this.selectedSubject,
+    subject: [{ value: this.selectedSubject, disabled: true }],
     min_questions_count_in_subject_test:['', Validators.required],
     max_questions_count_in_subject_test:['', Validators.required],
+  })
+
+  public themeForm = this.fb.group({
+    id:[null],
+    subject: [{ value: this.selectedSubject, disabled: true }],
+    name: ['', Validators.required],
+    category_id: ['', Validators.required]
+  })
+
+  public subThemeForm = this.fb.group({
+    id:[null],
+    subject: [{ value: this.selectedSubject, disabled: true }],
+    name: ['', Validators.required],
+    theme_id: ['', Validators.required],
+    duration: ['', Validators.required],
+    questions_count: ['', Validators.required],
+    questions_with_many_answers_count: ['', Validators.required],
+    matchings_count: ['', Validators.required],
+    lvl_a_percent: ['', Validators.required],
+    lvl_b_percent: ['', Validators.required],
+    lvl_c_percent: ['', Validators.required],
   })
 
   getDisplayName(name: string): string {
@@ -96,15 +127,23 @@ export class AdminTestPageComponent implements OnInit{
     }
   }
 
-  onCategoryChange() {
+  loadThemes() {
     this.testService.getThemes(this.selectedSubject, this.selectedCategory).subscribe(data=>{
       this.themes = data;
     })
   }
 
 
-  ngOnInit(): void {
-    this.loadTest()
+  loadAll(event: Event) {
+    this.loadTest();
+    this.loadThemes();
+    this.loadSubThemes();
+
+    const newValue = (event.target as HTMLSelectElement).value;
+    this.selectedSubject = newValue;
+    this.categoryForm.patchValue({ subject: newValue });
+    this.themeForm.patchValue({ subject: newValue });
+    this.subThemeForm.patchValue({ subject: newValue });
   }
 
   loadTest(){
@@ -113,8 +152,6 @@ export class AdminTestPageComponent implements OnInit{
       }
     )
   }
-
-
 
   loadSubThemes() {
     this.testService.getSubThemes(this.selectedSubject, this.selectedThemes).subscribe(data => {
@@ -204,10 +241,14 @@ export class AdminTestPageComponent implements OnInit{
 
   changeType(newType: string) {
     this.activeTab = newType;
-    if (this.activeTab === 'takyptar') {
-      this.onCategoryChange();
+    if (this.activeTab === 'takyryptar') {
+      this.loadThemes();
+      this.selectedCategory = undefined;
+      this.selectedThemes = undefined;
     } else if (this.activeTab === 'takyrypwalar') {
-      this.onCategoryChange();
+      this.selectedCategory = undefined;
+      this.selectedThemes = undefined;
+      this.loadThemes();
       this.loadSubThemes();
     }
   }
@@ -215,28 +256,231 @@ export class AdminTestPageComponent implements OnInit{
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string, selectedModal: string, id?: number): void {
     this.selectedType = selectedModal;
-
+    this.selectedCategory = undefined;
+    this.selectedThemes = undefined;
     if(this.selectedType === 'bolim'){
       this.dialog.open(this.dialogTemplate, {
         width: '800px',
         enterAnimationDuration,
         exitAnimationDuration,
+        disableClose: true
       });
+    }else if(this.selectedType === 'takyryp'){
+
+      this.dialog.open(this.dialogTemplate, {
+        width: '800px',
+        enterAnimationDuration,
+        exitAnimationDuration,
+        disableClose: true
+      });
+    }else if(this.selectedType === 'takyrypwalar'){
+      this.loadThemes();
+      this.subThemeForm.get('theme_id')?.setValue('');
+      this.dialog.open(this.dialogTemplate, {
+        width: '800px',
+        enterAnimationDuration,
+        exitAnimationDuration,
+        disableClose: true
+      });
+    }else if(this.selectedType === 'bolim-update' && id !== undefined){
+      this.testService.getTestById(id).subscribe(
+        (Data) => {
+          if (Data) {
+            this.populateCategoryForm(Data);
+            this.dialog.open(this.dialogTemplate, {
+              width: '600px',
+              enterAnimationDuration,
+              exitAnimationDuration,
+              disableClose: true
+            });
+          } else {
+            console.error('Сотрудник с таким ID не найден');
+          }
+        },
+        (error) => {
+          console.error('Ошибка при получении данных сотрудника:', error);
+        }
+      );
+    }else if(this.selectedType === 'takyryp-update' && id !== undefined){
+      this.testService.getThemeById(id).subscribe(
+        (Data) => {
+          if (Data) {
+            this.populateThemeForm(Data);
+            this.dialog.open(this.dialogTemplate, {
+              width: '600px',
+              enterAnimationDuration,
+              exitAnimationDuration,
+              disableClose: true
+            });
+          } else {
+            console.error('Сотрудник с таким ID не найден');
+          }
+        },
+        (error) => {
+          console.error('Ошибка при получении данных сотрудника:', error);
+        }
+      );
+    }else if(this.selectedType === 'takyrypwalar-update' && id !== undefined){
+      this.testService.getSubThemeById(id).subscribe(
+        (Data) => {
+          if (Data) {
+            this.populateSubThemeForm(Data);
+            this.dialog.open(this.dialogTemplate, {
+              width: '600px',
+              enterAnimationDuration,
+              exitAnimationDuration,
+              disableClose: true
+            });
+          } else {
+            console.error('Сотрудник с таким ID не найден');
+          }
+        },
+        (error) => {
+          console.error('Ошибка при получении данных сотрудника:', error);
+        }
+      );
     }
-
-
-
   }
 
   closeDialog(): void {
+    this.categoryForm.reset();
+    this.subThemeForm.reset();
+    this.themeForm.reset();
+
+    this.categoryForm.patchValue({ subject: this.selectedSubject });
+    this.subThemeForm.patchValue({ subject: this.selectedSubject });
+    this.themeForm.patchValue({ subject: this.selectedSubject });
+
     this.dialog.closeAll();
   }
 
-  onSubmitCategory(){
+  onSubmitCategory() {
+    const formData = {
+      ...this.categoryForm.value,
+      subject: this.selectedSubject
+    };
 
-    this.testService.saveCategoryData(this.category.value).subscribe((response)=>{
-      console.log('Save response:', response);
-    })
+    if (!formData.id) {
+      delete formData.id;
+    }
+
+    this.testService.saveCategoryData(formData).subscribe(
+      (response) => {
+        if (response.success) {
+          this.alert.success('Данные успешно сохранены');
+          this.categoryForm.reset();
+          this.categoryForm.patchValue({ subject: this.selectedSubject });
+          this.loadTest();
+          this.closeDialog();
+        }
+      },
+      (error) => {
+        if (error.status === 409) {
+          this.alert.warn('Пользователь с таким номером телефона уже существует');
+        } else {
+          this.alert.error('Ошибка сохранения данных');
+        }
+      }
+    );
   }
-  protected readonly name = name;
+
+
+  onSubmitTheme() {
+    const formData = {
+      ...this.themeForm.value,
+      subject: this.selectedSubject
+    };
+
+    if (!formData.id) {
+      delete formData.id;
+    }
+
+    this.testService.saveThemeData(formData).subscribe(
+      (response) => {
+        if (response.success) {
+          this.alert.success('Данные успешно сохранены');
+          this.themeForm.reset();
+          this.themeForm.patchValue({ subject: this.selectedSubject });
+          this.loadTest();
+          this.closeDialog();
+
+        }
+      },
+      (error) => {
+        if (error.status === 409) {
+          this.alert.warn('Пользователь с таким номером телефона уже существует');
+        } else {
+          this.alert.error('Ошибка сохранения данных');
+        }
+      }
+    );
+  }
+
+  onSubmitSubTheme(){
+    const formData = {
+      ...this.subThemeForm.value,
+      subject: this.selectedSubject
+    };
+
+    if (!formData.id) {
+      delete formData.id;
+    }
+
+    this.testService.saveSubThemeData(formData).subscribe(
+      (response) => {
+        if (response.success) {
+          this.alert.success('Данные успешно сохранены');
+          this.subThemeForm.reset();
+          this.subThemeForm.patchValue({ subject: this.selectedSubject });
+          this.loadSubThemes();
+          this.closeDialog();
+        }
+      },
+      (error) => {
+        if (error.status === 409) {
+          this.alert.warn('Пользователь с таким номером телефона уже существует');
+        } else {
+          this.alert.error('Ошибка сохранения данных');
+        }
+      }
+    );
+  }
+
+
+  populateCategoryForm(Data: any): void {
+    this.categoryForm.patchValue({
+      id:Data.id,
+      name: Data.name,
+      subject: Data.subject,
+      min_questions_count_in_subject_test:Data.min_questions_count_in_subject_test,
+      max_questions_count_in_subject_test:Data.max_questions_count_in_subject_test,
+    });
+  }
+
+  populateThemeForm(Data: any): void {
+    this.themeForm.patchValue({
+      id:Data.id,
+      subject: Data.subject,
+      name: Data.name,
+      category_id: Data.category_id
+    });
+  }
+
+  populateSubThemeForm(Data: any): void {
+    this.subThemeForm.patchValue({
+      id:Data.id,
+      subject: Data.subject,
+      name: Data.name,
+      theme_id: Data.theme_id,
+      duration: Data.duration,
+      questions_count: Data.questions_count,
+      questions_with_many_answers_count: Data.questions_with_many_answers_count,
+      matchings_count: Data.matchings_count,
+      lvl_a_percent: Data.lvl_a_percent,
+      lvl_b_percent: Data.lvl_b_percent,
+      lvl_c_percent: Data.lvl_c_percent,
+    });
+  }
+
+
 }

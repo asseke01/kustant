@@ -1,3 +1,7 @@
+button{
+  cursor: pointer;
+}
+
 .navbar-container {
   top: 0;
   position: sticky;
@@ -92,6 +96,7 @@
   border: none;
   border-radius: 5px;
   font-size: 13.5px;
+
 }
 
 
@@ -275,7 +280,8 @@ select{
   border-radius: 3px;
 }
 
-.form-group label{
+.form-group label,
+.answers label{
   font-weight: 700;
   font-size: 16px;
   margin-bottom: 5px;
@@ -330,8 +336,9 @@ select{
 
 .delete-fifth-answer {
   position: relative;
-  left:150px;
-  bottom:30px
+  left:600px;
+  bottom:30px;
+  width:140px;
 }
 
 .delete-text {
@@ -357,3 +364,20 @@ select{
 .one-question {
   height: 500px;
 }
+
+.correct {
+  color: green;
+}
+
+.question-divider {
+  border: 0;
+  height: 2px;
+  background-color: black;
+  margin: 20px 0;
+}
+
+select[readonly] {
+  pointer-events: none; /* Отключает возможность изменения */
+  background-color: #f9f9f9;
+}
+

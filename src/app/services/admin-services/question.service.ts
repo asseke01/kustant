@@ -32,4 +32,8 @@ export class QuestionService {
   saveQuestion(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}save_question/`, data, );
   }
+
+  saveContext(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}save_context/`, data, );
+  }
 }

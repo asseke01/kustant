@@ -8,7 +8,6 @@ import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {AlertService} from '../../../services/helper-services/alert.service';
 import {QuillEditorComponent} from 'ngx-quill';
-import Quill from 'quill';
 
 @Component({
   selector: 'app-admin-question-page',
@@ -49,6 +48,7 @@ export class AdminQuestionPageComponent implements OnInit {
   limit: number = 20;
   currentPage: number = 1;
   protected maxAnswers = 5;
+  protected maxManyAnswers = 6;
 
   subjects = [
     {name: 'history', displayName: 'Қазақстан тарихы'},
@@ -80,7 +80,7 @@ export class AdminQuestionPageComponent implements OnInit {
   };
 
   subThemes:any[]=[];
-  questions:any[]=[];
+  questionsData:any[]=[];
 
   //ЗАГРУЗКА ДАННЫХ
 
@@ -100,7 +100,7 @@ export class AdminQuestionPageComponent implements OnInit {
   loadQuestions() {
     this.questionService.getQuestions(this.selectedValue, this.selectedSubject, undefined, undefined, this.offset, this.limit)
       .subscribe(data => {
-        this.questions = data.questions;
+        this.questionsData = data.questions;
         this.questionCount = data.total_questions_count;
       });
   }
@@ -156,6 +156,8 @@ export class AdminQuestionPageComponent implements OnInit {
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string, type: string): void {
     this.initializeAnswers(5);
+    this.initializeManyAnswers(6);
+    this.initializeQuestions(5);
     this.selectedType = type;
 
     const dialogHeight = this.getDialogHeightByType(type);
@@ -186,6 +188,10 @@ export class AdminQuestionPageComponent implements OnInit {
         return '400px';
       case 'one-question':
         return '80vh';
+      case 'many-question':
+        return '80vh';
+      case 'context-question':
+        return '80vh';
       default:
         return '100%';
     }
@@ -198,12 +204,43 @@ export class AdminQuestionPageComponent implements OnInit {
     lvl:[''],
     status:['not_accepted'],
     theme_id:[''],
+    type:['has_many_answers'],
+    answers: this.fb.array([])
+  })
+
+  public manyQuestionForm = this.fb.group({
+    subject: [{ value: this.selectedSubject, disabled: true }],
+    help_text:[''],
+    text:[''],
+    lvl:[''],
+    status:['not_accepted'],
+    theme_id:[''],
     type:['has_one_answer'],
     answers: this.fb.array([])
   })
 
+  public contextQuestionForm = this.fb.group({
+    help_text:[''],
+    subject: [{ value: this.selectedSubject, disabled: true }],
+    status:['not_accepted'],
+    text:[''],
+    questions: this.fb.array([])
+  })
+
   get answers(): FormArray {
     return this.oneQuestionForm.get('answers') as FormArray;
+  }
+
+  get answersMany(): FormArray {
+    return this.manyQuestionForm.get('answers') as FormArray;
+  }
+
+  get questions(): FormArray {
+    return this.contextQuestionForm.get('questions') as FormArray;
+  }
+
+  getAnswers(questionIndex: number): FormArray {
+    return this.questions.at(questionIndex).get('answers') as FormArray;
   }
 
   initializeAnswers(count: number): void {
@@ -212,6 +249,20 @@ export class AdminQuestionPageComponent implements OnInit {
     }
   }
 
+  initializeManyAnswers(count: number): void {
+    for (let i = 0; i < count; i++) {
+      this.addManyAnswer();
+    }
+  }
+
+  initializeQuestions(count: number): void {
+    for (let i = 0; i < count; i++) {
+      this.addQuestion();
+    }
+  }
+
+
+
   addAnswer(): void {
     if (this.answers.length < this.maxAnswers) {
       const answerGroup = this.fb.group({
@@ -219,6 +270,37 @@ export class AdminQuestionPageComponent implements OnInit {
         is_correct: [false]
       });
       this.answers.push(answerGroup);
+    }
+  }
+
+  addManyAnswer(): void {
+    if (this.answersMany.length < this.maxManyAnswers) {
+      const answerGroup = this.fb.group({
+        text: [''],
+        is_correct: [false]
+      });
+      this.answersMany.push(answerGroup);
+    }
+  }
+
+  addQuestion(): void {
+    const questionGroup = this.fb.group({
+      text: [''], // Текст вопроса
+      answers: this.fb.array([])
+    });
+    this.questions.push(questionGroup);
+
+    this.initializeContextAnswers(this.questions.length - 1, 5);
+  }
+
+  initializeContextAnswers(questionIndex: number, count: number): void {
+    const answers = this.questions.at(questionIndex).get('answers') as FormArray;
+    for (let i = 0; i < count; i++) {
+      const answerGroup = this.fb.group({
+        text: [''],
+        is_correct: [false]
+      });
+      answers.push(answerGroup);
     }
   }
 
@@ -233,6 +315,27 @@ export class AdminQuestionPageComponent implements OnInit {
     };
   }
 
+  getContextConfig(qIndex: number, aIndex: number) {
+    return {
+      toolbar: {
+        container: `#toolbar-${qIndex}-${aIndex}`, // Уникальный идентификатор на основе индексов
+      },
+      history: {
+        userOnly: true,
+      },
+    };
+  }
+
+
+  getModuleConfig(index: number) {
+    return {
+      toolbar: {
+        container: '#toolbox-' + index
+      }
+    };
+  }
+
+
   removeLastAnswer(): void {
     const answersLength = this.answers.length;
     if (answersLength > 0) {
@@ -246,9 +349,102 @@ export class AdminQuestionPageComponent implements OnInit {
     });
   }
 
+
   handleAnswerContentChange(index: number, event: any): void {
-    const content = event.html;
-    this.answers.at(index).get('text')?.setValue(content);
+    const content = event.html || '';
+
+    const currentText = this.answers.at(index).get('text')?.value || '';
+
+    if (currentText !== content) {
+      this.answers.at(index).get('text')?.setValue(content, { emitEvent: false });
+    }
+  }
+
+  setCorrectManyAnswer(index: number): void {
+    const currentControl = this.answersMany.controls[index];
+    const answerText = currentControl.get('text')?.value;
+
+    if (!answerText || answerText.trim() === '') {
+      this.alert.warn('Невозможно отметить ответ как правильный, так как текст не заполнен.');
+      return;
+    }
+
+    const correctAnswers = this.answersMany.controls
+      .map((control, idx) => ({ control, idx }))
+      .filter(item => item.control.get('is_correct')?.value);
+
+    const correctAnswersCount = correctAnswers.length;
+    const isCurrentlyCorrect = currentControl.get('is_correct')?.value;
+
+    if (isCurrentlyCorrect) {
+      currentControl.patchValue({ is_correct: false });
+    } else {
+      if (correctAnswersCount < 3) {
+        currentControl.patchValue({ is_correct: true });
+      } else {
+        const lastCorrectAnswerIndex = correctAnswers[correctAnswersCount - 1].idx;
+        this.answersMany.controls[lastCorrectAnswerIndex].patchValue({ is_correct: false });
+        currentControl.patchValue({ is_correct: true });
+      }
+    }
+  }
+
+
+  handleManyAnswerContentChange(index: number, event: any): void {
+    const content = event.html || '';
+
+    const currentText = this.answersMany.at(index).get('text')?.value || '';
+
+    if (currentText !== content) {
+      this.answersMany.at(index).get('text')?.setValue(content, { emitEvent: false });
+    }
+  }
+
+  handleQuestionContentChange(qIndex: number, event: any): void {
+    const content = event.html || '';
+    const currentQuestion = this.questions.at(qIndex);
+    if (currentQuestion.get('text')?.value !== content) {
+      currentQuestion.get('text')?.setValue(content, { emitEvent: false });
+    }
+  }
+
+  handleAnswerContextChange(qIndex: number, aIndex: number, event: any): void {
+    const content = event.html || '';
+    const currentAnswer = (this.questions.at(qIndex).get('answers') as FormArray).at(aIndex);
+    if (currentAnswer.get('text')?.value !== content) {
+      currentAnswer.get('text')?.setValue(content, { emitEvent: false });
+    }
+  }
+
+  setContextCorrectAnswer(qIndex: number, aIndex: number): void {
+    const answers = this.questions.at(qIndex).get('answers') as FormArray;
+    const currentAnswer = answers.at(aIndex);
+
+    answers.controls.forEach((control, index) => {
+      if (index !== aIndex) {
+        control.patchValue({ is_correct: false });
+      }
+    });
+
+    currentAnswer.patchValue({ is_correct: true });
+  }
+
+  removeFifthAnswer(qIndex: number): void {
+    const answers = this.getAnswers(qIndex);
+    if (answers.length === 5) {
+      answers.removeAt(4);
+    }
+  }
+
+  addFifthAnswer(qIndex: number): void {
+    const answers = this.getAnswers(qIndex);
+    if (answers.length < 5) {
+      const newAnswer = this.fb.group({
+        text: [''],
+        is_correct: [false]
+      });
+      answers.push(newAnswer);
+    }
   }
 
 
@@ -263,6 +459,9 @@ export class AdminQuestionPageComponent implements OnInit {
         if (response.success) {
           this.alert.success('Данные успешно сохранены');
           this.oneQuestionForm.reset();
+          this.oneQuestionForm.patchValue({ subject: this.selectedSubject });
+          this.manyQuestionForm.patchValue({ subject: this.selectedSubject });
+          this.contextQuestionForm.patchValue({ subject: this.selectedSubject });
           this.closeDialog();
         }
       },
@@ -276,9 +475,72 @@ export class AdminQuestionPageComponent implements OnInit {
     );
   }
 
+  onSubmitMany(){
+    if (this.manyQuestionForm.invalid) {
+      this.alert.warn('Форма содержит ошибки');
+      return;
+    }
+
+    this.questionService.saveQuestion(this.manyQuestionForm.value).subscribe(
+      (response) => {
+        if (response.success) {
+          this.alert.success('Данные успешно сохранены');
+          this.manyQuestionForm.reset();
+          this.oneQuestionForm.patchValue({ subject: this.selectedSubject });
+          this.manyQuestionForm.patchValue({ subject: this.selectedSubject });
+          this.contextQuestionForm.patchValue({ subject: this.selectedSubject });
+          this.closeDialog();
+        }
+      },
+      (error) => {
+        if (error.status === 409) {
+          this.alert.warn('Пользователь с таким номером телефона уже существует');
+        } else {
+          this.alert.error('Ошибка сохранения данных');
+        }
+      }
+    );
+  }
+
+  onSubmitContext(){
+
+
+    if (this.contextQuestionForm.invalid) {
+      this.alert.warn('Форма содержит ошибки');
+      return;
+    }
+    console.log(this.contextQuestionForm.get('subject')?.value);
+
+    this.questionService.saveContext(this.contextQuestionForm.value).subscribe(
+      (response) => {
+        if (response.success) {
+          this.alert.success('Данные успешно сохранены');
+          this.oneQuestionForm.patchValue({ subject: this.selectedSubject });
+          this.manyQuestionForm.patchValue({ subject: this.selectedSubject });
+          this.contextQuestionForm.patchValue({ subject: this.selectedSubject });
+          this.closeDialog();
+          this.contextQuestionForm.reset();
+        }
+      },
+      (error) => {
+        if (error.status === 409) {
+          this.alert.warn('Пользователь с таким номером телефона уже существует');
+        } else {
+          this.alert.error('Ошибка сохранения данных');
+        }
+      }
+    );
+  }
+
   closeDialog(): void {
-    this.dialog.closeAll();
     this.oneQuestionForm.reset();
+    this.manyQuestionForm.reset();
+
+    this.oneQuestionForm.patchValue({ subject: this.selectedSubject });
+    this.manyQuestionForm.patchValue({ subject: this.selectedSubject });
+    this.contextQuestionForm.patchValue({ subject: this.selectedSubject });
+
+    this.dialog.closeAll();
   }
 
   //Контроль формы

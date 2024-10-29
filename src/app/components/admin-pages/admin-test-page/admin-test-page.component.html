@@ -141,8 +141,11 @@
 <ng-template #dialogTemplate>
   <div class="dialog-header">
     <h2 mat-dialog-title *ngIf="selectedType=='bolim'">Бөлім қосу</h2>
+    <h2 mat-dialog-title *ngIf="selectedType=='bolim-update'">Бөлім жаңарту</h2>
     <h2 mat-dialog-title *ngIf="selectedType=='takyryp'">Тақырып қосу</h2>
+    <h2 mat-dialog-title *ngIf="selectedType=='takyryp-update'">Тақырып жаңарту</h2>
     <h2 mat-dialog-title *ngIf="selectedType=='takyrypwalar'">Тақырыпша қосу</h2>
+    <h2 mat-dialog-title *ngIf="selectedType=='takyrypwalar-update'">Тақырыпша жаңарту</h2>
     <button mat-icon-button  class="close-button">
       <mat-icon (click)="closeDialog()">close</mat-icon>
     </button>

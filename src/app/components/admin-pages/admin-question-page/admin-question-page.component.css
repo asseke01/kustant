@@ -1,0 +1,359 @@
+.navbar-container {
+  top: 0;
+  position: sticky;
+  align-items: center;
+  background-color: white;
+  padding: 27px 30px;
+}
+
+.navbar-container h2{
+  padding: 0;
+  margin: 0;
+  font-size: 22px;
+}
+
+.navbar-menu{
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.select{
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+
+.select-themes{
+  display: flex;
+  position: relative;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.select select,
+.select-themes select{
+  width: 100%;
+  background-color: transparent;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0;
+  opacity: 0;
+  position: absolute;
+  z-index: 2;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.search-menu{
+  display: flex;
+  align-items: center;
+}
+
+.search-menu input{
+  border: 1px solid #4A4A4A;
+  border-radius: 5px 0 0 5px;
+  padding: 5.5px;
+  max-width: 100%;
+  width:300px;
+}
+
+.add-btn, .search-btn{
+  padding: 5px 11px;
+  border: none;
+  background-color: #4A4A4A;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+}
+
+.search-btn{
+  padding: 5px 11px;
+  border: none;
+  background-color: #4A4A4A;
+  border-radius: 0 5px 5px 0;
+  color: white;
+  font-size: 16px;
+}
+
+.button-container{
+  display: flex;
+  gap:20px;
+}
+
+.plus-button{
+  padding: 5px 10px;
+  background-color: #464646;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 13.5px;
+}
+
+
+/**content**/
+
+.main-container{
+  padding: 27px 30px;
+}
+
+.content-container{
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px 15px;
+}
+
+.action-buttons{
+  display: flex;
+  gap:15px;
+  margin-bottom: 20px;
+}
+
+
+.action-button{
+  background-color: transparent;
+  border-radius: 7px;
+  padding: 5px 15px;
+  border: 1px solid #1D1D42;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+
+.action-button.active {
+  background-color: #1D1D42;
+  color: white;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+table th {
+  color: #4A4A4A;
+  font-weight: 500;
+  background-color: transparent;
+}
+
+table td {
+  font-weight: 500;
+}
+
+table th,
+table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.accepted-status {
+  color: green;
+}
+
+.not-accepted-status {
+  color: red;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+  gap: 16px;
+}
+
+.pagination button {
+  background-color: #4A4A4A;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:disabled {
+  background-color: #b8b8b8;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #3a3a3a;
+}
+
+.pagination span {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/**modal*/
+
+.grid-container{
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) minmax(100px, 1fr) ;
+  gap:20px;
+}
+
+.block{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #D4E6F1;
+  color:black;
+  border-radius: 10px;
+  padding: 25px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.block:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.block-icon{
+  display: flex;
+  gap:10px;
+  margin-bottom: 10px;
+}
+
+.block-icon i {
+  font-size: 28px;
+  transition: color 0.3s ease;
+}
+
+.block:hover i {
+  color: #2980B9;
+}
+
+.content{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 600px;
+  height:100%;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialog-header h2{
+  font-weight: 600;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.form-group{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+select{
+  padding: 8px;
+  border: 1px solid #4A4A4A;
+  border-radius: 3px;
+}
+
+.form-group label{
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: black;
+}
+
+.form-inline{
+  display: flex;
+  gap:10px
+}
+
+.delete-subject{
+  text-decoration: none;
+  color: red;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.add-subject{
+  text-decoration: none;
+  color: green;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.save-subject{
+  padding: 5px 11px;
+  border: none;
+  background-color: #4A4A4A;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+}
+
+.mat-mdc-dialog-actions {
+  display: flex;
+  justify-content: flex-start;
+
+}
+
+::ng-deep .mat-mdc-dialog-surface {
+  border-radius: 5px !important;
+  background-color: white !important;
+}
+
+::ng-deep.mat-mdc-dialog-content{
+  padding-bottom: 10px!important;
+}
+
+
+
+
+.delete-fifth-answer {
+  position: relative;
+  left:150px;
+  bottom:30px
+}
+
+.delete-text {
+  color: red;
+  cursor: pointer;
+  font-size: 16px;
+  text-decoration: underline;
+  display: inline-block;
+  width: 100%;
+  text-align: right;
+}
+
+.add-question{
+  color: green;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.select-type {
+  height: 300px;
+}
+
+.one-question {
+  height: 500px;
+}

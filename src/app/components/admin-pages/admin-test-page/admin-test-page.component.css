@@ -131,7 +131,8 @@ table th {
   flex-direction: column;
   gap: 20px;
   width: 100%;
-  max-width: 300px;
+  max-width: 400px;
+  height:100%;
 }
 
 .dialog-header {
@@ -207,4 +208,8 @@ select{
 ::ng-deep .mat-mdc-dialog-surface {
   border-radius: 5px !important;
   background-color: white !important;
+}
+
+::ng-deep.mat-mdc-dialog-content{
+  padding-bottom: 10px!important;
 }

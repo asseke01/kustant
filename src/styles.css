@@ -1,3 +1,5 @@
+@import 'quill/dist/quill.snow.css';
+
 @font-face {
   font-family: Gilroy-Regular;
   src: url(assets/fonts/gilroy-regular.ttf);

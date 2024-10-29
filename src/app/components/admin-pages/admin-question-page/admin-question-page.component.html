@@ -1,1 +1,227 @@
-<p>admin-question-page works!</p>
+<div class="navbar-container">
+  <h2>Сұрақтар</h2>
+  <hr style="transform: scaleY(0.3);">
+
+  <div class="navbar-menu">
+    <div class="select" >
+      <span>Пән: {{ getDisplayName(selectedSubject) }} </span>
+      <span> <i class="bi bi-caret-down-fill"></i>  </span>
+      <select id="subject1" [(ngModel)]="selectedSubject" >
+        <option *ngFor="let item of subjects" [value]="item.name">{{ item.displayName }}</option>
+      </select>
+    </div>
+
+    <div class="button-container">
+
+      <div class="search-menu">
+        <input type="text" placeholder="ФИО/Телефон (формат +7 (xxx) xxx xx xx)" >
+        <button class="search-btn">Іздеу</button>
+      </div>
+
+      <button class="plus-button" (click)="openDialog('250ms', '250ms','select-type')" >Сұрақ қосу</button>
+    </div>
+
+  </div>
+</div>
+
+<div class="main-container">
+
+  <div class="content-container">
+
+    <div class="action-buttons">
+      <button class="action-button" [class.active]="selectedValue === 'has_one_answer'" (click)="changeType('has_one_answer')">Бір жауапты</button>
+      <button class="action-button" [class.active]="selectedValue === 'has_many_answers'" (click)="changeType('has_many_answers')">Көп жауапты</button>
+      <button class="action-button">Сәйкестендіру</button>
+      <button class="action-button">Контекст</button>
+    </div>
+
+    <div class="action-buttons">
+
+      <div class="select" >
+        <span>Пән: {{ getDisplayTheme(selectedSubTheme) }} </span>
+        <span> <i class="bi bi-caret-down-fill"></i>  </span>
+        <select id="subTheme" [(ngModel)]="selectedSubTheme" >
+          <option [ngValue]="undefined" selected>Барлығы</option>
+          <option *ngFor="let item of subThemes" [value]="item.id">{{ item.theme_name }} {{ item.name }}</option>
+        </select>
+      </div>
+
+      <div class="select" >
+        <span>{{selectedText}}</span>
+        <span> <i class="bi bi-caret-down-fill"></i>  </span>
+        <select (change)="onSelectionChange($event)">
+          <option value="all">Барлығы</option>
+          <option value="not_accepted">Қабылданбаған</option>
+          <option value="accepted">Қабылданған</option>
+        </select>
+      </div>
+
+      <span>Общ. {{ questionCount || 0 }} сұрақ</span>
+
+
+    </div>
+
+
+    <div class="table-container">
+      <table>
+        <tr>
+          <th>#</th>
+          <th>Сұрақ</th>
+          <th>Статус</th>
+          <th>Деңгейі</th>
+        </tr>
+        <tbody>
+        <tr *ngFor="let question of questions; let i = index" >
+          <td>{{ i + 1 + offset }}</td>
+          <td>{{ question.help_text }}</td>
+          <td [ngClass]="{'accepted-status': question.status === 'accepted', 'not-accepted-status': question.status !== 'accepted'}">
+            {{ question.status_display }}
+          </td>
+          <td>{{ question.lvl_display }}</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <div class="pagination">
+        <button (click)="previousPage()" [disabled]="offset === 0">Предыдущая</button>
+        <span>Страница: {{ currentPage }}</span>
+        <button (click)="nextPage()">Следующая</button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<ng-template #dialogTemplate>
+  <div class="dialog-header">
+    <h2 mat-dialog-title *ngIf="selectedType == 'select-type'">Тип таңдау</h2>
+    <h2 mat-dialog-title *ngIf="selectedType !== 'select-type'">Сұрақ қосу</h2>
+    <button mat-icon-button  class="close-button">
+      <mat-icon (click)="closeDialog()">close</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content [ngClass]="selectedType">
+
+    <!--Выбрать тип для начала-->
+    <ng-container *ngIf="selectedType == 'select-type'">
+      <div class="grid-container">
+
+        <div class="block" (click)="changeModalType('one-question')">
+          <div class="block-icon">
+            <i class="bi bi-check-circle"></i>
+          </div>
+          <span>Бір жауапты</span>
+        </div>
+
+        <div class="block">
+          <div class="block-icon">
+            <i class="bi bi-check-circle"></i> <i class="bi bi-check-circle"></i>
+          </div>
+          <span>Көп жауапты</span>
+        </div>
+
+        <div class="block">
+          <div class="block-icon">
+            <i class="bi bi-images"></i>
+          </div>
+          <span>Контекст</span>
+        </div>
+
+        <div class="block">
+          <div class="block-icon">
+            <i class="bi bi-arrow-left-right"></i>
+          </div>
+          <span>Cәйкестендіру</span>
+        </div>
+
+      </div>
+
+    </ng-container>
+    <!--Первый тип-->
+    <ng-container *ngIf="selectedType == 'one-question'">
+      <form [formGroup]="oneQuestionForm">
+
+        <div class="content">
+
+          <div class="form-group">
+            <label for="subject">Пән</label>
+            <select
+              id="subject"
+              formControlName="subject">
+              <option *ngFor="let item of subjects" [value]="item.name">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+
+          <div class="form-group">
+            <label for="subThemeForm">Пән</label>
+            <select
+              id="subThemeForm"
+              formControlName="theme_id">
+              <option *ngFor="let item of subThemes" [value]="item.id">{{ item.theme_name }} {{ item.name }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="help_text">Іздеу тексті</label>
+            <input type="text" id="help_text" name="help_text" formControlName="help_text">
+          </div>
+
+          <div class="form-group">
+            <label for="text">Текст</label>
+            <quill-editor
+              id="text"
+              formControlName = 'text'
+              [modules]="quillModules"
+              placeholder=''>
+            </quill-editor>
+          </div>
+
+          <div class="form-group">
+            <label for="level">Пән</label>
+            <select
+              id="level"
+              formControlName="lvl">
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+          </div>
+
+          <div formArrayName="answers">
+
+            <label for="subTheme">Жауаптар</label>
+            <div *ngFor="let answer of answers.controls; let i = index" [formGroupName]="i" class="form-group answer-item">
+
+              <div [id]="'toolbar-' + i" class="toolbar">
+                <button class="ql-image"></button>
+                <button style="width: 20px" (click)="setCorrectAnswer(i)"><i class="bi bi-check-circle"></i></button>
+              </div>
+
+              <quill-editor
+                formControlName="text"
+                [modules]="getEditorConfig(i)"
+                placeholder=''
+                (onContentChanged)="handleAnswerContentChange(i, $event)">
+              </quill-editor>
+
+              <div *ngIf="i === (answers.length - 1) && i === 4" class="delete-fifth-answer">
+                <span class="delete-text" (click)="removeLastAnswer()">"E" жауабын жою</span>
+              </div>
+            </div>
+
+            <span (click)="addAnswer()" *ngIf="answers.length != maxAnswers" class="add-question">"Е" жауабын қосу</span>
+          </div>
+
+        </div>
+      </form>
+    </ng-container>
+
+
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button class="save-subject" *ngIf="selectedType !== 'select-type'" (click)="onSubmit()">Сақтау</button>
+  </mat-dialog-actions>
+</ng-template>

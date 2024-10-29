@@ -288,7 +288,7 @@ export class AdminTestPageComponent implements OnInit{
           if (Data) {
             this.populateCategoryForm(Data);
             this.dialog.open(this.dialogTemplate, {
-              width: '600px',
+              width: '800px',
               enterAnimationDuration,
               exitAnimationDuration,
               disableClose: true
@@ -307,7 +307,7 @@ export class AdminTestPageComponent implements OnInit{
           if (Data) {
             this.populateThemeForm(Data);
             this.dialog.open(this.dialogTemplate, {
-              width: '600px',
+              width: '800px',
               enterAnimationDuration,
               exitAnimationDuration,
               disableClose: true
@@ -326,7 +326,7 @@ export class AdminTestPageComponent implements OnInit{
           if (Data) {
             this.populateSubThemeForm(Data);
             this.dialog.open(this.dialogTemplate, {
-              width: '600px',
+              width: '800px',
               enterAnimationDuration,
               exitAnimationDuration,
               disableClose: true

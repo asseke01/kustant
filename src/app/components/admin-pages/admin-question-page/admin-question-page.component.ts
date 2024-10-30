@@ -1,6 +1,6 @@
 import {Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {NgClass, NgForOf, NgIf} from "@angular/common";
-import {FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Form, FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {TestService} from '../../../services/admin-services/test.service';
 import {QuestionService} from '../../../services/admin-services/question.service';
 import {MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
@@ -78,6 +78,9 @@ export class AdminQuestionPageComponent implements OnInit {
       ['image']
     ]
   };
+
+  status = 'not_accepted'
+  type = 'has_many_answers'
 
   subThemes:any[]=[];
   questionsData:any[]=[];
@@ -158,6 +161,8 @@ export class AdminQuestionPageComponent implements OnInit {
     this.initializeAnswers(5);
     this.initializeManyAnswers(6);
     this.initializeQuestions(5);
+    this.initializeMatchQuestions(2);
+    this.initializeMatchAnswers(2);
     this.selectedType = type;
 
     const dialogHeight = this.getDialogHeightByType(type);
@@ -192,6 +197,8 @@ export class AdminQuestionPageComponent implements OnInit {
         return '80vh';
       case 'context-question':
         return '80vh';
+      case 'match-question':
+        return '80vh';
       default:
         return '100%';
     }
@@ -202,9 +209,9 @@ export class AdminQuestionPageComponent implements OnInit {
     help_text:[''],
     text:[''],
     lvl:[''],
-    status:['not_accepted'],
+    status:[this.status],
     theme_id:[''],
-    type:['has_many_answers'],
+    type:[this.type],
     answers: this.fb.array([])
   })
 
@@ -227,6 +234,16 @@ export class AdminQuestionPageComponent implements OnInit {
     questions: this.fb.array([])
   })
 
+  public matchingQuestionForm = this.fb.group({
+    help_text:[''],
+    subject: [{ value: this.selectedSubject, disabled: true }],
+    theme_id:[''],
+    status:['not_accepted'],
+    text:[''],
+    questions: this.fb.array([]),
+    answers: this.fb.array([])
+  })
+
   get answers(): FormArray {
     return this.oneQuestionForm.get('answers') as FormArray;
   }
@@ -237,6 +254,14 @@ export class AdminQuestionPageComponent implements OnInit {
 
   get questions(): FormArray {
     return this.contextQuestionForm.get('questions') as FormArray;
+  }
+
+  get matchingQuestion():FormArray{
+    return this.matchingQuestionForm.get('questions') as FormArray;
+  }
+
+  get matchingAnswers():FormArray{
+    return this.matchingQuestionForm.get('answers') as FormArray;
   }
 
   getAnswers(questionIndex: number): FormArray {
@@ -260,6 +285,41 @@ export class AdminQuestionPageComponent implements OnInit {
       this.addQuestion();
     }
   }
+
+  initializeMatchQuestions(count: number): void {
+    for (let i = 0; i < count; i++) {
+      this.addMatchQuestion();
+    }
+  }
+
+  initializeMatchAnswers(count: number): void {
+    for (let i = 0; i < count; i++) {
+      this.addMatchAnswer();
+    }
+  }
+
+
+  addMatchQuestion(): void {
+    const questionGroup = this.fb.group({
+      question: [''],
+      answer: ['']
+    });
+    this.matchingQuestion.push(questionGroup);
+  }
+
+  addMatchAnswer(): void {
+    const answerGroup = this.fb.group({
+      text: ['']
+    });
+    this.matchingAnswers.push(answerGroup);
+  }
+
+  removeMatchAnswer(index: number): void {
+    if (this.matchingAnswers.length > 2) {
+      this.matchingAnswers.removeAt(index);
+    }
+  }
+
 
 
 
@@ -285,7 +345,7 @@ export class AdminQuestionPageComponent implements OnInit {
 
   addQuestion(): void {
     const questionGroup = this.fb.group({
-      text: [''], // Текст вопроса
+      text: [''],
       answers: this.fb.array([])
     });
     this.questions.push(questionGroup);
@@ -335,7 +395,21 @@ export class AdminQuestionPageComponent implements OnInit {
     };
   }
 
+  getMatchConfig(index: number) {
+    return {
+      toolbar: {
+        container: '#toolbox-question-' + index
+      }
+    };
+  }
 
+  getMatchAnswerConfig(index: number) {
+    return {
+      toolbar: {
+        container: '#toolbox-answer-' + index
+      }
+    };
+  }
   removeLastAnswer(): void {
     const answersLength = this.answers.length;
     if (answersLength > 0) {
@@ -534,8 +608,6 @@ export class AdminQuestionPageComponent implements OnInit {
 
   closeDialog(): void {
     this.oneQuestionForm.reset();
-    this.manyQuestionForm.reset();
-
     this.oneQuestionForm.patchValue({ subject: this.selectedSubject });
     this.manyQuestionForm.patchValue({ subject: this.selectedSubject });
     this.contextQuestionForm.patchValue({ subject: this.selectedSubject });

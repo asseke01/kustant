@@ -270,6 +270,8 @@ table td {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+  width: 100%;
+  max-width: 550px;
 }
 
 .form-group input[type="text"],
@@ -376,8 +378,24 @@ select{
   margin: 20px 0;
 }
 
-select[readonly] {
-  pointer-events: none; /* Отключает возможность изменения */
-  background-color: #f9f9f9;
+
+.answer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.delete-button {
+  color: red;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.add-button {
+  color: green;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 

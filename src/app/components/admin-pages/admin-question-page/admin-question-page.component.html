@@ -127,7 +127,7 @@
           <span>Контекст</span>
         </div>
 
-        <div class="block">
+        <div class="block" (click)="changeModalType('match-question')">
           <div class="block-icon">
             <i class="bi bi-arrow-left-right"></i>
           </div>
@@ -387,6 +387,86 @@
 
             </div>
           </div>
+
+        </div>
+      </form>
+    </ng-container>
+
+    <ng-container *ngIf="selectedType == 'match-question'">
+      <form [formGroup]="matchingQuestionForm">
+
+        <div class="content">
+
+          <div class="form-group">
+            <label for="subject-match">Пән</label>
+            <select
+              id="subject-match"
+              formControlName="subject">
+              <option *ngFor="let item of subjects" [value]="item.name">{{ item.displayName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="help_text-context">Іздеу тексті</label>
+            <input type="text" id="help_text-match" name="help_text" formControlName="help_text">
+          </div>
+
+
+          <div class="form-group">
+            <label for="text-context-match">Контекст</label>
+            <quill-editor
+              id="text-context-match"
+              formControlName = 'text'
+              [modules]="quillModules"
+              placeholder=''>
+            </quill-editor>
+          </div>
+
+          <hr class="question-divider">
+
+          <div formArrayName="questions" class="answers">
+            <label>Сұрақтар</label>
+            <div *ngFor="let question of matchingQuestion.controls; let i = index" [formGroupName]="i">
+              <div class="form-group">
+                <div id="toolbox-question-{{ i  }}">
+                  <span style="float: left; font-weight: 700;font-size: 14px;">Сұрақ #{{ i + 1 }} </span>
+                  <button class="ql-image" style="float: right"></button>
+                </div>
+              <quill-editor formControlName="question" [modules]="getMatchConfig(i)"></quill-editor>
+              </div>
+
+              <div class="form-group">
+                <div id="toolbox-answer-{{ i  }}">
+                  <span style="float: left; font-weight: 700;font-size: 14px;">Сұрақтың жауабы</span>
+                </div>
+              <quill-editor formControlName="answer" [modules]="getMatchAnswerConfig(i)"></quill-editor>
+              </div>
+
+            </div>
+          </div>
+
+          <div formArrayName="answers" class="answers">
+            <div *ngFor="let answer of matchingAnswers.controls; let i = index" [formGroupName]="i" class="answer-row">
+              <div class="form-group">
+                <div id="toolbox-{{ i }}">
+                  <button class="ql-bold"></button>
+                  <button class="ql-italic"></button>
+                  <button class="ql-underline"></button>
+                  <button class="ql-strike"></button>
+                  <button class="ql-header" value="1"></button>
+                  <button class="ql-header" value="2"></button>
+                  <button class="ql-list" value="ordered"></button>
+                  <button class="ql-list" value="bullet"></button>
+                  <button class="ql-image"></button>
+                </div>
+                <quill-editor formControlName="text" [modules]="getModuleConfig(i)"></quill-editor>
+              </div>
+              <!-- Показываем кнопку удаления, начиная с третьего элемента -->
+              <button *ngIf="i >= 2" (click)="removeMatchAnswer(i)" class="delete-button">Жою</button>
+            </div>
+            <button (click)="addMatchAnswer()" class="add-button">Артық жауап қосу</button>
+          </div>
+
 
         </div>
       </form>

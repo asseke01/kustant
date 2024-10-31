@@ -329,7 +329,6 @@
           <div formArrayName="questions" class="answers">
             <div *ngFor="let question of questions.controls; let qIndex = index" [formGroupName]="qIndex" class="question-item">
 
-              <!-- Редактируемый текст вопроса -->
               <label for="question-text">#{{qIndex + 1}} Сұрақ</label>
               <div class="form-group">
                 <div id="toolbox-{{ qIndex }}">
@@ -352,7 +351,6 @@
                 </quill-editor>
               </div>
 
-              <!-- Список ответов -->
               <div formArrayName="answers" class="answers">
                 <label for="answers"># {{qIndex + 1}} Жауаптар</label>
                 <div *ngFor="let answer of getAnswers(qIndex).controls; let aIndex = index"
@@ -461,7 +459,6 @@
                 </div>
                 <quill-editor formControlName="text" [modules]="getModuleConfig(i)"></quill-editor>
               </div>
-              <!-- Показываем кнопку удаления, начиная с третьего элемента -->
               <button *ngIf="i >= 2" (click)="removeMatchAnswer(i)" class="delete-button">Жою</button>
             </div>
             <button (click)="addMatchAnswer()" class="add-button">Артық жауап қосу</button>

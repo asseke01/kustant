@@ -21,7 +21,7 @@ import {UnauthGuard} from './services/auth-services/unauth.guard';
 export const routes: Routes = [
 
   {
-    path:'', component:StartPageComponent, canActivate: [UnauthGuard]
+    path:'', component:StartPageComponent
   },
   {
     path:'login', component:LoginPageComponent

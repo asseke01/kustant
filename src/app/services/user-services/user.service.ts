@@ -61,14 +61,17 @@ export class UserService {
   logout(): Observable<any> {
     return this.http.get<any>(`${this.userUrl}logout_api/`).pipe(
       tap(response => {
-        if (response.success) {
+        if (response && response.success) {
           this.authService.clearToken();
-          this.authService.clearUserData()
+          this.authService.clearUserData();
           console.log('Выход выполнен успешно');
+        } else {
+          console.log('Не удалось выполнить выход');
         }
       })
     );
   }
+
 
 
 

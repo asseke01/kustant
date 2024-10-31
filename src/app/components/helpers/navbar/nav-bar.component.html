@@ -4,13 +4,14 @@
       <img src="assets/img/logo_ico.svg" alt="logo" >
     </a>
 
-    <div class="burger-menu" [ngClass]="{'burger-active': isMenuOpen}" (click)="toggleMenu()">
+    <div class="burger-menu" [class.burger-active]="isMenuOpen" (click)="toggleMenu()">
       <div class="bar"></div>
       <div class="bar"></div>
       <div class="bar"></div>
     </div>
 
-    <div class="links-container" [ngClass]="{'burger-active': isMenuOpen}">
+    <div class="links-container" [class.active]="isMenuOpen">
+      <img src="assets/img/logo_ico.svg" alt="logo" *ngIf="isMenuOpen">
       <a class="links">Тақырыптық тесттер</a>
       <a class="links">Нәтижелерім</a>
       <ng-container *ngIf="userData; else loginLink">

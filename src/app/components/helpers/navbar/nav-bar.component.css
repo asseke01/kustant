@@ -36,23 +36,6 @@
   transition: all 0.3s ease;
 }
 
-.burger-active .bar:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-}
-
-.burger-active .bar:nth-child(2) {
-  opacity: 0;
-}
-
-.burger-active .bar:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
-}
-
-.burger-active .links-container {
-  right: 0;
-}
-
-
 .auth{
   padding: 20px 35px;
   background-color: #00B0EA;
@@ -60,24 +43,108 @@
   color: white;
 }
 
-@media(max-width: 1024px) {
+@media(max-width: 1095px) {
+  .auth{
+    padding: 10px;
+    background-color: #00B0EA;
+    border-radius: 15px;
+    color: white;
+  }
 
+  .links{
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 1000px) {
+  .auth{
+    padding: 8px;
+    background-color: #00B0EA;
+    border-radius: 15px;
+    color: white;
+  }
+
+  .links{
+    font-size: 18px;
+  }
 }
 
 @media(max-width:950px) {
-  .links-container{
-    display: none;
+  .links-container {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    width: 250px;
+    background-color: white;
+    box-shadow: -1px 0 5px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 20px;
+    transition: right 0.3s ease;
+    z-index: 1000;
   }
 
+  .links-container.active {
+    right: 0;
+  }
 
+  .links {
+    position: relative;
+    top:20px;
+    text-decoration: none;
+    margin: 10px 0;
+    font-size: 22px;
+    color: black;
+    cursor: pointer;
+  }
 
   .burger-menu {
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 45px;
+    height: 20px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    z-index: 1100;
+  }
+
+  .burger-menu .bar {
+    width: 100%;
+    height: 3px;
+    background-color: black;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  .burger-menu .bar {
+    width: 100%;
+    height: 3px;
+    background-color: black;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .burger-menu.burger-active .bar:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+  }
+
+  .burger-menu.burger-active .bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .burger-menu.burger-active .bar:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
   }
 
   .auth {
     padding: 15px 25px;
     font-size: 14px;
+    color: white;
   }
 
   .nav-bar{

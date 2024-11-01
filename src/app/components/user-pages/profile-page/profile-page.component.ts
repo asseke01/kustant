@@ -5,6 +5,7 @@ import {UserService} from '../../../services/user-services/user.service';
 import {AlertService} from '../../../services/helper-services/alert.service';
 import {AuthService} from '../../../services/auth-services/auth.service';
 import {NgIf} from '@angular/common';
+import {UserFooterComponent} from '../user-footer/user-footer.component';
 
 @Component({
   selector: 'app-profile-page',
@@ -12,7 +13,8 @@ import {NgIf} from '@angular/common';
   imports: [
     NavBarComponent,
     MatProgressBar,
-    NgIf
+    NgIf,
+    UserFooterComponent
   ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.css'

@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 import {StartPageComponent} from './components/user-pages/start-page/start-page.component';
 import {LoginPageComponent} from './components/auth-pages/login-page/login-page.component';
 import {MainPageComponent} from './components/user-pages/main-page/main-page.component';
@@ -21,48 +21,48 @@ import {UnauthGuard} from './services/auth-services/unauth.guard';
 export const routes: Routes = [
 
   {
-    path:'', component:StartPageComponent, canActivate:[UnauthGuard],
+    path: '', component: StartPageComponent, canActivate: [UnauthGuard],
   },
   {
-    path:'login', component:LoginPageComponent
+    path: 'login', component: LoginPageComponent
   },
   {
-    path:'admin-login', component:AdminLoginPageComponent
+    path: 'admin-login', component: AdminLoginPageComponent
   },
   {
-    path:'main',component:MainPageComponent,  canActivate: [AuthGuard]
+    path: 'main', component: MainPageComponent, canActivate: [AuthGuard]
   },
   {
-    path:'profile', component:ProfilePageComponent
+    path: 'profile', component: ProfilePageComponent
   },
   {
-    path:'test-type/:subject_name', component:TestTypePageComponent
+    path: 'test-type/:subject_name', component: TestTypePageComponent
   },
   {
-    path:'start-test', component:StartTestPageComponent
+    path: 'start-test', component: StartTestPageComponent
   },
 
 
   {
-    path:'admin', component:AdminPagesComponent,canActivate: [AuthGuard],
-    children:[
+    path: 'admin', component: AdminPagesComponent, canActivate: [AuthGuard],
+    children: [
       {
-        path:'employee', component:AdminEmployeePageComponent
+        path: 'employee', component: AdminEmployeePageComponent
       },
       {
-        path:'learner', component:AdminLearnerPageComponent
+        path: 'learner', component: AdminLearnerPageComponent
       },
       {
-        path:'subjects',component:AdminSubjectsPageComponent
+        path: 'subjects', component: AdminSubjectsPageComponent
       },
       {
-        path:'test', component:AdminTestPageComponent
+        path: 'test', component: AdminTestPageComponent
       },
       {
-        path:'question', component:AdminQuestionPageComponent
+        path: 'question', component: AdminQuestionPageComponent
       },
       {
-        path:'wrong-questions', component:AdminWrongQuestionPageComponent
+        path: 'wrong-questions', component: AdminWrongQuestionPageComponent
       }
     ]
   }

@@ -23,16 +23,16 @@ import {UserService} from '../../../services/user-services/user.service';
   animations: [
     trigger('slideLeftRight', [
       transition(':enter', [
-        style({ transform: 'translateX(100%)', opacity: 0 }),
+        style({transform: 'translateX(100%)', opacity: 0}),
         group([
-          animate('500ms ease-out', style({ transform: 'translateX(0)' })),
-          animate('600ms ease-out', style({ opacity: 1 }))
+          animate('500ms ease-out', style({transform: 'translateX(0)'})),
+          animate('600ms ease-out', style({opacity: 1}))
         ])
       ]),
       transition(':leave', [
         group([
-          animate('500ms ease-in', style({ transform: 'translateX(-100%)' })),
-          animate('600ms ease-in', style({ opacity: 0 }))
+          animate('500ms ease-in', style({transform: 'translateX(-100%)'})),
+          animate('600ms ease-in', style({opacity: 0}))
         ])
       ])
     ])
@@ -50,10 +50,11 @@ export class LoginPageComponent {
   isCodeSubmitted = false;
   imageUrl = '/assets/img/auth_ico.svg';
 
-  constructor() {}
+  constructor() {
+  }
 
   public phoneForm = this.form.group({
-    phone: ['', [ Validators.required,Validators.pattern(/^7\d{9}$/)]]
+    phone: ['', [Validators.required, Validators.pattern(/^7\d{9}$/)]]
   })
 
   public codeForm = this.form.group({
@@ -62,10 +63,9 @@ export class LoginPageComponent {
 
   public studentForm = this.form.group({
       fullname: [''],
-      subjects:['']
-  }
+      subjects: ['']
+    }
   )
-
 
 
   onSubmitPhone() {
@@ -94,18 +94,18 @@ export class LoginPageComponent {
     }
 
     this.loading = true;
-    this.userService.sendCode(phone).subscribe(response =>{
-      setTimeout(() => {
-        this.loading = false;
-        this.isPhoneSubmitted = true;
-        this.alert.success('Смс успешно отправлен!');
+    this.userService.sendCode(phone).subscribe(response => {
+        setTimeout(() => {
+          this.loading = false;
+          this.isPhoneSubmitted = true;
+          this.alert.success('Смс успешно отправлен!');
 
-        this.changeImage('/assets/img/login_second_ico.svg');
-      }, 1000);
-    },(error)=>{
+          this.changeImage('/assets/img/login_second_ico.svg');
+        }, 1000);
+      }, (error) => {
         this.loading = false;
         this.alert.error('Ошибка при отправке номера телефона')
-    }
+      }
     );
 
   }
@@ -131,31 +131,31 @@ export class LoginPageComponent {
       }
 
 
-      this.userService.checkCode(phone,code).subscribe(response =>{
-        setTimeout(() => {
-          this.loading = false;
-          if(response.code_is_correct){
-            if(!response.logged_in){
-              this.isCodeSubmitted = true;
-              this.changeImage('/assets/img/login_three_ico.svg');
-              this.alert.success('Код проверен! Пройдите регистрацию');
-            }else if (response.logged_in){
-              this.alert.success('Успешно авторизован!');
-
-              this.router.navigate(['main']).then(navigationSuccess => {
-                if (navigationSuccess) {
-                } else {
-                }
-              });
-            }
-          }else{
-            this.alert.error('Неправилньый код');
+      this.userService.checkCode(phone, code).subscribe(response => {
+          setTimeout(() => {
             this.loading = false;
-          }
+            if (response.code_is_correct) {
+              if (!response.logged_in) {
+                this.isCodeSubmitted = true;
+                this.changeImage('/assets/img/login_three_ico.svg');
+                this.alert.success('Код проверен! Пройдите регистрацию');
+              } else if (response.logged_in) {
+                this.alert.success('Успешно авторизован!');
+
+                this.router.navigate(['main']).then(navigationSuccess => {
+                  if (navigationSuccess) {
+                  } else {
+                  }
+                });
+              }
+            } else {
+              this.alert.error('Неправилньый код');
+              this.loading = false;
+            }
 
 
-        }, 1000);
-      },(error)=>{
+          }, 1000);
+        }, (error) => {
           this.alert.error('Ошибка при проверке смс кода')
           this.loading = false;
         }
@@ -163,9 +163,9 @@ export class LoginPageComponent {
     }
   }
 
-  onSubmitStudent(){
-    if(this.studentForm.valid){
-      this.loading =true
+  onSubmitStudent() {
+    if (this.studentForm.valid) {
+      this.loading = true
 
       let code = this.codeForm.get('code')?.value;
 
@@ -186,11 +186,12 @@ export class LoginPageComponent {
       let fullname = this.studentForm.get('fullname')?.value;
       let subjects = this.studentForm.get('subjects')?.value;
 
-      this.userService.submitStudent(phone,code,fullname,subjects).subscribe(response=>{
-        this.loading = false;
-        this.router.navigate(['main'])
-        this.alert.success('Успешно зарегестрирован!');
-      }, (error)=>{
+      this.userService.submitStudent(phone, code, fullname, subjects).subscribe(response => {
+          this.loading = false;
+          this.router.navigate(['main'])
+          this.alert.success('Успешно зарегестрирован!');
+        }, (error) => {
+          this.loading = false;
           this.alert.error('Ошибка при отправке формы')
         }
       );
@@ -209,14 +210,12 @@ export class LoginPageComponent {
     } else if (this.isPhoneSubmitted) {
       this.isPhoneSubmitted = false;
       this.codeForm.reset();
-      this.loading=false;
+      this.loading = false;
       this.imageUrl = '/assets/img/auth_ico.svg';
     } else {
       this.router.navigate(['']);
     }
   }
-
-
 
 
 }

@@ -2,6 +2,7 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 25px;
+  min-height: 100vh;
 }
 
 .test-container{

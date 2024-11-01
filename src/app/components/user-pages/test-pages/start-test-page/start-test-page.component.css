@@ -127,3 +127,21 @@
 .answers-section button.selected::before {
   background-color: #00B0EA;
 }
+
+.navigation-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.test-btn {
+  font-size: 17px;
+  border: 1px solid black;
+  background: none;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.test-btn:hover {
+  background-color: black;
+  color: white;
+}

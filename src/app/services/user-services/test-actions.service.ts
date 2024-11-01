@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import {GetLearnerSubjects} from '../../../assets/interfaces/get_learner_subjects';
 import {GetLvlData} from '../../../assets/interfaces/getLvlData';
 import {Observable} from 'rxjs';
+import {GetLearnerSpecifiedTests} from '../../../assets/interfaces/get_learner_specified_tests';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,10 @@ export class TestActionsService {
 
   public startSubjectTest(subject: string): Observable<{ success: boolean }> {
     return this.http.post<{ success: boolean }>(`${this.userUrl}start_subject_test/`, { subject });
+  }
+
+  public getLearnerSpecifiedTests(): Observable<GetLearnerSpecifiedTests[]> {
+    return this.http.get<GetLearnerSpecifiedTests[]>(`${this.userUrl}get_learner_specified_tests/`);
   }
 
 }

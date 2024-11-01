@@ -63,13 +63,14 @@
 }
 
 .progress-bar button.answered {
-  background-color: #4caf50;
+  background-color: #00B0EA;
   color: white;
 }
 
 .progress-bar button.current {
-  background-color: #2196f3;
-  color: white;
+  border: 1px solid #00B0EA;
+  background-color: white;
+  color: #00B0EA;
 }
 
 .questions-answers {
@@ -95,7 +96,7 @@
   padding: 12px 20px;
   cursor: pointer;
   text-align: left;
-  background-color: #f9f9f9;
+  background-color: white;
   font-size: 18px;
   font-weight: 500;
   border-radius: 8px;
@@ -118,12 +119,11 @@
   margin-right: 10px;
 }
 
-.answers-section button.selected {
-  background-color: #cce5ff;
-  color: #004085;
-}
+/*.answers-section button.selected {*/
+/*  background-color: #cce5ff;*/
+/*  color: #004085;*/
+/*}*/
 
 .answers-section button.selected::before {
-  background-color: #4caf50;
-  color: white;
+  background-color: #00B0EA;
 }

@@ -3,6 +3,7 @@ import {TestActionsService} from '../../../../services/user-services/test-action
 import {ActivatedRoute} from '@angular/router';
 import {TestingService} from '../../../../services/user-services/testing.service';
 import {NgClass, NgForOf} from '@angular/common';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-start-test-page',
@@ -27,6 +28,8 @@ export class StartTestPageComponent implements OnInit{
 
   private testingService = inject(TestingService);
   private route = inject(ActivatedRoute);
+  private sanitizer = inject(DomSanitizer);
+
 
   ngOnInit() {
     this.subject = this.route.snapshot.queryParamMap.get('subject') || 'en_lang';
@@ -87,6 +90,13 @@ export class StartTestPageComponent implements OnInit{
   endTest() {
     alert('Test time is over!');
     // Add logic to submit the test or navigate to results
+  }
+
+  public safeHtmlContent!: SafeHtml;
+
+  // Возвращаем SafeHtml для использования в шаблоне
+  sanitizeHtmlContent(htmlContent: string): SafeHtml {
+    return this.sanitizer.bypassSecurityTrustHtml(htmlContent);
   }
 
   protected readonly String = String;

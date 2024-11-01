@@ -5,7 +5,7 @@
     <h2>Белгіленген тесттер</h2>
     <div class="grid-container">
 
-      <div class="test-box main">
+      <div class="test-box main" *ngFor="let specTest of getLearnerSpecifiedTests">
 
         <div class="title">
           <h3>Тарих</h3>
@@ -24,44 +24,6 @@
 
       </div>
 
-      <div class="test-box main">
-
-        <div class="title">
-          <h3>Математика</h3>
-          <span style="font-size: 15px">Пәндік тест</span>
-        </div>
-
-        <div class="details">
-
-          <div class="info">
-            <p><span style="font-weight: 600">Группа:</span> ХБ-1</p>
-            <p><span style="font-weight: 600">Уақыты:</span> 15:00</p>
-          </div>
-
-          <img src="assets/img/lock_ico.svg">
-        </div>
-
-      </div>
-
-      <div class="test-box main">
-
-        <div class="title">
-          <h3>Биология</h3>
-          <span style="font-size: 15px">Пәндік тест</span>
-        </div>
-
-        <div class="details">
-
-          <div class="info">
-            <p><span style="font-weight: 600">Группа:</span> ХБ-1</p>
-            <p><span style="font-weight: 600">Уақыты:</span> 15:00</p>
-          </div>
-
-          <img src="assets/img/lock_ico.svg">
-        </div>
-
-      </div>
-
     </div>
 
   </div>
@@ -73,13 +35,29 @@
 
     <div class="grid-container">
 
-      <div class="test-box" *ngFor="let subject of getLearnerSubjects">
+      <div class="test-box" (click)="openDialog(dialogTemplate)">
+        <div class="title">
+          <h3>Толық ҰБТ</h3>
+          <span style="font-size: 15px">Толық ҰБТ-ға дайындығыңызды тексеріңіз</span>
+        </div>
+      </div>
 
+      <ng-template #dialogTemplate>
+        <h2 mat-dialog-title>Тестілеуді бастау?</h2>
+        <mat-dialog-content>
+          <p>Толық ҰБТ бойынша еркін тестті бастау?</p>
+        </mat-dialog-content>
+        <mat-dialog-actions>
+          <button mat-button (click)="closeDialog()">Жоқ</button>
+          <button mat-button (click)="closeDialog()">Тестілеуді бастау</button>
+        </mat-dialog-actions>
+      </ng-template>
+
+      <div class="test-box" *ngFor="let subject of getLearnerSubjects">
         <div class="title" (click)="onClick(subject.name)">
           <h3>{{ subject.name }}</h3>
           <span style="font-size: 15px">{{ subject.name_display }}</span>
         </div>
-
       </div>
 
     </div>
@@ -87,4 +65,4 @@
   </div>
 
 </div>
-
+<app-user-footer></app-user-footer>

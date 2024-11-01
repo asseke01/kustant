@@ -12,7 +12,7 @@
 
     <div class="links-container" [class.active]="isMenuOpen">
       <img src="assets/img/logo_ico.svg" alt="logo" *ngIf="isMenuOpen">
-      <a class="links">Тақырыптық тесттер</a>
+      <a class="links" routerLink="/main">Тақырыптық тесттер</a>
       <a class="links">Нәтижелерім</a>
       <ng-container *ngIf="userData; else loginLink">
         <a class="links auth" routerLink="../profile">{{ userData.fullname }}</a>

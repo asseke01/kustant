@@ -1,0 +1,129 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.test-container {
+  display: flex;
+  flex-direction: column;
+  padding: 25px 30px;
+  max-height: calc(100vh - 50px);
+  min-height: calc(100vh - 50px);
+  gap: 10px;
+}
+
+.test-header {
+  background-color: white;
+  height: 77px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 10px;
+  padding: 8px 42px;
+}
+
+.end-test-timer {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.timer {
+  font-size: 20px;
+}
+
+.end-test__btn {
+  font-size: 20px;
+  padding: 18px 34px;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  background-color: #FF7D8E;
+}
+
+.progress-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.progress-bar button {
+  display: flex;
+  width: 55px;
+  height: 55px;
+  border-radius: 15px;
+  background: white;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  border: none;
+}
+
+.progress-bar button.answered {
+  background-color: #4caf50;
+  color: white;
+}
+
+.progress-bar button.current {
+  background-color: #2196f3;
+  color: white;
+}
+
+.questions-answers {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 42px;
+  border-radius: 10px;
+}
+
+.answers-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.answers-section button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  text-align: left;
+  background-color: #f9f9f9;
+  font-size: 18px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  position: relative;
+}
+
+.answers-section button::before {
+  content: attr(data-label);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #ccc;
+  color: black;
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.answers-section button.selected {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.answers-section button.selected::before {
+  background-color: #4caf50;
+  color: white;
+}

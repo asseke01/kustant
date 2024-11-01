@@ -1,8 +1,8 @@
 <div class="main-container">
 
   <div class="image-container" [ngStyle]="{'background-image': 'url(' + imageUrl + ')'}">
-    <h1>Тарих</h1>
-    <p>XV-XXI ғғ.</p>
+    <h1>{{ title }}</h1>
+    <p>{{ sub_title }}</p>
   </div>
 
 
@@ -18,7 +18,7 @@
         <h1>{{ title }}</h1>
         <h2>Тест түрін таңдаңыз:</h2>
         <div class="type-container">
-          <div class="box-container test" (click)="onLevelTwo()">
+          <div class="box-container test" (click)="startSubjectTest()">
             <h2>Пәндік толық тест</h2>
             <p>Тарих пәні бойынша толық тест түрі.</p>
           </div>

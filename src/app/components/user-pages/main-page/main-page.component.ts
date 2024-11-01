@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {NavBarComponent} from '../../helpers/navbar/nav-bar.component';
 import {Router} from '@angular/router';
-import {TestActionsService} from '../../../test-actions.service';
+import {TestActionsService} from '../../../services/user-services/test-actions.service';
 import {GetLearnerSubjects} from '../../../../assets/interfaces/get_learner_subjects';
 import {NgForOf} from '@angular/common';
 

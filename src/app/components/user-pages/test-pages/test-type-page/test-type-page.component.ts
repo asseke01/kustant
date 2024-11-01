@@ -4,7 +4,7 @@ import {NgxMaskDirective} from "ngx-mask";
 import {ReactiveFormsModule} from "@angular/forms";
 import {ActivatedRoute, Router} from '@angular/router';
 import {animate, group, style, transition, trigger} from '@angular/animations';
-import {TestActionsService} from '../../../../test-actions.service';
+import {TestActionsService} from '../../../../services/user-services/test-actions.service';
 import {GetLearnerSubjects} from '../../../../../assets/interfaces/get_learner_subjects';
 import {GetLvlData, lvlData} from '../../../../../assets/interfaces/getLvlData';
 
@@ -45,6 +45,7 @@ export class TestTypePageComponent implements OnInit {
 
   public subjectName!: string;
   public title!: string;
+  public sub_title!: string;
   public lvlData: lvlData[] = [];
   public levelTwo = false;
   public levelThree = false;
@@ -64,6 +65,7 @@ export class TestTypePageComponent implements OnInit {
   private getLevelData(subject: string, lvl: number, lvlOption: number | null) {
     this.testActionsService.getLvlData(subject, lvl, lvlOption).subscribe(data => {
       this.title = data.title;
+      this.sub_title = data.sub_title;
       this.lvlData = data.lvl_data;
       this.imageUrl = `http://127.0.0.1:8000${data.poster}`;
       this.isLastLvl = data.is_last_lvl;
@@ -114,6 +116,14 @@ export class TestTypePageComponent implements OnInit {
     } else {
       this.router.navigate(['main']);
     }
+  }
+
+  public startSubjectTest() {
+    this.testActionsService.startSubjectTest(this.subjectName).subscribe(response => {
+      if (response.success) {
+        this.router.navigate(['start-test'], { queryParams: { subject: this.subjectName } });
+      }
+    });
   }
 
 }

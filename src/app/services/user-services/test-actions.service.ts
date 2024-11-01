@@ -1,7 +1,8 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
-import {GetLearnerSubjects} from '../assets/interfaces/get_learner_subjects';
-import {GetLvlData} from '../assets/interfaces/getLvlData';
+import {GetLearnerSubjects} from '../../../assets/interfaces/get_learner_subjects';
+import {GetLvlData} from '../../../assets/interfaces/getLvlData';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,10 @@ export class TestActionsService {
     }
 
     return this.http.get<GetLvlData>(`${this.userUrl}get_lvl_data/`, { params });
+  }
+
+  public startSubjectTest(subject: string): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`${this.userUrl}start_subject_test/`, { subject });
   }
 
 }

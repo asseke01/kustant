@@ -158,7 +158,7 @@
 }
 
 .scroll-box li:last-child {
-  border-bottom: none;
+  /*border-bottom: none;*/
 }
 
 .logo{

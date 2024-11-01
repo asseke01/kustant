@@ -1,1 +1,44 @@
-<p>start-test-page works!</p>
+<div class="test-container">
+
+  <div class="test-header">
+    <h2>{{ subject }}</h2>
+    <div class="end-test-timer">
+      <div class="timer">{{ timer }}</div>
+      <button class="end-test__btn">Тестілеуді аяқтау</button>
+    </div>
+  </div>
+
+
+  <div class="progress-bar">
+    <button *ngFor="let num of [].constructor(40); let i = index"
+            [ngClass]="{'answered': answeredQuestions.has(i + 1), 'current': questionNumber === i + 1}"
+            (click)="loadQuestion(i + 1)">
+      {{ i + 1 }}
+    </button>
+  </div>
+
+  <div class="questions-answers">
+
+    <div class="question-section">
+      <h3>{{ questionNumber }} сұрақ</h3>
+      <p [innerHTML]="questionData?.text"></p>
+    </div>
+
+    <div class="answers-section">
+      <button *ngFor="let answer of questionData?.answers; let i = index"
+              (click)="selectAnswer(answer.id)"
+              [ngClass]="{'selected': answer.is_selected}"
+      [innerHTML]="answer.text"
+      [attr.data-label]="String.fromCharCode(65 + i)">
+      </button>
+    </div>
+
+    <div class="navigation-buttons">
+      <button (click)="previousQuestion()" [disabled]="questionNumber === 1">Алдыңғы</button>
+      <button (click)="nextQuestion()" [disabled]="questionNumber === 40">Келесі</button>
+    </div>
+
+  </div>
+
+</div>
+

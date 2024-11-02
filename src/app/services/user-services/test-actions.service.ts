@@ -4,6 +4,7 @@ import {GetLearnerSubjects} from '../../../assets/interfaces/get_learner_subject
 import {GetLvlData} from '../../../assets/interfaces/getLvlData';
 import {Observable} from 'rxjs';
 import {GetLearnerSpecifiedTests} from '../../../assets/interfaces/get_learner_specified_tests';
+import {GetCurrentTesting} from '../../../assets/interfaces/getCurrentTesting';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,14 @@ export class TestActionsService {
 
   public getLearnerSpecifiedTests(): Observable<GetLearnerSpecifiedTests[]> {
     return this.http.get<GetLearnerSpecifiedTests[]>(`${this.userUrl}get_learner_specified_tests/`);
+  }
+
+  public getCurrentTesting() {
+    return this.http.get<GetCurrentTesting>(`${this.userUrl}get_current_testing/`);
+  }
+
+  public finishTest() {
+    return this.http.post(`${this.userUrl}finish_test/`, {})
   }
 
 }

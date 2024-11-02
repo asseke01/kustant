@@ -9,6 +9,7 @@ import {GetLearnerSpecifiedTests} from '../../../../assets/interfaces/get_learne
 import {MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatButton} from '@angular/material/button';
 import {UserFooterComponent} from '../user-footer/user-footer.component';
+import {ConfirmDialogComponent} from '../../../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-main-page',
@@ -59,11 +60,24 @@ export class MainPageComponent implements OnInit{
     this.router.navigate(['test-type', subject_name]);
   }
 
-  openDialog(templateRef: TemplateRef<any>): void {
-    this.dialogRef = this.dialog.open(templateRef);
+  public openDialog(): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Тестілеуді бастау?',
+        message: 'Толық ҰБТ бойынша еркін тестті бастау?',
+        cancelText: 'Жоқ',
+        confirmText: 'Тестілеуді бастау',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.router.navigate(['main']);
+      }
+    });
   }
 
-  closeDialog(): void {
+  public closeDialog(): void {
     if (this.dialogRef) {
       this.dialogRef.close();
     }

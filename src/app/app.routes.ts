@@ -16,12 +16,11 @@ import {
 import {AuthGuard} from './services/auth-services/auth.guard';
 import {AdminLoginPageComponent} from './components/auth-pages/admin-login-page/admin-login-page.component';
 import {ProfilePageComponent} from './components/user-pages/profile-page/profile-page.component';
-import {UnauthGuard} from './services/auth-services/unauth.guard';
 
 export const routes: Routes = [
 
   {
-    path: '', component: StartPageComponent, canActivate: [UnauthGuard],
+    path: '', component: StartPageComponent,
   },
   {
     path: 'login', component: LoginPageComponent
@@ -33,13 +32,13 @@ export const routes: Routes = [
     path: 'main', component: MainPageComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'profile', component: ProfilePageComponent
+    path: 'profile', component: ProfilePageComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'test-type/:subject_name', component: TestTypePageComponent
+    path: 'test-type/:subject_name', component: TestTypePageComponent, canActivate: [AuthGuard]
   },
   {
-    path: 'start-test', component: StartTestPageComponent
+    path: 'start-test', component: StartTestPageComponent, canActivate: [AuthGuard]
   },
 
 

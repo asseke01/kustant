@@ -4,6 +4,11 @@
   padding: 0;
 }
 
+.loading-container {
+  display: flex;
+  justify-content: center;
+}
+
 .test-container {
   display: flex;
   flex-direction: column;
@@ -40,6 +45,7 @@
   border: none;
   color: white;
   background-color: #FF7D8E;
+  cursor: pointer;
 }
 
 .progress-bar {
@@ -141,7 +147,7 @@
   cursor: pointer;
 }
 
-.test-btn:hover {
+.test-btn:hover:enabled {
   background-color: black;
   color: white;
 }

@@ -10,10 +10,13 @@ export class UnauthGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): Observable<boolean> {
+    console.log("UnauthGuard: Checking if user is unauthenticated");
     if (!this.authService.getToken()) {
-      return of(true); // allow access if not authenticated
+      console.log("UnauthGuard: User is unauthenticated, allowing access to StartPage");
+      return of(true); // разрешить доступ к StartPage
     } else {
-      this.router.navigate(['main']); // redirect to MainPage if authenticated
+      console.log("UnauthGuard: User is authenticated, redirecting to MainPage");
+      this.router.navigate(['main']); // перенаправить на главную страницу
       return of(false);
     }
   }

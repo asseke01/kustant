@@ -8,15 +8,15 @@
       <div class="test-box main" *ngFor="let specTest of getLearnerSpecifiedTests">
 
         <div class="title">
-          <h3>Тарих</h3>
-          <span style="font-size: 15px">Пәндік тест</span>
+          <h3>{{ specTest.name }}</h3>
+          <span style="font-size: 15px"> {{ specTest.test_type_display }}</span>
         </div>
 
         <div class="details">
 
           <div class="info">
-            <p><span style="font-weight: 600">Группа:</span> ХБ-1</p>
-            <p><span style="font-weight: 600">Уақыты:</span> 15:00</p>
+            <p><span style="font-weight: 600">Группа:</span> {{ specTest.group_name }}</p>
+            <p><span style="font-weight: 600">Уақыты:</span> {{ specTest.starts_at }}</p>
           </div>
 
           <a class="start">Бастау</a>
@@ -35,28 +35,17 @@
 
     <div class="grid-container">
 
-      <div class="test-box" (click)="openDialog(dialogTemplate)">
+      <div class="test-box" (click)="openDialog()">
         <div class="title">
           <h3>Толық ҰБТ</h3>
           <span style="font-size: 15px">Толық ҰБТ-ға дайындығыңызды тексеріңіз</span>
         </div>
       </div>
 
-      <ng-template #dialogTemplate>
-        <h2 mat-dialog-title>Тестілеуді бастау?</h2>
-        <mat-dialog-content>
-          <p>Толық ҰБТ бойынша еркін тестті бастау?</p>
-        </mat-dialog-content>
-        <mat-dialog-actions>
-          <button mat-button (click)="closeDialog()">Жоқ</button>
-          <button mat-button (click)="closeDialog()">Тестілеуді бастау</button>
-        </mat-dialog-actions>
-      </ng-template>
-
       <div class="test-box" *ngFor="let subject of getLearnerSubjects">
         <div class="title" (click)="onClick(subject.name)">
-          <h3>{{ subject.name }}</h3>
-          <span style="font-size: 15px">{{ subject.name_display }}</span>
+          <h3>{{ subject.name_display }}</h3>
+          <span style="font-size: 15px">{{ subject.name }}</span>
         </div>
       </div>
 

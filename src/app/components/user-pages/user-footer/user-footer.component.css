@@ -17,7 +17,7 @@
   row-gap: 50px;
   color: white;
   background-color: #272727;
-  width: 1120px;
+  max-width: 1120px;
   margin: 40px auto 0px auto;
 }
 
@@ -38,4 +38,16 @@ p {
 a {
   color: white;
   text-decoration: none;
+}
+
+@media (max-width: 950px) {
+  .footer-content {
+    gap: 50px;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-content {
+    gap: 10px;
+  }
 }

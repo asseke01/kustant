@@ -1,16 +1,19 @@
-<div class="test-container">
+<div *ngIf="loading" class="loading-container">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  <p>Loading...</p>
+</div>
 
+<div class="test-container" *ngIf="!loading">
   <div class="test-header">
-    <h2>{{ subject }}</h2>
+    <h2>{{ selectedSubject?.name_display }}</h2>
     <div class="end-test-timer">
       <div class="timer">{{ timer }}</div>
-      <button class="end-test__btn">Тестілеуді аяқтау</button>
+      <button class="end-test__btn" (click)="finishTest()">Тестілеуді аяқтау</button>
     </div>
   </div>
 
-
   <div class="progress-bar">
-    <button *ngFor="let num of [].constructor(40); let i = index"
+    <button *ngFor="let num of [].constructor(questionsCount); let i = index"
             [ngClass]="{'answered': answeredQuestions.has(i + 1), 'current': questionNumber === i + 1}"
             (click)="loadQuestion(i + 1)">
       {{ i + 1 }}
@@ -19,26 +22,42 @@
 
   <div class="questions-answers">
 
-    <div class="question-section">
+    <div *ngIf="questionData?.question_type === 'matching'">
       <h3>{{ questionNumber }} сұрақ</h3>
-      <p [innerHTML]="sanitizeHtmlContent(questionData?.text)"></p>
+      <p [innerHTML]="sanitizeHtmlContent(questionText)"></p>
+      <div *ngFor="let question of questionData.questions">
+        <label [innerHTML]="sanitizeHtmlContent(question.text)"></label>
+        <mat-form-field appearance="fill" class="question-select">
+          <mat-select [(ngModel)]="matchingAnswers[question.id]" (selectionChange)="onMatchingAnswerChange()"
+                      placeholder="Выберите ответ">
+            <!--            <mat-option [value]="null">Выберите ответ</mat-option>-->
+            <mat-option *ngFor="let answer of answers" [value]="answer.id">
+              <span [innerHTML]="sanitizeHtmlContent(answer.text)"></span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
 
-    <div class="answers-section">
-      <button *ngFor="let answer of questionData?.answers; let i = index"
-              (click)="selectAnswer(answer.id)"
-              [ngClass]="{'selected': answer.is_selected}"
-      [innerHTML]="sanitizeHtmlContent(answer.text)"
-      [attr.data-label]="String.fromCharCode(65 + i)">
-      </button>
+    <div *ngIf="questionData?.question_type !== 'matching'">
+      <div class="question-section">
+        <h3>{{ questionNumber }} сұрақ</h3>
+        <p [innerHTML]="sanitizeHtmlContent(questionText)"></p>
+      </div>
+      <div class="answers-section">
+        <button *ngFor="let answer of answers; let i = index"
+                (click)="selectAnswer(answer.id)"
+                [ngClass]="{'selected': answer.is_selected}"
+                [innerHTML]="sanitizeHtmlContent(answer.text)"
+                [attr.data-label]="String.fromCharCode(65 + i)">
+        </button>
+      </div>
     </div>
 
     <div class="navigation-buttons">
       <button class="test-btn" (click)="previousQuestion()" [disabled]="questionNumber === 1">Алдыңғы сұрақ</button>
-      <button class="test-btn" (click)="nextQuestion()" [disabled]="questionNumber === 40">Келесі сұрақ</button>
+      <button class="test-btn" (click)="nextQuestion()" [disabled]="questionNumber === questionsCount">Келесі сұрақ
+      </button>
     </div>
-
   </div>
-
 </div>
-

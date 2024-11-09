@@ -12,6 +12,7 @@ import {answers, GetQuestion} from '../../../../../assets/interfaces/getQuestion
 import {FormsModule} from '@angular/forms';
 import {MatFormField} from '@angular/material/form-field';
 import {MatOption, MatSelect} from '@angular/material/select';
+import {AlertService} from '../../../../services/helper-services/alert.service';
 
 @Component({
   selector: 'app-start-test-page',
@@ -37,6 +38,7 @@ export class StartTestPageComponent implements OnInit {
   private sanitizer = inject(DomSanitizer);
   private dialog = inject(MatDialog);
   private router = inject(Router);
+  private alert = inject(AlertService)
 
   public subject!: string;
   public questionNumber = 1;
@@ -44,7 +46,6 @@ export class StartTestPageComponent implements OnInit {
   public questionText!: string;
   public answers: answers[] = [];
   public answeredQuestions: Set<number> = new Set();
-  public timer: string = '00:00';
   public currentTesting!: GetCurrentTesting;
   public subjects: Subject[] = [];
   public selectedSubject!: any;
@@ -52,12 +53,14 @@ export class StartTestPageComponent implements OnInit {
   public loading: boolean = true;
   public matchingAnswers: { [key: number]: number | null } = {};
 
+  public timer: string = '00:00';
+  private endDateTime!: Date;
   private timerInterval: any;
+
 
   ngOnInit() {
     this.getCurrentTesting();
     this.subject = this.route.snapshot.queryParamMap.get('subject') || '';
-    this.startTimer(90 * 60); // 90 минут на тест
   }
 
   getCurrentTesting() {
@@ -72,6 +75,8 @@ export class StartTestPageComponent implements OnInit {
           this.loadSubjectAnswers(this.selectedSubject.name);
         }
         this.loading = false;
+        this.setTimer(data.ends_at);
+
       },
       (error) => {
         console.error("Error fetching current testing data:", error);
@@ -79,6 +84,40 @@ export class StartTestPageComponent implements OnInit {
       }
     );
   }
+
+  setTimer(endsAt: string) {
+    const [datePart, timePart] = endsAt.split(' ');
+    const [day, month, year] = datePart.split('.').map(Number);
+    const [hours, minutes] = timePart.split(':').map(Number);
+
+    this.endDateTime = new Date(Date.UTC(year, month - 1, day, hours, minutes));
+
+    if (!isNaN(this.endDateTime.getTime())) {
+      this.updateTimer();
+      this.timerInterval = setInterval(() => this.updateTimer(), 1000);
+    } else {
+      console.error("Failed to parse endDateTime. Check endsAt format.");
+    }
+  }
+
+
+  updateTimer() {
+    const now = new Date();
+    const timeRemaining = Math.max(0, this.endDateTime.getTime() - now.getTime()); // Оставшееся время в миллисекундах
+
+    if (timeRemaining <= 0) {
+      clearInterval(this.timerInterval);
+      this.alert.warn('Время вышло, тест автоматически завершается!');
+      this.testActionsService.finishTest().subscribe(() => {
+        this.router.navigate(['main']);
+      });
+    } else {
+      const minutes = Math.floor(timeRemaining / 60000) % 60;
+      const hours = Math.floor(timeRemaining / 3600000);
+      this.timer = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+    }
+  }
+
 
   loadSubjectAnswers(subjectName: string): void {
     const answers: number[] = this.currentTesting.subjects_answers[subjectName] || [];
@@ -122,7 +161,7 @@ export class StartTestPageComponent implements OnInit {
   }
 
   saveAnswer() {
-    const { id, type } = this.questionData;
+    const {id, type} = this.questionData;
 
     let answerPayload: any;
     if (type === 'matching') {
@@ -138,7 +177,7 @@ export class StartTestPageComponent implements OnInit {
       const selectedAnswerId = this.answers.find(answer => answer.is_selected)?.id;
       answerPayload = {
         question_id: id,
-        answers: selectedAnswerId ? `[${selectedAnswerId}]` : "[]",
+        answers: selectedAnswerId ? [selectedAnswerId] : "[]",
         type
       };
     }
@@ -150,7 +189,7 @@ export class StartTestPageComponent implements OnInit {
 
   selectAnswer(answerId: number) {
     if (this.questionData) {
-      const { type } = this.questionData;
+      const {type} = this.questionData;
 
       this.questionData.answers.forEach((answer: any) => {
         answer.is_selected = answer.id === answerId;
@@ -176,30 +215,14 @@ export class StartTestPageComponent implements OnInit {
     }
   }
 
-  startTimer(duration: number) {
-    let timer = duration;
-    this.timerInterval = setInterval(() => {
-      let minutes = Math.floor(timer / 60);
-      let seconds = timer % 60;
-      this.timer = `${minutes < 10 ? '0' : ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-      timer--;
-
-      if (timer < 0) {
-        clearInterval(this.timerInterval);
-        this.endTest();
-      }
-    }, 1000);
-  }
-
-  endTest() {
-    alert('Test time is over!');
-  }
-
   finishTest(): void {
+    const unansweredQuestions = this.questionsCount - this.answeredQuestions.size;
+    const hasUnansweredQuestions = unansweredQuestions > 0;
+
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Тестілеуді аяқтау',
-        message: 'Белгіленбеген сұрақтар бар, тестілеуді аяқтағанда ол сұрақтарға 0 балл беріледі!',
+        message: hasUnansweredQuestions ? 'Белгіленбеген сұрақтар бар, тестілеуді аяқтағанда ол сұрақтарға 0 балл беріледі!' : '',
         cancelText: 'Жалғастыру',
         confirmText: 'Aяқтау',
       },
@@ -208,7 +231,6 @@ export class StartTestPageComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.testActionsService.finishTest().subscribe(() => {
-          console.log('dada')
           this.router.navigate(['main']);
         });
       }

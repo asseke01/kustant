@@ -64,6 +64,7 @@ export const routes: Routes = [
         path: 'wrong-questions', component: AdminWrongQuestionPageComponent
       }
     ]
-  }
+  },
+  {path: '**', redirectTo: '', pathMatch: 'full'},
 
 ];

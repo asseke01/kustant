@@ -41,7 +41,9 @@
 
     <div *ngIf="questionData?.question_type !== 'matching'">
       <div class="question-section">
-        <h3>{{ questionNumber }} сұрақ</h3>
+        <div class="surak-container">
+          <h3>{{ questionNumber }} сұрақ</h3>
+        </div>
         <p [innerHTML]="sanitizeHtmlContent(questionText)"></p>
       </div>
       <div class="answers-section">

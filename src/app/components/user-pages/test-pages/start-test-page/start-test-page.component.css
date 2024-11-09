@@ -88,6 +88,11 @@
   border-radius: 10px;
 }
 
+.surak-container {
+  padding: 20px 0;
+  border-bottom: 2px solid #F5F5F5;
+}
+
 .answers-section {
   display: flex;
   flex-direction: column;
@@ -99,7 +104,6 @@
   align-items: center;
   width: 100%;
   border: none;
-  padding: 12px 20px;
   cursor: pointer;
   text-align: left;
   background-color: white;

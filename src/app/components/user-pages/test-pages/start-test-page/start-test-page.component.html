@@ -4,10 +4,11 @@
 </div>
 
 <div class="test-container" *ngIf="!loading">
+  <h2 class="mobile-header">{{ selectedSubject?.name_display }}</h2>
   <div class="test-header">
     <h2>{{ selectedSubject?.name_display }}</h2>
     <div class="end-test-timer">
-      <div class="timer">{{ timer }}</div>
+      <div class="timer">{{ timer$ | async }}</div>
       <button class="end-test__btn" (click)="finishTest()">Тестілеуді аяқтау</button>
     </div>
   </div>
@@ -22,9 +23,9 @@
 
   <div class="questions-answers">
 
-    <div *ngIf="questionData?.question_type === 'matching'">
+    <div *ngIf="questionData?.question_type === 'matching'" class="question-section">
       <h3>{{ questionNumber }} сұрақ</h3>
-      <p [innerHTML]="sanitizeHtmlContent(questionText)"></p>
+      <div class="sanitized-content" [innerHTML]="sanitizeHtmlContent(questionText)"></div>
       <div *ngFor="let question of questionData.questions">
         <label [innerHTML]="sanitizeHtmlContent(question.text)"></label>
         <mat-form-field appearance="fill" class="question-select">
@@ -39,13 +40,11 @@
       </div>
     </div>
 
-    <div *ngIf="questionData?.question_type !== 'matching'">
-      <div class="question-section">
-        <div class="surak-container">
-          <h3>{{ questionNumber }} сұрақ</h3>
-        </div>
-        <p [innerHTML]="sanitizeHtmlContent(questionText)"></p>
+    <div *ngIf="questionData?.question_type !== 'matching'" class="question-section">
+      <div class="surak-container">
+        <h3>{{ questionNumber }} сұрақ</h3>
       </div>
+      <div class="sanitized-content" [innerHTML]="sanitizeHtmlContent(questionText)"></div>
       <div class="answers-section">
         <button *ngFor="let answer of answers; let i = index"
                 (click)="selectAnswer(answer.id)"

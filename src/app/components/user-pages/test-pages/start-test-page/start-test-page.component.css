@@ -18,6 +18,10 @@
   gap: 10px;
 }
 
+.mobile-header {
+  display: none;
+}
+
 .test-header {
   background-color: white;
   height: 77px;
@@ -56,16 +60,17 @@
 }
 
 .progress-bar button {
+  counter-increment: item;
   display: flex;
-  width: 55px;
-  height: 55px;
+  width: 53px;
+  aspect-ratio: 1 / 1;
   border-radius: 15px;
   background: white;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  font-weight: 600;
   border: none;
+  font-size: 20px;
+  font-family: "Gilroy-Medium", serif;
 }
 
 .progress-bar button.answered {
@@ -154,4 +159,60 @@
 .test-btn:hover:enabled {
   background-color: black;
   color: white;
+}
+
+@media (max-width: 800px) {
+  .test-container {
+    padding: 12px 15px;
+  }
+
+  .test-header {
+    padding: 8px 20px;
+  }
+
+  .questions-answers {
+    padding: 10px 20px;
+  }
+
+  .progress-bar button {
+    width: calc(100% / 11 - 10px);
+    border-radius: 8px;  }
+}
+
+@media (max-width: 600px) {
+
+  .test-header {
+    display: block;
+  }
+
+  .test-header h2 {
+    display: none;
+  }
+
+  .end-test-timer {
+    justify-content: space-between;
+  }
+
+  .mobile-header {
+    display: block;
+  }
+
+  .progress-bar button {
+    width: calc(100% / 10 - 8.1px);
+    font-size: 17.5px;
+    border-radius: 7px;
+  }
+}
+
+@media (max-width: 500px) {
+  .end-test__btn {
+    padding: 15px 20px;
+    font-size: 15px;
+  }
+
+  .progress-bar button {
+    width: calc(100% / 9 - 6.3px);
+    font-size: 15px;
+    border-radius: 6px;
+  }
 }

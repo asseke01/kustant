@@ -1,8 +1,8 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {TestActionsService} from '../../../../services/user-services/test-actions.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TestingService} from '../../../../services/user-services/testing.service';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {GetCurrentTesting, Subject} from '../../../../../assets/interfaces/getCurrentTesting';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
@@ -13,6 +13,7 @@ import {FormsModule} from '@angular/forms';
 import {MatFormField} from '@angular/material/form-field';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {AlertService} from '../../../../services/helper-services/alert.service';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-start-test-page',
@@ -25,7 +26,8 @@ import {AlertService} from '../../../../services/helper-services/alert.service';
     FormsModule,
     MatFormField,
     MatSelect,
-    MatOption
+    MatOption,
+    AsyncPipe
   ],
   templateUrl: './start-test-page.component.html',
   styleUrl: './start-test-page.component.css'
@@ -53,7 +55,7 @@ export class StartTestPageComponent implements OnInit {
   public loading: boolean = true;
   public matchingAnswers: { [key: number]: number | null } = {};
 
-  public timer: string = '00:00';
+  public timer$ = new BehaviorSubject<string>('00:00');
   private endDateTime!: Date;
   private timerInterval: any;
 
@@ -94,16 +96,15 @@ export class StartTestPageComponent implements OnInit {
 
     if (!isNaN(this.endDateTime.getTime())) {
       this.updateTimer();
-      this.timerInterval = setInterval(() => this.updateTimer(), 1000);
+      this.timerInterval = setInterval(() => this.updateTimer(), 1000000);
     } else {
       console.error("Failed to parse endDateTime. Check endsAt format.");
     }
   }
 
-
   updateTimer() {
     const now = new Date();
-    const timeRemaining = Math.max(0, this.endDateTime.getTime() - now.getTime()); // Оставшееся время в миллисекундах
+    const timeRemaining = Math.max(0, this.endDateTime.getTime() - now.getTime());
 
     if (timeRemaining <= 0) {
       clearInterval(this.timerInterval);
@@ -114,10 +115,10 @@ export class StartTestPageComponent implements OnInit {
     } else {
       const minutes = Math.floor(timeRemaining / 60000) % 60;
       const hours = Math.floor(timeRemaining / 3600000);
-      this.timer = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+      const formattedTime = `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+      this.timer$.next(formattedTime); // Update the observable
     }
   }
-
 
   loadSubjectAnswers(subjectName: string): void {
     const answers: number[] = this.currentTesting.subjects_answers[subjectName] || [];
@@ -240,8 +241,19 @@ export class StartTestPageComponent implements OnInit {
   public safeHtmlContent!: SafeHtml;
 
   sanitizeHtmlContent(htmlContent: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(htmlContent);
+    // Set different max-width based on screen size
+    const maxWidth = window.innerWidth <= 500 ? '300px'
+      : window.innerWidth <= 650 ? '400px'
+        : window.innerWidth <= 900 ? '500px'
+          : '700px';
+
+    const modifiedHtml = htmlContent.replace(
+      /<img /g,
+      `<img style="max-width: ${maxWidth}; height: auto;"`
+    );
+    return this.sanitizer.bypassSecurityTrustHtml(modifiedHtml);
   }
+
 
   protected readonly String = String;
 }

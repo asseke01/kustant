@@ -33,7 +33,13 @@ export class QuestionService {
     return this.http.post(`${this.apiUrl}save_question/`, data, );
   }
 
+  notifyIncorrectQuestion(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}notify_incorrect_question/`, data, );
+  }
+
   saveContext(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}save_context/`, data, );
   }
+
+
 }

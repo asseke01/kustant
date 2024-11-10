@@ -16,6 +16,8 @@ import {
 import {AuthGuard} from './services/auth-services/auth.guard';
 import {AdminLoginPageComponent} from './components/auth-pages/admin-login-page/admin-login-page.component';
 import {ProfilePageComponent} from './components/user-pages/profile-page/profile-page.component';
+import {TestRequest} from '@angular/common/http/testing';
+import {TestResultPageComponent} from './components/user-pages/test-pages/test-result-page/test-result-page.component';
 
 export const routes: Routes = [
 
@@ -39,6 +41,9 @@ export const routes: Routes = [
   },
   {
     path: 'start-test', component: StartTestPageComponent, canActivate: [AuthGuard]
+  },
+  {
+    path: 'test-result', component: TestResultPageComponent, canActivate: [AuthGuard]
   },
 
 

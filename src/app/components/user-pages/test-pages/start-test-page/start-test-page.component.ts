@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {TestActionsService} from '../../../../services/user-services/test-actions.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TestingService} from '../../../../services/user-services/testing.service';
@@ -6,7 +6,7 @@ import {AsyncPipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {GetCurrentTesting, Subject} from '../../../../../assets/interfaces/getCurrentTesting';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogActions, MatDialogContent, MatDialogModule, MatDialogTitle} from '@angular/material/dialog';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {answers, GetQuestion} from '../../../../../assets/interfaces/getQuestion';
 import {FormsModule} from '@angular/forms';
@@ -14,6 +14,9 @@ import {MatFormField} from '@angular/material/form-field';
 import {MatOption, MatSelect} from '@angular/material/select';
 import {AlertService} from '../../../../services/helper-services/alert.service';
 import {BehaviorSubject} from 'rxjs';
+import {MatInput} from '@angular/material/input';
+import {MatButton} from '@angular/material/button';
+import {QuestionService} from '../../../../services/admin-services/question.service';
 
 @Component({
   selector: 'app-start-test-page',
@@ -27,7 +30,13 @@ import {BehaviorSubject} from 'rxjs';
     MatFormField,
     MatSelect,
     MatOption,
-    AsyncPipe
+    AsyncPipe,
+    MatDialogTitle,
+    MatDialogContent,
+    MatInput,
+    MatDialogActions,
+    MatButton,
+    MatDialogModule
   ],
   templateUrl: './start-test-page.component.html',
   styleUrl: './start-test-page.component.css'
@@ -36,6 +45,7 @@ export class StartTestPageComponent implements OnInit {
 
   private testingService = inject(TestingService);
   private testActionsService = inject(TestActionsService);
+  private questionService = inject(QuestionService);
   private route = inject(ActivatedRoute);
   private sanitizer = inject(DomSanitizer);
   private dialog = inject(MatDialog);
@@ -58,6 +68,8 @@ export class StartTestPageComponent implements OnInit {
   public timer$ = new BehaviorSubject<string>('00:00');
   private endDateTime!: Date;
   private timerInterval: any;
+  @ViewChild('errorReportDialog') errorReportDialog!: TemplateRef<any>;
+  public errorDescription: string = '';
 
 
   ngOnInit() {
@@ -232,7 +244,7 @@ export class StartTestPageComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.testActionsService.finishTest().subscribe(() => {
-          this.router.navigate(['main']);
+          this.router.navigate(['test-result']);
         });
       }
     });
@@ -247,11 +259,49 @@ export class StartTestPageComponent implements OnInit {
         : window.innerWidth <= 900 ? '500px'
           : '700px';
 
-    const modifiedHtml = htmlContent.replace(
+    const modifiedHtml = htmlContent?.replace(
       /<img /g,
       `<img style="max-width: ${maxWidth}; height: auto;"`
     );
     return this.sanitizer.bypassSecurityTrustHtml(modifiedHtml);
+  }
+
+  openErrorReportDialog(): void {
+    console.log('dada')
+    this.dialog.open(this.errorReportDialog);
+  }
+
+  closeDialog(): void {
+    this.errorDescription = ''
+    this.dialog.closeAll();
+  }
+
+  submitErrorReport(): void {
+    if (this.errorDescription.trim()) {
+      const reportData = {
+        question_type: this.questionData.question_type,
+        question_id: this.questionData.question_id,
+        text: this.errorDescription,
+      };
+      console.log(reportData);
+
+      this.questionService.notifyIncorrectQuestion(reportData).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.alert.success('Апелляция успешно отправлена'); // Display success message
+          }
+          this.errorDescription = ''
+          this.closeDialog();
+        },
+        error: (err) => {
+          console.error('Ошибка при отправке апелляции:', err);
+          this.alert.success('Ошибка при отправке апелляции. Попробуйте еще раз.'); // Display error message
+        }
+      });
+    } else {
+      console.log('Описание ошибки не может быть пустым.');
+      this.alert.success('Описание ошибки не может быть пустым.'); // Inform user to provide input
+    }
   }
 
 

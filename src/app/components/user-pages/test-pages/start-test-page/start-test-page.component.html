@@ -22,9 +22,11 @@
   </div>
 
   <div class="questions-answers">
-
     <div *ngIf="questionData?.question_type === 'matching'" class="question-section">
-      <h3>{{ questionNumber }} сұрақ</h3>
+      <div class="surak-container">
+        <h3>{{ questionNumber }} сұрақ</h3>
+        <button class="test-btn" (click)="openErrorReportDialog()">Сұрақ қатесін хабарлау</button>
+      </div>
       <div class="sanitized-content" [innerHTML]="sanitizeHtmlContent(questionText)"></div>
       <div *ngFor="let question of questionData.questions">
         <label [innerHTML]="sanitizeHtmlContent(question.text)"></label>
@@ -43,6 +45,7 @@
     <div *ngIf="questionData?.question_type !== 'matching'" class="question-section">
       <div class="surak-container">
         <h3>{{ questionNumber }} сұрақ</h3>
+        <button class="test-btn" (click)="openErrorReportDialog()">Сұрақ қатесін хабарлау</button>
       </div>
       <div class="sanitized-content" [innerHTML]="sanitizeHtmlContent(questionText)"></div>
       <div class="answers-section">
@@ -62,3 +65,16 @@
     </div>
   </div>
 </div>
+
+<ng-template #errorReportDialog>
+  <div class="errorModal">
+  <h2 mat-dialog-title>Сұрақ қатесін хабарлау</h2>
+  <div mat-dialog-content>
+    <textarea class="reportTextArea" matInput placeholder="Қатені жайлы..." [(ngModel)]="errorDescription"></textarea>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="closeDialog()">Артқа</button>
+    <button mat-button (click)="submitErrorReport()">Хабарлау</button>
+  </div>
+  </div>
+</ng-template>

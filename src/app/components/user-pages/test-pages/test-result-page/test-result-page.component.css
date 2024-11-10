@@ -1,0 +1,18 @@
+.main-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 25px;
+  min-height: 100vh;
+}
+
+.test-result__content {
+  width: 100%;
+  border-radius: 15px;
+  padding: 30px 40px;
+}
+
+@media (max-width: 950px) {
+  .main-container {
+    padding: 0;
+  }
+}

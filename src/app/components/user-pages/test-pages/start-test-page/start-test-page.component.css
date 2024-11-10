@@ -94,6 +94,9 @@
 }
 
 .surak-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 20px 0;
   border-bottom: 2px solid #F5F5F5;
 }
@@ -148,6 +151,10 @@
   gap: 20px;
 }
 
+.errorModal {
+  width: 512px;
+}
+
 .test-btn {
   font-size: 17px;
   border: 1px solid black;
@@ -159,6 +166,12 @@
 .test-btn:hover:enabled {
   background-color: black;
   color: white;
+}
+
+.reportTextArea {
+  height: 6.75em;
+  padding: .75em;
+  width: 100%;
 }
 
 @media (max-width: 800px) {
@@ -176,7 +189,17 @@
 
   .progress-bar button {
     width: calc(100% / 11 - 10px);
-    border-radius: 8px;  }
+    border-radius: 8px;
+  }
+
+  .test-btn {
+    padding: 5px 10px;
+    font-size: 14px;
+  }
+
+  .errorModal {
+    width: 412px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -201,6 +224,10 @@
     width: calc(100% / 10 - 8.1px);
     font-size: 17.5px;
     border-radius: 7px;
+  }
+
+  .errorModal {
+    width: 312px;
   }
 }
 

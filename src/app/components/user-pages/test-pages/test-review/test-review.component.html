@@ -1,0 +1,93 @@
+<div *ngIf="loading" class="loading-container">
+  <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  <p>Loading...</p>
+</div>
+
+<div class="test-container" *ngIf="!loading">
+  <h2 class="mobile-header">{{ selectedSubject?.name_display }}</h2>
+  <div class="test-header">
+    <h2>{{ selectedSubject?.name_display }}</h2>
+    <div class="end-test-timer">
+      <button class="end-test__btn" (click)="navigateToTestResult()">Шығу</button>
+    </div>
+  </div>
+
+  <div class="progress-bar">
+    <button *ngFor="let num of [].constructor(questionsCount); let i = index"
+            [ngClass]="{
+            'correct': answeredQuestions.get(i + 1) === 'correct',
+            'incorrect': answeredQuestions.get(i + 1) === 'incorrect',
+            'half-correct': answeredQuestions.get(i + 1) === 'half-correct',
+            'current': questionNumber === i + 1
+          }"
+            (click)="loadQuestion(i + 1)">
+      {{ i + 1 }}
+    </button>
+  </div>
+
+  <div class="questions-answers">
+
+    <div *ngIf="questionData?.question_type === 'matching'" class="question-section">
+      <div class="surak-container">
+        <h3>{{ questionNumber }} сұрақ</h3>
+        <button class="test-btn" (click)="openErrorReportDialog()">Сұрақ қатесін хабарлау</button>
+      </div>
+      <div class="sanitized-content" [innerHTML]="sanitizeHtmlContent(questionText)"></div>
+
+      <div *ngFor="let question of questionData.questions">
+        <label [innerHTML]="sanitizeHtmlContent(question.text)"></label>
+        <mat-form-field appearance="fill" class="question-select">
+          <mat-select [(ngModel)]="matchingAnswers[question.id]" disabled>
+            <mat-option *ngFor="let answer of answers" [value]="answer.id">
+              <span [innerHTML]="sanitizeHtmlContent(answer.text)"></span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+          <span *ngIf="!question.is_correct" class="incorrect-icon">✖</span>
+          <span *ngIf="question.is_correct" class="correct-icon">✔</span>
+        <div *ngIf="!question.is_correct" class="correct-answer-text">
+          Дұрыс жауап: <span [innerHTML]="sanitizeHtmlContent(question.correct_answer!)"></span>
+        </div>
+      </div>
+    </div>
+
+
+    <div *ngIf="questionData?.question_type !== 'matching'" class="question-section">
+      <div class="surak-container">
+        <h3>{{ questionNumber }} сұрақ</h3>
+        <button class="test-btn" (click)="openErrorReportDialog()">Сұрақ қатесін хабарлау</button>
+      </div>
+      <div class="sanitized-content" [innerHTML]="sanitizeHtmlContent(questionText)"></div>
+      <div class="answers-section">
+        <button *ngFor="let answer of answers; let i = index"
+                [ngClass]="{
+            'selected': answer.is_selected,
+            'correct-answer': answer.is_correct,
+            'incorrect-answer': answer.is_selected && !answer.is_correct
+          }"
+                [innerHTML]="sanitizeHtmlContent(answer.text)"
+                [attr.data-label]="String.fromCharCode(65 + i)">
+        </button>
+      </div>
+    </div>
+
+    <div class="navigation-buttons">
+      <button class="test-btn" (click)="previousQuestion()" [disabled]="questionNumber === 1">Алдыңғы сұрақ</button>
+      <button class="test-btn" (click)="nextQuestion()" [disabled]="questionNumber === questionsCount">Келесі сұрақ
+      </button>
+    </div>
+  </div>
+</div>
+
+<ng-template #errorReportDialog>
+  <div class="errorModal">
+    <h2 mat-dialog-title>Сұрақ қатесін хабарлау</h2>
+    <div mat-dialog-content>
+      <textarea class="reportTextArea" matInput placeholder="Қатені жайлы..." [(ngModel)]="errorDescription"></textarea>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="closeDialog()">Артқа</button>
+      <button mat-button (click)="submitErrorReport()">Хабарлау</button>
+    </div>
+  </div>
+</ng-template>

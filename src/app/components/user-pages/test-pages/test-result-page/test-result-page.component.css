@@ -1,18 +1,137 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 .main-container {
   max-width: 1400px;
   margin: 0 auto;
   padding: 25px;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 
 .test-result__content {
   width: 100%;
+  background-color: #fff;
   border-radius: 15px;
   padding: 30px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+h1 {
+  font-size: 28px;
+}
+
+.subject-title {
+  font-size: 16px;
+  font-family: Gilroy-Regular, sans-serif;
+}
+
+.subjects {
+  width: 60%;
+  margin-top: 50px;
+  margin-bottom: 70px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.row p {
+  width: 50%;
+  text-align: center;
+  display: block;
+  margin: 10px 0 16px 0;
+  font-size: 16.5px;
+  letter-spacing: 0.5px;
+  line-height: 24px;
+  font-family: Gilroy-Regular, sans-serif;
+}
+
+.result-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.result-summary p {
+  display: block;
+  margin-top: 10px;
+  width: 92%;
+  font-size: 16.5px;
+  letter-spacing: 0.5px;
+  line-height: 24px;
+  font-family: Gilroy-Regular, sans-serif;
+}
+
+.result-summary span {
+  font-family: Gilroy-Bold, sans-serif;
+}
+
+.error-button {
+  background-color: #666;
+  color: #fff;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 17px;
+  font-family: Gilroy-Regular, sans-serif;
+  transition: background-color 0.2s ease;
+  max-width: 163px;
+  white-space: nowrap;
+}
+
+.error-button:hover {
+  background-color: #555;
 }
 
 @media (max-width: 950px) {
   .main-container {
     padding: 0;
+  }
+
+  .test-result__content {
+    padding: 20px 30px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  .result-table th,
+  .result-table td {
+    font-size: 14px;
+  }
+
+  .error-button {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 600px) {
+  .test-result__content {
+    padding: 15px 20px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .result-summary {
+    font-size: 14px;
+  }
+
+  .error-button {
+    padding: 8px 12px;
+    font-size: 13px;
   }
 }

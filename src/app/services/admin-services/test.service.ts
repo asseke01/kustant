@@ -2,6 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {AuthService} from '../auth-services/auth.service';
 import {Observable} from 'rxjs';
+import {GetTestResult} from '../../../assets/interfaces/getTestResult';
 
 @Injectable({
   providedIn: 'root'
@@ -99,5 +100,10 @@ export class TestService {
 
   saveSubThemeData(data: any): Observable<any> {
     return this.http.post(`${this.apiUrl}save_sub_theme/`, data, );
+  }
+
+  getTestResult(test_id: number):Observable<GetTestResult> {
+    const params = new HttpParams().set('test_id', test_id.toString());
+    return this.http.get<GetTestResult>(`${this.apiUrl}get_test_result/`, { params });
   }
 }

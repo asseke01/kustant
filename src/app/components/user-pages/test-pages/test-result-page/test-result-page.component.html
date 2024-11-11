@@ -2,8 +2,28 @@
   <app-navbar></app-navbar>
 
   <div class="test-result__content">
+
     <h1>Тестілеу нәтижесі</h1>
-    <p>Физика пәндік тест</p>
+    <p class="subject-title">{{ subject_display }} {{ test_type_display }}</p>
+    <div class="subjects">
+      <div class="row">
+        <p>Пәндер атауы</p>
+        <p>Жинаған балдары</p>
+      </div>
+      <hr>
+      <div class="row">
+        <p>{{ subject_display }}</p>
+        <p>{{ taken_marks }}</p>
+      </div>
+    </div>
+
+    <div class="result-summary">
+      <p><span>Барлығы:</span> {{ taken_marks }} балл</p>
+      <p><span>Мүмкін болған:</span> {{ over_all_marks }} балл</p>
+      <p><span>Басталған уақыт:</span> {{ started_on }}</p>
+    </div>
+
+    <button class="error-button" (click)="navigateToTestReview()">Қатемен жұмыс</button>
   </div>
 
 </div>

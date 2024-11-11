@@ -244,7 +244,7 @@ export class StartTestPageComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.testActionsService.finishTest().subscribe(() => {
-          this.router.navigate(['test-result']);
+          this.router.navigate([`test-result/${this.currentTesting.test_id}`]);
         });
       }
     });

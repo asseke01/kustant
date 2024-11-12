@@ -7,7 +7,19 @@
   <h2 class="mobile-header">{{ selectedSubject?.name_display }}</h2>
   <div class="test-header">
     <h2>{{ selectedSubject?.name_display }}</h2>
-    <div class="end-test-timer">
+    <div class="subject-select" *ngIf="subjects.length > 1">
+      <mat-form-field appearance="fill">
+        <mat-select placeholder="Пән таңдау" [(ngModel)]="selectedSubject"
+                    (selectionChange)="onSubjectChange($event.value)">
+          <mat-select-trigger>Пән таңдау</mat-select-trigger>
+          <mat-option *ngFor="let subject of subjects" [value]="subject">
+            {{ subject.name_display }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button *ngIf="subjects.length > 1" class="end-test__btn1" (click)="navigateToTestResult()">Шығу</button>
+    </div>
+    <div class="end-test-timer" [ngClass]="{'multiple-subjects': subjects.length > 1}">
       <button class="end-test__btn" (click)="navigateToTestResult()">Шығу</button>
     </div>
   </div>

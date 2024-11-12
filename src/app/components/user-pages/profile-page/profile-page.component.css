@@ -11,6 +11,10 @@
   margin-top: 25px;
 }
 
+.test-container h2 {
+  font-size: 28px;
+}
+
 
 .profile-grid-container {
   display: grid;
@@ -48,6 +52,15 @@
 .title h1{
   padding: 0;
   margin: 10px 0;
+  font-size: 28px;
+}
+
+.title span {
+  width: 92%;
+  font-size: 16.5px;
+  letter-spacing: 0.5px;
+  line-height: 24px;
+  font-family: Gilroy-Regular, sans-serif;
 }
 
 .exit-button, .subject-button{

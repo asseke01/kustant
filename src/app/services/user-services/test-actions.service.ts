@@ -35,6 +35,10 @@ export class TestActionsService {
     return this.http.post<{ success: boolean }>(`${this.userUrl}start_subject_test/`, { subject });
   }
 
+  public startUbtTest(): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`${this.userUrl}start_ubt_test/`, {});
+  }
+
   public getLearnerSpecifiedTests(): Observable<GetLearnerSpecifiedTests[]> {
     return this.http.get<GetLearnerSpecifiedTests[]>(`${this.userUrl}get_learner_specified_tests/`);
   }

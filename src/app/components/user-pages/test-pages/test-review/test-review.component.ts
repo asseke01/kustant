@@ -8,7 +8,7 @@ import {MatFormField} from '@angular/material/form-field';
 import {MatInput} from '@angular/material/input';
 import {MatOption} from '@angular/material/core';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
-import {MatSelect} from '@angular/material/select';
+import {MatSelect, MatSelectTrigger} from '@angular/material/select';
 import {TestingService} from '../../../../services/user-services/testing.service';
 import {GetTestReview, reviewSubject} from '../../../../../assets/interfaces/getTestReview.interface';
 import {answers, GetQuestion} from '../../../../../assets/interfaces/getQuestion';
@@ -33,7 +33,8 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
     MatSelect,
     NgForOf,
     NgIf,
-    NgClass
+    NgClass,
+    MatSelectTrigger
   ],
   templateUrl: './test-review.component.html',
   styleUrl: './test-review.component.css'
@@ -99,6 +100,24 @@ export class TestReviewComponent implements OnInit {
       console.error("Error fetching current testing data:", error);
       this.loading = false;
     });
+  }
+
+  private selectSubject(subject: reviewSubject) {
+    this.selectedSubject = subject;
+    this.subject = subject.name;
+    this.questionsCount = subject.questions_count;
+
+    // Update answered status based on current subject
+    this.answeredQuestions.clear();
+    subject.correct_answers.forEach((num: any) => this.answeredQuestions.set(num, 'correct'));
+    subject.incorrect_answers.forEach((num: any) => this.answeredQuestions.set(num, 'incorrect'));
+    subject.half_answers.forEach((num: any) => this.answeredQuestions.set(num, 'half-correct'));
+
+    this.loadQuestion(1); // Load the first question for the selected subject
+  }
+
+  onSubjectChange(subject: reviewSubject) {
+    this.selectSubject(subject); // Update the selected subject and reload data
   }
 
   public loadQuestion(number: number) {

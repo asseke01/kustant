@@ -72,7 +72,11 @@ export class MainPageComponent implements OnInit{
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.router.navigate(['main']);
+        this.testActionsService.startUbtTest().subscribe((response) => {
+          if(response.success) {
+            this.router.navigate(['start-test']);
+          }
+        })
       }
     });
   }

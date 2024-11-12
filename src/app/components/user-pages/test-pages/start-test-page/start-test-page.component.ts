@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {TestActionsService} from '../../../../services/user-services/test-actions.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TestingService} from '../../../../services/user-services/testing.service';
-import {AsyncPipe, NgClass, NgForOf, NgIf} from '@angular/common';
+import {AsyncPipe, NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {GetCurrentTesting, Subject} from '../../../../../assets/interfaces/getCurrentTesting';
 import {ConfirmDialogComponent} from '../../../../confirm-dialog/confirm-dialog.component';
@@ -10,8 +10,8 @@ import {MatDialog, MatDialogActions, MatDialogContent, MatDialogModule, MatDialo
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {answers, GetQuestion} from '../../../../../assets/interfaces/getQuestion';
 import {FormsModule} from '@angular/forms';
-import {MatFormField} from '@angular/material/form-field';
-import {MatOption, MatSelect} from '@angular/material/select';
+import {MatFormField, MatLabel} from '@angular/material/form-field';
+import {MatOption, MatSelect, MatSelectTrigger} from '@angular/material/select';
 import {AlertService} from '../../../../services/helper-services/alert.service';
 import {BehaviorSubject} from 'rxjs';
 import {MatInput} from '@angular/material/input';
@@ -36,7 +36,10 @@ import {QuestionService} from '../../../../services/admin-services/question.serv
     MatInput,
     MatDialogActions,
     MatButton,
-    MatDialogModule
+    MatDialogModule,
+    MatLabel,
+    MatSelectTrigger,
+    NgStyle
   ],
   templateUrl: './start-test-page.component.html',
   styleUrl: './start-test-page.component.css'
@@ -64,8 +67,12 @@ export class StartTestPageComponent implements OnInit {
   public questionsCount: number = 40;
   public loading: boolean = true;
   public matchingAnswers: { [key: number]: number | null } = {};
-
+  public subjectsAnswersMap: { [subjectName: string]: Set<number> } = {};
   public timer$ = new BehaviorSubject<string>('00:00');
+
+  public selectedAnswers: number[] = []; // Track selected answers as array for easier manipulation
+  public maxSelectableAnswers = 1;
+
   private endDateTime!: Date;
   private timerInterval: any;
   @ViewChild('errorReportDialog') errorReportDialog!: TemplateRef<any>;
@@ -83,20 +90,45 @@ export class StartTestPageComponent implements OnInit {
       (data) => {
         this.currentTesting = data;
         this.subjects = data.subjects;
-        if (this.subjects.length > 0) {
-          this.selectedSubject = this.subjects[0];
-          this.questionsCount = this.selectedSubject.questions_count;
-          this.loadSubjectAnswers(this.selectedSubject.name);
+
+        // Initialize subjectsAnswersMap with answered questions for each subject
+        for (const subject of this.subjects) {
+          const subjectName = subject.name;
+          const answeredQuestions = data.subjects_answers[subjectName] || [];
+
+          // Create a Set for answered questions
+          this.subjectsAnswersMap[subjectName] = new Set();
+          answeredQuestions.forEach((answer, index) => {
+            if (answer !== -1) {
+              this.subjectsAnswersMap[subjectName].add(index + 1);
+            }
+          });
         }
+
+        if (this.subjects.length > 0) {
+          this.selectedSubject = this.subjects[0]; // Default to the first subject
+          this.questionsCount = this.selectedSubject.questions_count;
+          this.subject = this.selectedSubject.name; // Set subject name
+          this.updateAnsweredQuestionsForCurrentSubject();
+          this.loadQuestion(1);
+        }
+
         this.loading = false;
         this.setTimer(data.ends_at);
-
       },
       (error) => {
         console.error("Error fetching current testing data:", error);
         this.loading = false;
       }
     );
+  }
+
+  onSubjectChange(subject: Subject) {
+    this.selectedSubject = subject;
+    this.subject = subject.name;
+    this.questionsCount = subject.questions_count;
+    this.updateAnsweredQuestionsForCurrentSubject();
+    this.loadSubjectAnswers(this.subject);
   }
 
   setTimer(endsAt: string) {
@@ -133,15 +165,15 @@ export class StartTestPageComponent implements OnInit {
   }
 
   loadSubjectAnswers(subjectName: string): void {
-    const answers: number[] = this.currentTesting.subjects_answers[subjectName] || [];
     this.answeredQuestions.clear();
 
-    answers.forEach((answer: number, index: number) => {
-      if (answer !== -1) {
-        this.answeredQuestions.add(index + 1);
-      }
+    // Load answered questions from the local subjectsAnswersMap
+    const answeredQuestionsSet = this.subjectsAnswersMap[subjectName] || new Set();
+    answeredQuestionsSet.forEach(questionNumber => {
+      this.answeredQuestions.add(questionNumber);
     });
-    this.loadQuestion(1);
+
+    this.loadQuestion(1); // Load the first question for the new subject
   }
 
   loadQuestion(number: number) {
@@ -150,6 +182,8 @@ export class StartTestPageComponent implements OnInit {
       this.questionData = data;
       this.questionText = data.text;
       this.answers = data.answers;
+      this.selectedAnswers = [];
+      this.maxSelectableAnswers = this.answers.length > 5 ? 3 : 1;
       if (this.questionData.question_type === 'matching') {
         this.initMatchingAnswers();
       }
@@ -173,6 +207,33 @@ export class StartTestPageComponent implements OnInit {
     }
   }
 
+  toggleAnswerSelection(answerId: number) {
+    const index = this.selectedAnswers.indexOf(answerId);
+
+    if (index !== -1) {
+      // Answer is already selected, so remove it
+      this.selectedAnswers.splice(index, 1);
+    } else {
+      if (this.selectedAnswers.length < this.maxSelectableAnswers) {
+        // Add new selection if within limit
+        this.selectedAnswers.push(answerId);
+      } else if (this.maxSelectableAnswers === 1) {
+        // Replace single selection
+        this.selectedAnswers = [answerId];
+      } else {
+        // Remove the first selected item to allow the new selection
+        this.selectedAnswers.shift();
+        this.selectedAnswers.push(answerId);
+      }
+    }
+    // Update answer selection state for display purposes
+    this.answers.forEach(answer => {
+      answer.is_selected = this.selectedAnswers.includes(answer.id);
+    });
+
+    this.saveAnswer();
+  }
+
   saveAnswer() {
     const {id, type} = this.questionData;
 
@@ -190,14 +251,33 @@ export class StartTestPageComponent implements OnInit {
       const selectedAnswerId = this.answers.find(answer => answer.is_selected)?.id;
       answerPayload = {
         question_id: id,
-        answers: selectedAnswerId ? [selectedAnswerId] : "[]",
+        answers: this.selectedAnswers,
         type
       };
     }
 
     this.testingService.saveAnswer(answerPayload).subscribe(() => {
       this.answeredQuestions.add(this.questionNumber);
+
+      // Update the local subjectsAnswersMap with the answered question
+      if (!this.subjectsAnswersMap[this.subject]) {
+        this.subjectsAnswersMap[this.subject] = new Set();
+      }
+      this.subjectsAnswersMap[this.subject].add(this.questionNumber);
     });
+  }
+
+  updateAnsweredQuestionsForCurrentSubject() {
+    // Clear the current set of answered questions
+    this.answeredQuestions.clear();
+
+    // Populate answeredQuestions from subjectsAnswersMap for the current subject
+    const currentSubjectName = this.selectedSubject?.name;
+    if (currentSubjectName && this.subjectsAnswersMap[currentSubjectName]) {
+      this.subjectsAnswersMap[currentSubjectName].forEach(questionNumber => {
+        this.answeredQuestions.add(questionNumber);
+      });
+    }
   }
 
   selectAnswer(answerId: number) {

@@ -4,10 +4,25 @@
 </div>
 
 <div class="test-container" *ngIf="!loading">
-  <h2 class="mobile-header">{{ selectedSubject?.name_display }}</h2>
+  <div class="mobile-header">
+    <h2>{{ selectedSubject?.name_display }}</h2>
+    <div class="timer1" *ngIf="subjects.length > 1">{{ timer$ | async }}</div>
+  </div>
   <div class="test-header">
     <h2>{{ selectedSubject?.name_display }}</h2>
-    <div class="end-test-timer">
+    <div class="subject-select" *ngIf="subjects.length > 1">
+      <mat-form-field appearance="fill">
+        <mat-select placeholder="Пән таңдау" [(ngModel)]="selectedSubject"
+                    (selectionChange)="onSubjectChange($event.value)">
+          <mat-select-trigger>Пән таңдау</mat-select-trigger>
+          <mat-option *ngFor="let subject of subjects" [value]="subject">
+            {{ subject.name_display }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button *ngIf="subjects.length > 1" class="end-test__btn1" (click)="finishTest()">Тестілеуді аяқтау</button>
+    </div>
+    <div class="end-test-timer" [ngClass]="{'multiple-subjects': subjects.length > 1}">
       <div class="timer">{{ timer$ | async }}</div>
       <button class="end-test__btn" (click)="finishTest()">Тестілеуді аяқтау</button>
     </div>
@@ -50,7 +65,7 @@
       <div class="sanitized-content" [innerHTML]="sanitizeHtmlContent(questionText)"></div>
       <div class="answers-section">
         <button *ngFor="let answer of answers; let i = index"
-                (click)="selectAnswer(answer.id)"
+                (click)="toggleAnswerSelection(answer.id)"
                 [ngClass]="{'selected': answer.is_selected}"
                 [innerHTML]="sanitizeHtmlContent(answer.text)"
                 [attr.data-label]="String.fromCharCode(65 + i)">
@@ -68,13 +83,13 @@
 
 <ng-template #errorReportDialog>
   <div class="errorModal">
-  <h2 mat-dialog-title>Сұрақ қатесін хабарлау</h2>
-  <div mat-dialog-content>
-    <textarea class="reportTextArea" matInput placeholder="Қатені жайлы..." [(ngModel)]="errorDescription"></textarea>
-  </div>
-  <div mat-dialog-actions>
-    <button mat-button (click)="closeDialog()">Артқа</button>
-    <button mat-button (click)="submitErrorReport()">Хабарлау</button>
-  </div>
+    <h2 mat-dialog-title>Сұрақ қатесін хабарлау</h2>
+    <div mat-dialog-content>
+      <textarea class="reportTextArea" matInput placeholder="Қатені жайлы..." [(ngModel)]="errorDescription"></textarea>
+    </div>
+    <div mat-dialog-actions>
+      <button mat-button (click)="closeDialog()">Артқа</button>
+      <button mat-button (click)="submitErrorReport()">Хабарлау</button>
+    </div>
   </div>
 </ng-template>

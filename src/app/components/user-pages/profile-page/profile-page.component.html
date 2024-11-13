@@ -6,8 +6,8 @@
 
       <div class="profile-box">
         <div class="title">
-          <h1>Салем {{ userData.fullname }}</h1>
-          <span>Таңдау пәндері:</span>
+          <h1>Салем, {{ userData.fullname }}</h1>
+          <span>Таңдау пәндері: {{ userData.subject1 }}-{{ userData.subject2 }}</span>
         </div>
 
         <div class="details">
@@ -19,73 +19,49 @@
       <div class="profile-box">
         <div class="title">
           <h1>ҰБТ Рекорд</h1>
-          <span style="font-size: 15px">Username: count балл</span>
+          <span>Username: {{ ubtRecord }} балл</span>
         </div>
 
-        <div class="details-progress">
-          <mat-progress-bar mode="determinate" value="40"></mat-progress-bar>
-          <span style="margin-top: 8px">Рекорд: count балл</span>
+        <div class="progress">
+          <div class="bar">
+            <div class="progress-bar-fill"
+                 [ngStyle]="{ width: ubtRecord ? (ubtRecord / maxUbtScore * 100) + '%' : '0%' }"></div>
+          </div>
+          <div class="points">
+            <div class="point">
+              0
+            </div>
+            <p class="text">
+              Рекорд: {{ ubtRecord }} балл
+            </p>
+            <div class="point">
+              140
+            </div>
+          </div>
         </div>
-
       </div>
+
     </div>
 
   </div>
 
-  <div class="test-container">
+  <div class="test-container" id="results">
     <h2>Нәтижелерім</h2>
     <div class="total-grid-container">
 
-      <div class="test-box">
+      <div class="test-box" *ngFor="let test of passedTests">
+
         <div class="title">
-          <h1>Subject</h1>
-          <span style="font-size: 15px">Type test</span>
+          <p>{{ test.subject_display }}</p>
+          <span>{{ test.test_type_display }}</span>
         </div>
 
         <div class="details">
-
           <div class="info">
-            <p><span style="font-weight: 600">Басталу уақыты:</span> DATE</p>
-            <p><span style="font-weight: 600">Балл:</span> COUNT</p>
+            <p><span>Басталу уақыты:</span> {{ test.started_on }}</p>
+            <p><span>Балл:</span> {{ test.taken_marks }}/{{ test.over_all_marks }}</p>
           </div>
-
-          <a class="show-button">Көру</a>
-        </div>
-
-      </div>
-
-      <div class="test-box">
-        <div class="title">
-          <h1>Subject</h1>
-          <span style="font-size: 15px">Type test</span>
-        </div>
-
-        <div class="details">
-
-          <div class="info">
-            <p><span style="font-weight: 600">Басталу уақыты:</span> DATE</p>
-            <p><span style="font-weight: 600">Балл:</span> COUNT</p>
-          </div>
-
-          <a class="show-button">Көру</a>
-        </div>
-
-      </div>
-
-      <div class="test-box">
-        <div class="title">
-          <h1>Subject</h1>
-          <span style="font-size: 15px">Type test</span>
-        </div>
-
-        <div class="details">
-
-          <div class="info">
-            <p><span style="font-weight: 600">Басталу уақыты:</span> DATE</p>
-            <p><span style="font-weight: 600">Балл:</span> COUNT</p>
-          </div>
-
-          <a class="show-button">Көру</a>
+          <a class="show-button" (click)="navigateToTestResults(test.id)">Көру</a>
         </div>
 
       </div>

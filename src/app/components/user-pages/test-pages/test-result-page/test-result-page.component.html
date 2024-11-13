@@ -2,19 +2,38 @@
   <app-navbar></app-navbar>
 
   <div class="test-result__content">
-
     <h1>Тестілеу нәтижесі</h1>
-    <p class="subject-title">{{ subject_display }} {{ test_type_display }}</p>
-    <div class="subjects">
+    <p class="subject-title">{{ subject_display }} {{ subject === "ubt" ? '' : test_type_display }}</p>
+
+    <!-- Display all subjects with scores if subject === "ubt" -->
+    <div *ngIf="subject === 'ubt'" class="subjects">
       <div class="row">
         <p>Пәндер атауы</p>
         <p>Жинаған балдары</p>
       </div>
       <hr>
-      <div class="row">
-        <p>{{ subject_display }}</p>
-        <p>{{ taken_marks }}</p>
+      <div *ngFor="let subj of subjects | keyvalue; let last = last">
+        <div class="row">
+          <p>{{ subj.key }}</p>
+          <p>{{ subj.value }}</p>
+        </div>
+        <hr *ngIf="!last">
       </div>
+    </div>
+
+    <!-- Display only one subject with score if subject !== "ubt" -->
+    <div *ngIf="subject !== 'ubt'" class="subjects">
+      <div class="row">
+        <p>Пәндер атауы</p>
+        <p>Жинаған балдары</p>
+      </div>
+      <hr>
+      <ng-container *ngFor="let subj of subjects | keyvalue; let i = index">
+        <div *ngIf="i === 0" class="row">
+          <p>{{ subj.key }}</p>
+          <p>{{ subj.value }}</p>
+        </div>
+      </ng-container>
     </div>
 
     <div class="result-summary">
@@ -25,6 +44,5 @@
 
     <button class="error-button" (click)="navigateToTestReview()">Қатемен жұмыс</button>
   </div>
-
 </div>
 <app-user-footer></app-user-footer>

@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {GetLearnerSpecifiedTests} from '../../../assets/interfaces/get_learner_specified_tests';
 import {GetQuestion} from '../../../assets/interfaces/getQuestion';
 import {GetTestReview} from '../../../assets/interfaces/getTestReview.interface';
+import {GetPassedTests} from '../../../assets/interfaces/getPassedTests.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -46,4 +47,15 @@ export class TestingService {
     });
   }
 
+  public getLearnerCurrentTestingExist(): Observable<{ current_testing_exists: boolean }> {
+    return this.http.get<{ current_testing_exists: boolean }>(`${this.apiUrl}get_learner_current_testing_existing/`);
+  }
+
+  public getUbtRecord() {
+    return this.http.get<any>(`${this.apiUrl}get_ubt_record/`);
+  }
+
+  public getPassedTests(): Observable<GetPassedTests[]> {
+    return this.http.get<GetPassedTests[]>(`${this.apiUrl}get_passed_tests/`);
+  }
 }

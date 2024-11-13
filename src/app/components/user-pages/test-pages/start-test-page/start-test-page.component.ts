@@ -72,6 +72,7 @@ export class StartTestPageComponent implements OnInit {
 
   public selectedAnswers: number[] = []; // Track selected answers as array for easier manipulation
   public maxSelectableAnswers = 1;
+  public selectedAnswersMap = new Map<number, number[]>();
 
   private endDateTime!: Date;
   private timerInterval: any;
@@ -182,8 +183,11 @@ export class StartTestPageComponent implements OnInit {
       this.questionData = data;
       this.questionText = data.text;
       this.answers = data.answers;
-      this.selectedAnswers = [];
+      // Set maxSelectableAnswers based on the number of answers
       this.maxSelectableAnswers = this.answers.length > 5 ? 3 : 1;
+
+      // Load previous selections if they exist for this question
+      this.selectedAnswers = this.selectedAnswersMap.get(this.questionNumber) || [];
       if (this.questionData.question_type === 'matching') {
         this.initMatchingAnswers();
       }
@@ -215,23 +219,36 @@ export class StartTestPageComponent implements OnInit {
       this.selectedAnswers.splice(index, 1);
     } else {
       if (this.selectedAnswers.length < this.maxSelectableAnswers) {
-        // Add new selection if within limit
-        this.selectedAnswers.push(answerId);
+        this.selectedAnswers.push(answerId); // Add if within limit
       } else if (this.maxSelectableAnswers === 1) {
-        // Replace single selection
-        this.selectedAnswers = [answerId];
+        this.selectedAnswers = [answerId]; // Replace single selection
       } else {
-        // Remove the first selected item to allow the new selection
-        this.selectedAnswers.shift();
+        this.selectedAnswers.shift(); // Remove the oldest selection
         this.selectedAnswers.push(answerId);
       }
     }
-    // Update answer selection state for display purposes
+
+    // Save the current selection state to the map
+    this.selectedAnswersMap.set(this.questionNumber, [...this.selectedAnswers]);
+    this.updateAnswerSelectionState();
+    this.updateAnsweredQuestionsState(); // Update the progress bar state
+    this.saveAnswer();
+  }
+
+  updateAnsweredQuestionsState() {
+    // Check if any answers are selected
+    if (this.selectedAnswers.length > 0) {
+      this.answeredQuestions.add(this.questionNumber);
+    } else {
+      this.answeredQuestions.delete(this.questionNumber);
+    }
+  }
+
+  updateAnswerSelectionState() {
+    // Update answer selection state for display
     this.answers.forEach(answer => {
       answer.is_selected = this.selectedAnswers.includes(answer.id);
     });
-
-    this.saveAnswer();
   }
 
   saveAnswer() {
@@ -258,7 +275,7 @@ export class StartTestPageComponent implements OnInit {
 
     this.testingService.saveAnswer(answerPayload).subscribe(() => {
       this.answeredQuestions.add(this.questionNumber);
-
+      this.updateAnsweredQuestionsState();
       // Update the local subjectsAnswersMap with the answered question
       if (!this.subjectsAnswersMap[this.subject]) {
         this.subjectsAnswersMap[this.subject] = new Set();

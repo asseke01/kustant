@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {NavBarComponent} from '../../../helpers/navbar/nav-bar.component';
-import {NgForOf} from '@angular/common';
+import {KeyValuePipe, NgForOf, NgIf} from '@angular/common';
 import {UserFooterComponent} from '../../user-footer/user-footer.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TestService} from '../../../../services/admin-services/test.service';
@@ -12,7 +12,9 @@ import {GetTestResult} from '../../../../../assets/interfaces/getTestResult';
   imports: [
     NavBarComponent,
     NgForOf,
-    UserFooterComponent
+    UserFooterComponent,
+    NgIf,
+    KeyValuePipe
   ],
   templateUrl: './test-result-page.component.html',
   styleUrl: './test-result-page.component.css'
@@ -33,6 +35,7 @@ export class TestResultPageComponent implements OnInit {
   public test_name!: string | null;
   public subject_display!: string;
   public subject!: string;
+  public subjects: any;
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -52,6 +55,7 @@ export class TestResultPageComponent implements OnInit {
       this.test_name = data.test_name;
       this.subject_display = data.subject_display;
       this.subject = data.subject;
+      this.subjects = data.subjects;
     })
   }
 

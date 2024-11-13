@@ -40,6 +40,7 @@ export class MainPageComponent implements OnInit{
   public getLearnerSpecifiedTests: GetLearnerSpecifiedTests[] = []
 
   ngOnInit() {
+    this.getLearnerCurrentTestingExist()
     this.getLearnerSubject()
     this.getLearnerSpecifiedTest()
   }
@@ -85,5 +86,13 @@ export class MainPageComponent implements OnInit{
     if (this.dialogRef) {
       this.dialogRef.close();
     }
+  }
+
+  public getLearnerCurrentTestingExist(){
+    this.testingService.getLearnerCurrentTestingExist().subscribe(data => {
+      if(data.current_testing_exists){
+        this.router.navigate(['start-test']);
+      }
+    })
   }
 }

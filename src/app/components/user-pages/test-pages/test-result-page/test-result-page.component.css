@@ -26,6 +26,11 @@
 
 h1 {
   font-size: 28px;
+  font-weight: bold;
+}
+
+hr {
+  margin: 8px 0;
 }
 
 .subject-title {

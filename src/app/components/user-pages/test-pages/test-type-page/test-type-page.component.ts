@@ -26,13 +26,13 @@ import {GetLvlData, lvlData} from '../../../../../assets/interfaces/getLvlData';
         style({transform: 'translateX(100%)', opacity: 0}),
         group([
           animate('500ms ease-out', style({transform: 'translateX(0)'})),
-          animate('600ms ease-out', style({opacity: 1}))
+          animate('500ms ease-out', style({opacity: 1}))  // Ensure both animations have the same duration
         ])
       ]),
       transition(':leave', [
         group([
           animate('500ms ease-in', style({transform: 'translateX(-100%)'})),
-          animate('600ms ease-in', style({opacity: 0}))
+          animate('500ms ease-in', style({opacity: 0}))  // Ensure both animations have the same duration
         ])
       ])
     ])
@@ -72,7 +72,14 @@ export class TestTypePageComponent implements OnInit {
     });
   }
 
-  public onLevelTwo() {
+  public onLevelTwo(event: MouseEvent) {
+    // Select all items and remove the 'selected' class
+    const items = document.querySelectorAll('.list-item');
+    items.forEach(item => item.classList.remove('selected'));
+
+    // Add 'selected' class to the clicked item only
+    (event.currentTarget as HTMLElement).classList.add('selected');
+
     this.currentLvl = 2;
     this.getLevelData(this.subjectName, this.currentLvl, null);
     this.levelTwo = true;
@@ -80,7 +87,15 @@ export class TestTypePageComponent implements OnInit {
     this.levelFour = false;
   }
 
-  public onLevelThree(lvlOption: number) {
+  public onLevelThree(lvlOption: number, event: MouseEvent) {
+    // Select all items and remove the 'selected' class
+    const items = document.querySelectorAll('.list-item');
+    items.forEach(item => item.classList.remove('selected'));
+
+    // Add 'selected' class to the clicked item only
+    (event.currentTarget as HTMLElement).classList.add('selected');
+
+    // Proceed with your existing logic
     console.log('Selected Level Two Option:', lvlOption);
     this.levelTwoOption = lvlOption;
     this.currentLvl = 3;
@@ -90,7 +105,14 @@ export class TestTypePageComponent implements OnInit {
     this.levelFour = false;
   }
 
-  public onLevelFour(lvlOption: number) {
+  public onLevelFour(lvlOption: number, event: MouseEvent) {
+    // Select all items and remove the 'selected' class
+    const items = document.querySelectorAll('.list-item');
+    items.forEach(item => item.classList.remove('selected'));
+
+    // Add 'selected' class to the clicked item only
+    (event.currentTarget as HTMLElement).classList.add('selected');
+
     console.log('Selected Level Three Option:', lvlOption);
     this.levelThreeOption = lvlOption;
     this.currentLvl = 4;
@@ -98,6 +120,21 @@ export class TestTypePageComponent implements OnInit {
     this.levelTwo = false;
     this.levelThree = false;
     this.levelFour = true;
+  }
+
+  public startThemeTest(theme_id: number, event: MouseEvent) {
+    // Select all items and remove the 'selected' class
+    const items = document.querySelectorAll('.list-item');
+    items.forEach(item => item.classList.remove('selected'));
+
+    // Add 'selected' class to the clicked item only
+    (event.currentTarget as HTMLElement).classList.add('selected');
+
+    this.testActionsService.startThemeTest(theme_id).subscribe(response => {
+      if (response.success) {
+        this.router.navigate(['start-test'], {queryParams: {subject: this.subjectName}});
+      }
+    });
   }
 
   public goBack(): void {
@@ -121,7 +158,7 @@ export class TestTypePageComponent implements OnInit {
   public startSubjectTest() {
     this.testActionsService.startSubjectTest(this.subjectName).subscribe(response => {
       if (response.success) {
-        this.router.navigate(['start-test'], { queryParams: { subject: this.subjectName } });
+        this.router.navigate(['start-test'], {queryParams: {subject: this.subjectName}});
       }
     });
   }

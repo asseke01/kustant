@@ -16,6 +16,8 @@
   max-height: calc(100vh - 50px);
   min-height: calc(100vh - 50px);
   gap: 10px;
+  margin: 0 auto;
+  max-width: 1400px;
 }
 
 .mobile-header {
@@ -244,6 +246,7 @@ mat-select-trigger {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 28px;
   width: 28px;
   height: 28px;
   border-radius: 50%;

@@ -1,7 +1,7 @@
-<div class = "white-container">
+<div class="white-container">
   <div class="nav-bar">
     <a class="logo-container" href="">
-      <img src="assets/img/logo_ico.svg" alt="logo" >
+      <img src="assets/img/logo_ico.svg" alt="logo">
     </a>
 
     <div class="burger-menu" [class.burger-active]="isMenuOpen" (click)="toggleMenu()">
@@ -15,7 +15,7 @@
       <a class="links" routerLink="/main">Тақырыптық тесттер</a>
       <a class="links" href="/profile#results">Нәтижелерім</a>
       <ng-container *ngIf="userData; else loginLink">
-        <a class="links auth" routerLink="../profile">{{ userData.fullname }}</a>
+        <a class="links auth" routerLink="../profile">Жеке кабинет</a>
       </ng-container>
       <ng-template #loginLink>
         <a class="links auth" routerLink="login">Кіру</a>

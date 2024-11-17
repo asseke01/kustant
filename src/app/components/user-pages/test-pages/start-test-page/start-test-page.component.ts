@@ -236,12 +236,18 @@ export class StartTestPageComponent implements OnInit {
   }
 
   updateAnsweredQuestionsState() {
-    // Check if any answers are selected
-    if (this.selectedAnswers.length > 0) {
+    // Проверяем, завершены ли ответы для matching или выбраны ответы
+    if (this.selectedAnswers.length > 0 || this.isMatchingAnswerComplete()) {
       this.answeredQuestions.add(this.questionNumber);
     } else {
       this.answeredQuestions.delete(this.questionNumber);
     }
+    // Обновляем ссылку на Set
+    this.answeredQuestions = new Set(this.answeredQuestions);
+  }
+
+  trackByFn(index: number): number {
+    return index;
   }
 
   updateAnswerSelectionState() {
@@ -252,7 +258,7 @@ export class StartTestPageComponent implements OnInit {
   }
 
   saveAnswer() {
-    const {id, type} = this.questionData;
+    const { id, type } = this.questionData;
 
     let answerPayload: any;
     if (type === 'matching') {
@@ -264,25 +270,38 @@ export class StartTestPageComponent implements OnInit {
         })),
         type: 'matching'
       };
+
+      // Проверяем, завершены ли все ответы
+      if (this.isMatchingAnswerComplete()) {
+        this.answeredQuestions.add(this.questionNumber);
+        this.answeredQuestions = new Set(this.answeredQuestions); // Обновляем ссылку
+        if (!this.subjectsAnswersMap[this.subject]) {
+          this.subjectsAnswersMap[this.subject] = new Set();
+        }
+        this.subjectsAnswersMap[this.subject].add(this.questionNumber);
+      }
     } else {
-      const selectedAnswerId = this.answers.find(answer => answer.is_selected)?.id;
       answerPayload = {
         question_id: id,
         answers: this.selectedAnswers,
         type
       };
-    }
 
-    this.testingService.saveAnswer(answerPayload).subscribe(() => {
       this.answeredQuestions.add(this.questionNumber);
-      this.updateAnsweredQuestionsState();
-      // Update the local subjectsAnswersMap with the answered question
+      this.answeredQuestions = new Set(this.answeredQuestions); // Обновляем ссылку
       if (!this.subjectsAnswersMap[this.subject]) {
         this.subjectsAnswersMap[this.subject] = new Set();
       }
       this.subjectsAnswersMap[this.subject].add(this.questionNumber);
+    }
+
+    this.testingService.saveAnswer(answerPayload).subscribe(() => {
+      this.updateAnsweredQuestionsState();
+      this.updateAnswerSelectionState();
+      console.log('Updated answeredQuestions:', Array.from(this.answeredQuestions));
     });
   }
+
 
   updateAnsweredQuestionsForCurrentSubject() {
     // Clear the current set of answered questions

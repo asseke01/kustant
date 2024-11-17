@@ -10,6 +10,8 @@
 }
 
 .test-container {
+  margin: 0 auto;
+  max-width: 1400px;
   display: flex;
   flex-direction: column;
   padding: 25px 30px;
@@ -88,7 +90,8 @@
 }
 
 ::ng-deep .mat-mdc-select-trigger .mat-mdc-select-arrow-wrapper {
-  display: none; !important;
+  display: none;
+!important;
 }
 
 ::ng-deep .mat-mdc-form-field-infix {
@@ -233,6 +236,7 @@ mat-select-trigger {
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 28px;
   width: 28px;
   height: 28px;
   border-radius: 50%;
@@ -330,7 +334,7 @@ mat-select-trigger {
     display: block;
   }
 
-    .mobile-header {
+  .mobile-header {
     display: flex;
     justify-content: space-between;
   }

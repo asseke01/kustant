@@ -28,15 +28,19 @@ export class TestActionsService {
       params = params.set('lvl_option', lvl_option);
     }
 
-    return this.http.get<GetLvlData>(`${this.userUrl}get_lvl_data/`, { params });
+    return this.http.get<GetLvlData>(`${this.userUrl}get_lvl_data/`, {params});
   }
 
   public startSubjectTest(subject: string): Observable<{ success: boolean }> {
-    return this.http.post<{ success: boolean }>(`${this.userUrl}start_subject_test/`, { subject });
+    return this.http.post<{ success: boolean }>(`${this.userUrl}start_subject_test/`, {subject});
   }
 
   public startUbtTest(): Observable<{ success: boolean }> {
     return this.http.post<{ success: boolean }>(`${this.userUrl}start_ubt_test/`, {});
+  }
+
+  public startThemeTest(theme_id: number): Observable<{ success: boolean }> {
+    return this.http.post<{ success: boolean }>(`${this.userUrl}start_theme_test/`, {theme_id: theme_id});
   }
 
   public getLearnerSpecifiedTests(): Observable<GetLearnerSpecifiedTests[]> {

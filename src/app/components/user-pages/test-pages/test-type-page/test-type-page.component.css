@@ -1,4 +1,4 @@
-.main-container{
+.main-container {
   display: flex;
   gap: 55px;
   padding: 25px;
@@ -7,7 +7,7 @@
   min-height: calc(100vh - 50px);
 }
 
-.image-container{
+.image-container {
   background-color: rgba(0, 0, 0, 0.3);
   background-blend-mode: darken;
   background-size: cover;
@@ -36,12 +36,12 @@
 
 }
 
-.image-container h1{
+.image-container h1 {
   margin: 0;
   letter-spacing: 1px;
 }
 
-.image-container p{
+.image-container p {
   font-size: 19px;
   opacity: 0.85;
 
@@ -87,14 +87,14 @@
   height: 15px;
 }
 
-.type-container{
+.type-container {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
-  gap:20px;
+  gap: 20px;
 }
 
-.box-container{
+.box-container {
   width: 100%;
   background-color: white;
   border-radius: 10px;
@@ -102,16 +102,16 @@
   cursor: pointer;
 }
 
-.box-container h2,p{
+.box-container h2, p {
   padding: 0;
   margin: 0;
 }
 
-.box-container h2{
+.box-container h2 {
   font-size: 28px
 }
 
-.box-container p{
+.box-container p {
   font-size: 20px;
 }
 
@@ -145,23 +145,38 @@
   scrollbar-width: none;
 }
 
-.scroll-box ul {
+.list {
   padding: 0;
   margin: 0;
   list-style-type: none;
 }
 
-.scroll-box li {
+.list-item {
   padding: 15px 30px;
   border-bottom: 1px solid #e0e0e0;
   margin: 0;
+  position: relative;
 }
+
+.list-item.selected {
+  background-color: lightblue; /* Customize the highlight color */
+}
+
+.box-container.selected {
+  background-color: lightblue;
+}
+
+ /*Disable tap highlight color */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 
 .scroll-box li:last-child {
   /*border-bottom: none;*/
 }
 
-.logo{
+.logo {
   position: absolute;
   bottom: 16px;
   left: 0;
@@ -175,7 +190,7 @@
     height: 98vh;
   }
 
-  .form-container{
+  .form-container {
     width: 300px;
   }
 
@@ -186,7 +201,7 @@
     padding: 30px;
   }
 
-  .logo{
+  .logo {
     position: absolute;
     bottom: 16px;
     left: 0;
@@ -206,7 +221,7 @@
   }
 
 
-  .form-container{
+  .form-container {
     width: 400px;
   }
 }
@@ -217,6 +232,24 @@
 
   }
 
+  .form h1 {
+    font-size: 32px;
+  }
+
+  .form h2 {
+    font-size: 19px;
+    font-family: "Gilroy-Regular", sans-serif;
+  }
+
+  .box-container h2 {
+    font-size: 20px;
+    font-family: "Gilroy-Bold", sans-serif;
+  }
+
+  .box-container p {
+    font-size: 14px;
+    font-family: "Gilroy-Regular", sans-serif;
+  }
 
   .box-container {
     padding: 20px 40px 50px 20px;

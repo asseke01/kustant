@@ -22,7 +22,7 @@
             <h2>Пәндік толық тест</h2>
             <p>Тарих пәні бойынша толық тест түрі.</p>
           </div>
-          <div class="box-container type" (click)="onLevelTwo()">
+          <div class="box-container type" (click)="onLevelTwo($event)">
             <h2>Тақырыптық тест</h2>
             <p>Тарих пәні бойынша толық тест түрі.</p>
           </div>
@@ -37,9 +37,11 @@
         <div class="level-container">
           <div class="level-box">
             <div class="scroll-box">
-              <ul (click)="onLevelThree(lvl.id)" *ngFor="let lvl of lvlData">
-                <li>{{ lvl.name }}</li>
-              </ul>
+              <div class="list">
+                <div class="list-item" *ngFor="let lvl of lvlData"
+                     (click)="onLevelThree(lvl.id, $event)">{{ lvl.name }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -53,9 +55,11 @@
         <div class="level-container">
           <div class="level-box">
             <div class="scroll-box">
-              <ul (click)="onLevelFour(lvl.id)" *ngFor="let lvl of lvlData">
-                <li>{{ lvl.name }}</li>
-              </ul>
+              <div class="list">
+                <div class="list-item" *ngFor="let lvl of lvlData"
+                     (click)="onLevelFour(lvl.id, $event)">{{ lvl.name }}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -63,15 +67,15 @@
     </ng-container>
 
     <ng-container>
-      <div class="form" *ngIf="levelFour">
+      <div class="form" *ngIf="levelFour" @slideLeftRight>
         <h1>Тақырыпшалар</h1>
         <h2>Тақырыпшаны таңдаңыз:</h2>
         <div class="level-container">
           <div class="level-box">
             <div class="scroll-box">
-              <ul *ngFor="let lvl of lvlData">
-                <li>{{ lvl.name }}</li>
-              </ul>
+              <div class="list">
+                <div class="list-item" *ngFor="let lvl of lvlData" (click)="startThemeTest(lvl.id, $event)">{{ lvl.name }}</div>
+              </div>
             </div>
           </div>
         </div>

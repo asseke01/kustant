@@ -2,6 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
 import {AuthService} from '../auth-services/auth.service';
+import {GetTestResult} from '../../../assets/interfaces/getTestResult';
 
 @Injectable({
   providedIn: 'root'
@@ -72,10 +73,7 @@ export class UserService {
     );
   }
 
-
-
-
-  adminLogin(data: { password: string | null | undefined; username: string | null | undefined }): Observable<any> {
+ adminLogin(data: { password: string | null | undefined; username: string | null | undefined }): Observable<any> {
     return this.http.post<any>(`${this.userUrl}admin/login_api/`, data).pipe(
       tap(response => {
         if (response && response.token) {
@@ -83,6 +81,10 @@ export class UserService {
         }
       })
     );
+  }
+
+  getSchool():Observable<any>{
+    return this.http.get(`${this.userUrl}get_school_groups/`);
   }
 
 }

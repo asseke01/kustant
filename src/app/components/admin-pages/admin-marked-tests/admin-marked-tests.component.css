@@ -1,0 +1,253 @@
+.navbar-container {
+  top: 0;
+  position: sticky;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 27px 30px;
+}
+
+.navbar-container h2{
+  padding: 0;
+  margin: 0;
+  font-size: 22px;
+}
+
+.navbar-menu{
+  display: flex;
+  gap: 20px;
+}
+
+.search-menu{
+  display: flex;
+  align-items: center;
+}
+
+.search-menu input{
+  border: 1px solid #4A4A4A;
+  border-radius: 5px 0 0 5px;
+  padding: 5.5px;
+  max-width: 100%;
+  width:300px;
+}
+
+
+.add-btn, .search-btn{
+  padding: 5px 11px;
+  border: none;
+  background-color: #4A4A4A;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.search-btn{
+  padding: 5px 11px;
+  border: none;
+  background-color: #4A4A4A;
+  border-radius: 0 5px 5px 0;
+  color: white;
+  font-size: 16px;
+}
+
+.main-container{
+  padding: 27px 30px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: minmax(100px, 1fr) minmax(100px, 1fr) minmax(100px, 1fr);
+  gap: 20px;
+}
+
+.profile-box {
+  position: relative;
+  background-color: white;
+  color: black;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.details-box{
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.details-box-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.end-span {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  cursor: pointer;
+}
+
+
+.detail-header{
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.detail-header h1,h5{
+  margin: 0;
+  padding: 0;
+}
+
+.detail-header h5{
+  font-weight: normal;
+}
+
+
+.details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.details p{
+  margin: 0;
+  padding: 0;
+}
+
+.button {
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 5px 10px;
+  background-color: #464646;
+  width: fit-content;
+  max-width: 120px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.border {
+  background-color: #b3e0ff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 6px;
+  border-radius: 10px 0 0 10px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 400px;
+}
+
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mat-mdc-dialog-actions {
+  display: flex;
+  justify-content: flex-start;
+
+}
+
+::ng-deep .mat-mdc-dialog-surface {
+  border-radius: 5px !important;
+  background-color: white !important;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+
+.dialog-header h2{
+  font-weight: 500;
+  font-size: 26px;
+}
+
+.form-group{
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group input[type="text"], select,input[type="datetime-local"]{
+  padding: 8px;
+  border: 1px solid #4A4A4A;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.form-group label{
+  font-weight: 500;
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: black;
+}
+
+.form-inline{
+  display: flex;
+  gap:10px
+}
+
+.delete-subject{
+  text-decoration: none;
+  color: red;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.add-subject{
+  margin-top: 10px;
+  text-decoration: none;
+  color: green;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.save-subject{
+  padding: 9px 11px;
+  border: none;
+  background-color: #4A4A4A;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.save-subject:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.submit-container{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.submit-buttons{
+  display: flex;
+  gap:10px;
+}

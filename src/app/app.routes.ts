@@ -19,6 +19,7 @@ import {ProfilePageComponent} from './components/user-pages/profile-page/profile
 import {TestRequest} from '@angular/common/http/testing';
 import {TestResultPageComponent} from './components/user-pages/test-pages/test-result-page/test-result-page.component';
 import {TestReviewComponent} from './components/user-pages/test-pages/test-review/test-review.component';
+import {AdminMarkedTestsComponent} from './components/admin-pages/admin-marked-tests/admin-marked-tests.component';
 
 export const routes: Routes = [
 
@@ -72,6 +73,9 @@ export const routes: Routes = [
       },
       {
         path: 'wrong-questions', component: AdminWrongQuestionPageComponent
+      },
+      {
+        path: 'marked-tests', component: AdminMarkedTestsComponent
       }
     ]
   },

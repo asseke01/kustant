@@ -72,9 +72,6 @@ export class UserService {
     );
   }
 
-
-
-
   adminLogin(data: { password: string | null | undefined; username: string | null | undefined }): Observable<any> {
     return this.http.post<any>(`${this.userUrl}admin/login_api/`, data).pipe(
       tap(response => {

@@ -1,0 +1,38 @@
+.navbar-container {
+  top: 0;
+  position: sticky;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 27px 30px;
+}
+
+.navbar-container h2{
+  padding: 0;
+  margin: 0;
+  font-size: 22px;
+}
+
+.navbar-menu{
+  display: flex;
+  gap: 20px;
+}
+
+.add-btn, .search-btn{
+  padding: 5px 11px;
+  border: none;
+  background-color: #4A4A4A;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.main-container{
+  padding: 27px 30px;
+}
+
+
+
+

@@ -29,6 +29,7 @@ import {StaffService} from '../../../services/admin-services/staff.service';
 })
 export class AdminSchoolsPageComponent implements OnInit {
   @ViewChild('dialogTemplate') dialogTemplate!: TemplateRef<any>;
+  @ViewChild('adminDialogTemplate') adminDialogTemplate!: TemplateRef<any>;
 
   private dialog = inject(MatDialog);
   private userService = inject(UserService);
@@ -43,7 +44,8 @@ export class AdminSchoolsPageComponent implements OnInit {
   public viewMode: 'admins' | 'students' = 'admins';
   public learners: any[] = [];
   public schoolAdmins: any[] = [];
-
+  public filteredLearners: any[] = [];
+  public selectedAdminId: number | null = null;
 
   public type: string = 'teachers';
   private selectedSchoolId!: number | undefined;
@@ -53,12 +55,19 @@ export class AdminSchoolsPageComponent implements OnInit {
     name: ['', Validators.required],
   })
 
+  public adminForm = this.form.group({
+    id: [null],
+    fullname: ['', Validators.required],
+    phone_number: ['', Validators.required],
+    password: ['']
+  });
+
   public openSchoolDetails(school: any): void {
     this.selectedSchool = school;
     this.viewMode = 'admins';
     this.schoolAdmins = [];
     this.learners = [];
-    this.loadSchoolAdmins(school.id); // Загружаем администраторов по умолчанию
+    this.loadSchoolAdmins(school.id);
   }
 
 
@@ -92,6 +101,37 @@ export class AdminSchoolsPageComponent implements OnInit {
     }
   }
 
+  public openAdminDialog(enterAnimationDuration: string, exitAnimationDuration: string, admin: any = null): void {
+    this.selectedModal = admin ? 'update' : 'create';
+    this.selectedAdminId = admin?.id || null;
+
+    if (this.selectedModal === 'update' && this.selectedAdminId !== null) {
+      this.adminForm.patchValue({
+        id: admin.id,
+        fullname: admin.fullname,
+        phone_number: admin.phone_number,
+        password: admin.password || '' // Пароль только если есть
+      });
+
+      this.dialog.open(this.adminDialogTemplate, {
+        width: '600px',
+        enterAnimationDuration,
+        exitAnimationDuration
+      });
+    } else {
+      this.adminForm.reset();
+      this.dialog.open(this.adminDialogTemplate, {
+        width: '600px',
+        enterAnimationDuration,
+        exitAnimationDuration
+      });
+    }
+  }
+
+  public closeAdminDialog(): void {
+    this.dialog.closeAll();
+  }
+
   public closeDialog(): void {
     this.dialog.closeAll();
   }
@@ -120,11 +160,23 @@ export class AdminSchoolsPageComponent implements OnInit {
 
   public filterStaff() {
     if (!this.searchQuery.trim()) {
-      this.loadSchools(); // Показать все школы, если запрос пуст
+      this.loadSchools();
       return;
     }
     this.schools = this.schools.filter(school =>
       school.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+  }
+
+  public filterLearners(): void {
+    const query = this.searchQuery.trim().toLowerCase();
+    if (!query) {
+      this.filteredLearners = this.learners;
+      return;
+    }
+
+    this.filteredLearners = this.learners.filter(learner =>
+      learner.fullname.toLowerCase().includes(query) || learner.phone_number.includes(query)
     );
   }
 
@@ -135,8 +187,8 @@ export class AdminSchoolsPageComponent implements OnInit {
     }
 
     const saveData = {
-      id: this.schoolForm.value.id ?? undefined, // Преобразуем null в undefined
-      name: this.schoolForm.value.name as string, // Преобразуем в string, так как поле валидируется
+      id: this.schoolForm.value.id ?? undefined,
+      name: this.schoolForm.value.name as string,
     };
 
     this.userService.saveSchool(saveData).subscribe(
@@ -193,7 +245,8 @@ export class AdminSchoolsPageComponent implements OnInit {
   private loadLearners(groupId?: number): void {
     this.userService.getLearners(groupId).subscribe(
       data => {
-        this.learners = data.learners;
+        this.learners = data.learners || [];
+        this.filteredLearners = this.learners;
       },
       error => {
         this.alert.error('Ошибка при загрузке учеников:');
@@ -208,6 +261,77 @@ export class AdminSchoolsPageComponent implements OnInit {
       },
       error => {
         this.alert.error('Ошибка при загрузке администраторов:');
+      }
+    );
+  }
+
+  public saveAdmin(): void {
+    let phone = this.adminForm.get('phone_number')?.value;
+
+    if (phone) {
+      phone = phone.replace(/\D/g, '');
+
+      if (phone.length === 10) {
+        phone = `+7 (${phone.slice(0, 3)}) ${phone.slice(3, 6)} ${phone.slice(6, 8)} ${phone.slice(8, 10)}`;
+        this.adminForm.get('phone_number')?.setValue(phone);
+      } else {
+        this.alert.warn('Некорректный формат телефона')
+      }
+    }
+
+    if (this.adminForm.invalid) {
+      this.alert.warn('Форма не заполнена!');
+      return;
+    }
+
+    const adminData = {
+      ...this.adminForm.value,
+      school_id: this.selectedSchool.id
+    };
+
+    this.staffService.saveSchoolAdmin(adminData).subscribe(
+      (response) => {
+        if (response.success) {
+          this.alert.success('Администратор успешно сохранен!');
+          this.loadSchoolAdmins(this.selectedSchool.id);
+          this.closeAdminDialog();
+        }
+      },
+      (error) => {
+        if (error.status === 409) {
+          this.alert.warn('Пользователь с таким номером уже существует!');
+        } else {
+          this.alert.error('Ошибка при сохранении администратора.');
+        }
+      }
+    );
+  }
+
+  public deleteAdmin(): void {
+    if (!this.selectedAdminId) {
+      this.alert.warn('Администратор не выбран!');
+      return;
+    }
+
+    if (!confirm('Вы уверены, что хотите удалить этого администратора?')) {
+      return;
+    }
+
+    const deleteData = {
+      prev_type: 'school_admins',
+      id: this.selectedAdminId,
+    };
+
+    this.staffService.deleteStaff(deleteData).subscribe(
+      (response) => {
+        if (response.success) {
+          this.alert.success('Администратор успешно удален!');
+          this.loadSchoolAdmins(this.selectedSchool.id);
+          this.closeAdminDialog();
+        }
+      },
+      (error) => {
+        this.alert.error('Ошибка при удалении администратора.');
       }
     );
   }

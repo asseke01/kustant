@@ -79,7 +79,21 @@
   <div class="navbar-container">
     <div class="school-details__header">
       <button class="back-btn" (click)="goBack()"><img src="assets/img/left_arrow_ico.svg" alt="back"></button>
-      <h2>{{ selectedSchool.name }}</h2></div>
+      <h2>{{ selectedSchool.name }}</h2>
+    </div>
+    <div class="search-menu" *ngIf="viewMode === 'students'">
+      <input
+        type="text"
+        placeholder="ФИО/Телефон (формат +7 (___) ___ __ __)"
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="filterLearners()"
+      />
+      <button class="search-btn" (click)="filterLearners()">Іздеу</button>
+    </div>
+    <button class="add-btn" *ngIf="viewMode==='admins'" (click)="openAdminDialog('250ms', '250ms')">
+      Админ қосу
+    </button>
+
   </div>
   <div class="main-container">
     <div class="content-container">
@@ -101,7 +115,7 @@
             <th>Телефон</th>
           </tr>
           <tbody>
-          <tr *ngFor="let admin of schoolAdmins; let i = index">
+          <tr *ngFor="let admin of schoolAdmins; let i = index" (click)="openAdminDialog('250ms', '250ms', admin)">
             <td>#{{ i + 1 }}</td>
             <td>{{ admin.fullname }}</td>
             <td>{{ admin.phone_number }}</td>
@@ -116,7 +130,7 @@
             <th>Таңдау пәні</th>
           </tr>
           <tbody>
-          <tr *ngFor="let student of learners; let i = index">
+          <tr *ngFor="let student of filteredLearners; let i = index">
             <td>#{{ i + 1 }}</td>
             <td>{{ student.fullname }}</td>
             <td>{{ student.phone_number }}</td>
@@ -127,4 +141,38 @@
       </div>
     </div>
   </div>
+</ng-template>
+
+<ng-template #adminDialogTemplate>
+  <div class="dialog-header">
+    <h2 mat-dialog-title *ngIf="selectedAdminId; else createTitle">Мектеп админін өзгерту</h2>
+    <ng-template #createTitle><h2 mat-dialog-title>Мектеп админін қосу</h2></ng-template>
+    <button mat-icon-button (click)="closeAdminDialog()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content>
+    <form [formGroup]="adminForm">
+      <div class="content">
+        <div class="form-group">
+          <label for="fullname">ФИО</label>
+          <input type="text" id="fullname" formControlName="fullname">
+        </div>
+        <div class="form-group">
+          <label for="phone_number">Тел. номер</label>
+          <input type="text" id="phone_number" formControlName="phone_number" [mask]="'(000) 000 00 00'" prefix="+7 ">
+        </div>
+        <div *ngIf="selectedAdminId">
+          <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="text" id="password" formControlName="password" [disabled]="true">
+          </div>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button class="save-subject" (click)="saveAdmin()">Сақтау</button>
+    <button class="save-subject" *ngIf="selectedAdminId" (click)="deleteAdmin()">Жою</button>
+  </mat-dialog-actions>
 </ng-template>

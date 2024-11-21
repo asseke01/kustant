@@ -32,4 +32,12 @@ export class StaffService {
     const params = groupId ? new HttpParams().set('group_id', groupId) : undefined;
     return this.http.get(`${this.userUrl}get_school_admins/`, {params});
   }
+
+  saveSchoolAdmin(data: any): Observable<any> {
+    return this.http.post<any>(`${this.userUrl}save_school_admin/`, data);
+  }
+
+  deleteStaff(data: { prev_type: string; id: number }): Observable<any> {
+    return this.http.post<any>(`${this.userUrl}delete_staff/`, data);
+  }
 }

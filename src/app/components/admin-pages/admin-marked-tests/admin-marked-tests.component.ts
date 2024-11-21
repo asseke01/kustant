@@ -243,4 +243,13 @@ export class AdminMarkedTestsComponent implements OnInit{
     });
   }
 
+  public changeStatus(status: string) {
+    if(status === 'archived') {
+      this.status = 'active'
+    } else {
+      this.status = 'archived';
+    }
+    this.loadTest();
+  }
+
 }

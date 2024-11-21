@@ -4,7 +4,7 @@
   <div class="navbar-menu">
 
     <button class="add-btn" (click)="openDialog('250ms', '250ms', 'create')">Тест белгілеу</button>
-    <button class="add-btn">Архив</button>
+    <button class="add-btn" (click)="changeStatus(status)">{{ status === 'archived' ? 'Артқа' : 'Архив' }}</button>
 
   </div>
 </div>
@@ -20,13 +20,13 @@
         <div class="details-box-left">
 
           <div class="detail-header">
-            <h1>{{item.name}}</h1>
-            <h5>{{item.test_type_display}}</h5>
+            <h1>{{ item.name }}</h1>
+            <h5>{{ item.test_type_display }}</h5>
           </div>
           <div class="details">
-            <p>Группа: {{item.group_name}}</p>
-            <p>Уақыты: {{item.starts_at}}</p>
-            <p>Дедлайн: {{item.ends_at}}</p>
+            <p>Группа: {{ item.group_name }}</p>
+            <p>Уақыты: {{ item.starts_at }}</p>
+            <p>Дедлайн: {{ item.ends_at }}</p>
           </div>
 
         </div>
@@ -35,7 +35,7 @@
           <span class="end-span" (click)="openDialog('250ms', '250ms', 'update', item.id)">
             <img src="assets/img/pencil.png" height="34" alt="pencil">
           </span>
-          <a class="button" >Нәтижелер</a>
+          <a class="button">Нәтижелер</a>
         </div>
 
       </div>
@@ -80,9 +80,9 @@
 
           <div class="form-group">
             <label for="group">Мектеп</label>
-            <select id="group" name="group" formControlName="group_id" >
+            <select id="group" name="group" formControlName="group_id">
               <option value="" disabled selected>Мектепті таңдаңыз</option>
-              <option *ngFor="let school of schools" [value]="school.id">{{school.name}}</option>
+              <option *ngFor="let school of schools" [value]="school.id">{{ school.name }}</option>
             </select>
           </div>
 
@@ -90,7 +90,7 @@
             <label for="group">Оқушылардың Excel тізімі
               <a href="assets/data/excel_demo.xlsx" target="_blank" style="text-decoration: underline; cursor: pointer">(Үлгі)</a>
             </label>
-            <input id="uploaded_excel_file" type="file" (change)="onFileChange($event)" />
+            <input id="uploaded_excel_file" type="file" (change)="onFileChange($event)"/>
           </div>
         </div>
       </form>
@@ -117,8 +117,8 @@
 
           <div class="form-group">
             <label for="group-update">Мектеп</label>
-            <select id="group-update" name="group-update" formControlName="group_id" >
-              <option *ngFor="let school of schools" [value]="school.id">{{school.name}}</option>
+            <select id="group-update" name="group-update" formControlName="group_id">
+              <option *ngFor="let school of schools" [value]="school.id">{{ school.name }}</option>
             </select>
           </div>
 
@@ -127,16 +127,17 @@
               <a href="assets/data/excel_demo.xlsx" target="_blank" style="text-decoration: underline; cursor: pointer">(Үлгі)</a>
             </label>
             <div *ngIf="testForm.get('excel')?.value" style="margin-bottom: 10px">
-              <a [href]="userUrl + testForm.get('excel')?.value" style="text-decoration: underline; cursor: pointer; font-size: 16px; ">
+              <a [href]="userUrl + testForm.get('excel')?.value"
+                 style="text-decoration: underline; cursor: pointer; font-size: 16px; ">
                 Қазіргі Excel
               </a>
             </div>
-            <input id="uploaded_excel_file-update" type="file" (change)="onFileChange($event)" />
+            <input id="uploaded_excel_file-update" type="file" (change)="onFileChange($event)"/>
           </div>
 
           <div class="form-group">
             <label for="subject-update">Пән</label>
-            <select id="subject-update" name="subject-update" >
+            <select id="subject-update" name="subject-update">
 
             </select>
           </div>
@@ -160,9 +161,8 @@
         </div>
 
         <div>
-          <button class="save-subject" (click)="onDelete()" >Жою</button>
+          <button class="save-subject" (click)="onDelete()">Жою</button>
         </div>
-
 
 
       </div>

@@ -1,0 +1,90 @@
+<div class="navbar-container">
+  <h2>Мектептер</h2>
+
+  <div class="navbar-menu">
+
+    <div class="search-menu">
+      <input type="text" placeholder="Мектеп аты" [(ngModel)]="searchQuery"
+             (ngModelChange)="updateSearchQuery(searchQuery)">
+      <button class="search-btn" (click)="filterStaff()">Іздеу</button>
+    </div>
+
+    <button class="add-btn" (click)="openDialog('250ms', '250ms', 'create')">Мектеп қосу</button>
+  </div>
+</div>
+
+<div class="main-container">
+
+  <div class="content-container">
+
+    <div class="table-container">
+      <table>
+        <tr>
+          <th>#</th>
+          <th>Мектеп</th>
+          <th></th>
+        </tr>
+        <tbody>
+        <tr *ngFor="let school of schools; let i = index"
+            (click)="openDialog('250ms', '250ms', 'update', school.id)">
+          <td>{{ i + 1 }}</td>
+          <td>{{ school.name }}</td>
+          <td>
+            <button class="edit-button">
+              <mat-icon class="mat-icon">edit</mat-icon>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+<ng-template #dialogTemplate>
+  <div class="dialog-header">
+    <h2 mat-dialog-title *ngIf="selectedModal=='create'">Мектеп қосу</h2>
+    <h2 mat-dialog-title *ngIf="selectedModal=='update'">Мектеп өзгерту</h2>
+    <button mat-icon-button (click)="closeDialog()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content>
+
+    <ng-container *ngIf="selectedModal == 'create'">
+      <form [formGroup]="schoolForm">
+
+        <div class="content">
+
+          <div class="form-group">
+            <label for="name">Мектеп аты</label>
+            <input type="text" id="name" name="fio" formControlName="name">
+          </div>
+
+        </div>
+      </form>
+    </ng-container>
+
+    <ng-container *ngIf="selectedModal == 'update'">
+      <form [formGroup]="schoolForm">
+
+        <div class="content">
+
+          <div class="form-group">
+            <label for="name1">Название</label>
+            <input type="text" id="name1" name="fio" formControlName="name">
+          </div>
+
+        </div>
+      </form>
+    </ng-container>
+
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button class="save-subject" (click)="saveSchoolGroup()">Сақтау</button>
+  </mat-dialog-actions>
+</ng-template>

@@ -1,0 +1,192 @@
+.navbar-container {
+  top: 0;
+  position: sticky;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 27px 30px;
+}
+
+.navbar-container h2 {
+  padding: 0;
+  margin: 0;
+  font-size: 22px;
+}
+
+.navbar-menu {
+  display: flex;
+  gap: 20px;
+}
+
+.search-menu {
+  display: flex;
+  align-items: center;
+}
+
+.search-menu input {
+  border: 1px solid #4A4A4A;
+  border-radius: 5px 0 0 5px;
+  padding: 5.5px;
+  max-width: 100%;
+  width: 300px;
+}
+
+
+.add-btn, .search-btn {
+  padding: 5px 11px;
+  border: none;
+  background-color: #4A4A4A;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.search-btn {
+  padding: 5px 11px;
+  border: none;
+  background-color: #4A4A4A;
+  border-radius: 0 5px 5px 0;
+  color: white;
+  font-size: 16px;
+}
+
+.main-container {
+  padding: 27px 30px;
+}
+
+.content-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 30px 15px;
+}
+
+table-container {
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th {
+  color: #4A4A4A;
+  font-weight: 500;
+}
+
+table td {
+  color: black;
+  font-weight: 500;
+}
+
+table th,
+table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+table td {
+  max-width: 10%;
+}
+
+table th {
+  background-color: transparent;
+}
+
+.edit-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.mat-icon:hover {
+  background-color: #d0d0d3;
+  border-radius: 5px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialog-header h2 {
+  font-weight: 600;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group input[type="text"], select {
+  padding: 8px;
+  border: 1px solid #4A4A4A;
+  border-radius: 3px;
+}
+
+.form-group label {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: black;
+}
+
+.form-inline {
+  display: flex;
+  gap: 10px
+}
+
+.delete-subject {
+  text-decoration: none;
+  color: red;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.add-subject {
+  margin-top: 10px;
+  text-decoration: none;
+  color: green;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.save-subject {
+  padding: 5px 11px;
+  border: none;
+  background-color: #4A4A4A;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+}
+
+.mat-mdc-dialog-actions {
+  display: flex;
+  justify-content: flex-start;
+
+}
+
+::ng-deep .mat-mdc-dialog-surface {
+  border-radius: 5px !important;
+  background-color: white !important;
+}

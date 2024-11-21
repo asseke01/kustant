@@ -77,7 +77,8 @@ export const routes: Routes = [
       },
       {
         path: 'marked-tests', component: AdminMarkedTestsComponent
-      }, {
+      },
+      {
         path: 'schools', component: AdminSchoolsPageComponent
       }
     ]

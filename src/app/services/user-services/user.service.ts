@@ -87,4 +87,15 @@ export class UserService {
     return this.http.get(`${this.userUrl}get_school_groups/`);
   }
 
+  saveSchool(data: { id?: number; name: string }): Observable<any> {
+    return this.http.post(`${this.userUrl}save_school_group/`, data, {
+      headers: { Authorization: `Token ${this.authService.getToken()}` }
+    });
+  }
+
+  deleteSchoolGroup(id: number): Observable<any> {
+    const body = { id };
+    return this.http.post(`${this.userUrl}delete_school_group/`, body);
+  }
+
 }

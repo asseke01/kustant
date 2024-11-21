@@ -9,6 +9,7 @@ import {FormArray, FormBuilder, ReactiveFormsModule, Validators} from '@angular/
 import {UserService} from '../../../services/user-services/user.service';
 import {AlertService} from '../../../services/helper-services/alert.service';
 import {environment} from '../../../../environments/environment';
+import {PopupService} from '../../../services/helper-services/popup.service';
 
 @Component({
   selector: 'app-admin-marked-tests',
@@ -34,6 +35,7 @@ export class AdminMarkedTestsComponent implements OnInit{
   private testService = inject(TestService);
   private userService = inject(UserService);
   private alert = inject(AlertService);
+  private popupService = inject(PopupService);
   selectedModal:string='';
   status = 'active';
   test : any[]=[]
@@ -48,7 +50,7 @@ export class AdminMarkedTestsComponent implements OnInit{
     starts_at: ['', Validators.required],
     ends_at: ['', Validators.required],
     test_type: ['UBT', [Validators.required]],
-    group_id: ['', [Validators.required]],
+    group_id: ['', Validators.required],
     excel: ['', [Validators.required]],
     uploaded_excel_file: ['', Validators.required],
   })
@@ -70,39 +72,51 @@ export class AdminMarkedTestsComponent implements OnInit{
     })
   }
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string, selectedModal:string,id?:number): void {
-    this.loadSchools();
+  openDialog(enterAnimationDuration: string, exitAnimationDuration: string, selectedModal: string, id?: number): void {
+    this.loadSchools(); // Загрузка школ
     this.selectedModal = selectedModal;
-    this.selectedId =  id;
-    console.log(id);
-    console.log(this.selectedModal);
-    if (selectedModal == 'update') {
-      this.testService.getSpecifiedTestId(this.selectedId).subscribe(
-        (data) => {
-          if (data) {
-            this.populateForm(data);
-            this.dialog.open(this.dialogTemplate, {
-              width: '100%',
-              maxWidth: '40vw',
-              enterAnimationDuration,
-              exitAnimationDuration,
-            });
-          }
+    this.selectedId = id;
+
+    console.log('selectedModal:', selectedModal);
+    console.log('Перед открытием диалога, состояние формы:', this.testForm.value);
+
+    if (selectedModal === 'update') {
+      this.testService.getSpecifiedTestId(this.selectedId).subscribe((data) => {
+        console.log('Данные для update:', data);
+        if (data) {
+          this.populateForm(data);
+          this.dialog.open(this.dialogTemplate, {
+            width: '100%',
+            maxWidth: '40vw',
+            enterAnimationDuration,
+            exitAnimationDuration,
+          });
         }
-      );
-    }else {
+      });
+    } else {
+      console.log('Сброс формы для create');
+      this.testForm.reset({
+        test_type: 'UBT',
+        group_id: '' // Сброс значения group_id
+      });
       this.dialog.open(this.dialogTemplate, {
         width: '100%',
         maxWidth: '40vw',
         enterAnimationDuration,
         exitAnimationDuration,
-        disableClose: true
+        disableClose: true,
       });
     }
   }
 
+
+
   closeDialog(): void {
     this.dialog.closeAll();
+    this.testForm.reset({
+      test_type: 'UBT',
+      group_id: null
+    });
   }
 
 
@@ -120,13 +134,13 @@ export class AdminMarkedTestsComponent implements OnInit{
 
   populateForm(data: any): void {
     this.testForm.patchValue({
-      id: data.id,
-      name: data.name,
-      starts_at: data.starts_at,
-      ends_at: data.ends_at,
-      group_id: data.group_id,
-      excel: data.excel,
-      uploaded_excel_file: data.uploaded_excel_file
+      id: data.id || '',
+      name: data.name || '',
+      starts_at: data.starts_at || '',
+      ends_at: data.ends_at || '',
+      group_id: data.group_id || '',
+      excel: data.excel || '',
+      uploaded_excel_file: data.uploaded_excel_file || ''
     });
   }
 
@@ -154,9 +168,6 @@ export class AdminMarkedTestsComponent implements OnInit{
       this.testService.saveSpecifiedData(formData).subscribe((response) => {
         if (response.success) {
           this.alert.success('Деректер сәтті сақталды');
-          this.testForm.reset({
-            test_type: 'UBT'
-          });
           this.loadTest();
           this.uploadedFile = null;
           this.closeDialog();
@@ -173,7 +184,6 @@ export class AdminMarkedTestsComponent implements OnInit{
       formData.append('group_id', formValues.group_id || '');
 
       if (this.uploadedFile) {
-        // Append new file if uploaded
         formData.append('uploaded_excel_file_key', this.uploadedFile);
         formData.append('uploaded_excel_file', 'uploaded_excel_file_key');
       } else {
@@ -185,14 +195,9 @@ export class AdminMarkedTestsComponent implements OnInit{
         }
       }
 
-
-
       this.testService.saveSpecifiedData(formData).subscribe((response) => {
         if (response.success) {
           this.alert.success('Деректер сәтті сақталды');
-          this.testForm.reset({
-            test_type: 'UBT'
-          });
           this.uploadedFile = null;
           this.loadTest();
           this.closeDialog();
@@ -200,6 +205,42 @@ export class AdminMarkedTestsComponent implements OnInit{
       });
     }
 
+  }
+
+  onDelete(): void {
+    this.popupService.openDialog(() => {
+      this.testService.deleteSpecifiedTest(this.selectedId).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.closeDialog();
+            this.alert.success('Успешно удален!');
+            this.uploadedFile = null;
+            this.loadTest();
+          }
+        },
+        error: (err) => {
+          this.alert.error('Ошибка при удалении!');
+        },
+      });
+    });
+  }
+
+  onArchieve(): void {
+    this.popupService.openDialog(() => {
+      this.testService.archiveSpecifiedTest(this.selectedId).subscribe({
+        next: (response) => {
+          if (response.success) {
+            this.closeDialog();
+            this.alert.success('Успешно архивирован!');
+            this.uploadedFile = null;
+            this.loadTest();
+          }
+        },
+        error: (err) => {
+          this.alert.error('Ошибка при архивировании!');
+        },
+      });
+    });
   }
 
 }

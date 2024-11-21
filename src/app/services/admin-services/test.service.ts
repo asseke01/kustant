@@ -123,4 +123,12 @@ export class TestService {
     const params = new HttpParams().set('id', id.toString());
     return this.http.get(`${this.apiUrl}get_specified_test/`, { params });
   }
+
+  deleteSpecifiedTest(testId: number | undefined): Observable<any>{
+    return this.http.post(`${this.apiUrl}delete_specified_test/`, { id: testId });
+  }
+
+  archiveSpecifiedTest(testId: number | undefined): Observable<any>{
+    return this.http.post(`${this.apiUrl}archive_specified_test/`, { id: testId });
+  }
 }

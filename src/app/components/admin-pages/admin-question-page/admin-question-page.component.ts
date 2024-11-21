@@ -378,7 +378,7 @@ export class AdminQuestionPageComponent implements OnInit {
   getContextConfig(qIndex: number, aIndex: number) {
     return {
       toolbar: {
-        container: `#toolbar-${qIndex}-${aIndex}`, // Уникальный идентификатор на основе индексов
+        container: `#toolbar-${qIndex}-${aIndex}`,
       },
       history: {
         userOnly: true,

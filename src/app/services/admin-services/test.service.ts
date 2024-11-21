@@ -106,4 +106,29 @@ export class TestService {
     const params = new HttpParams().set('test_id', test_id.toString());
     return this.http.get<GetTestResult>(`${this.apiUrl}get_test_result/`, { params });
   }
+
+  getSpecifiedTest(status:string):Observable<any>{
+    const params = new HttpParams().set('status', status);
+    return this.http.get(`${this.apiUrl}get_specified_tests/`, { params });
+  }
+
+  saveSpecifiedData(data: FormData): Observable<any> {
+    return this.http.post(`${this.apiUrl}save_specified_test/`, data);
+  }
+
+  getSpecifiedTestId(id: number | undefined):Observable<any> {
+    if (id === undefined) {
+      throw new Error("Invalid id: 'undefined' is not allowed.");
+    }
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.get(`${this.apiUrl}get_specified_test/`, { params });
+  }
+
+  deleteSpecifiedTest(testId: number | undefined): Observable<any>{
+    return this.http.post(`${this.apiUrl}delete_specified_test/`, { id: testId });
+  }
+
+  archiveSpecifiedTest(testId: number | undefined): Observable<any>{
+    return this.http.post(`${this.apiUrl}archive_specified_test/`, { id: testId });
+  }
 }

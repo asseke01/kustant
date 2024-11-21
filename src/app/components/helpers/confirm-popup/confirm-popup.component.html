@@ -1,0 +1,10 @@
+<div class="confirm-dialog-overlay" *ngIf="dialogVisible">
+  <div class="confirm-dialog">
+    <h2>Растау</h2>
+    <p>Сіз сенімдісіз бе?</p>
+    <div class="dialog-actions">
+      <button (click)="onCancel()">Жок</button>
+      <button class="confirm-button" (click)="onConfirm()">Ия</button>
+    </div>
+  </div>
+</div>

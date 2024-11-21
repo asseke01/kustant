@@ -183,7 +183,7 @@ table th {
 .mat-mdc-dialog-actions {
   display: flex;
   justify-content: flex-start;
-
+  gap: 10px;
 }
 
 ::ng-deep .mat-mdc-dialog-surface {

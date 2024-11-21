@@ -6,6 +6,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatDialog, MatDialogActions, MatDialogContent, MatDialogTitle} from '@angular/material/dialog';
 import {MatIconButton} from '@angular/material/button';
 import {NgxMaskDirective} from 'ngx-mask';
+import {AlertService} from '../../../services/helper-services/alert.service';
 
 @Component({
   selector: 'app-admin-schools-page',
@@ -31,6 +32,7 @@ export class AdminSchoolsPageComponent implements OnInit {
   private dialog = inject(MatDialog);
   private userService = inject(UserService);
   private form = inject(FormBuilder);
+  private alert = inject(AlertService);
 
   public searchQuery: string = '';
   public schools: any[] = [];
@@ -113,7 +115,7 @@ export class AdminSchoolsPageComponent implements OnInit {
 
   public saveSchoolGroup(): void {
     if (this.schoolForm.invalid) {
-      console.error('Форма недействительна');
+      this.alert.warn('Форма не заполнена');
       return;
     }
 
@@ -125,34 +127,40 @@ export class AdminSchoolsPageComponent implements OnInit {
     this.userService.saveSchool(saveData).subscribe(
       response => {
         if (response.success) {
+          this.alert.success("Успешно!")
           this.closeDialog();
           this.loadSchools();
         }
       },
       error => {
-        console.error('Ошибка при запросе:', error);
+        this.alert.error('Ошибка при запросе:');
       }
     );
   }
 
-  public deleteSchoolGroup(id: number): void {
+  public deleteSchoolGroup(): void {
+    if (!this.selectedSchoolId) {
+      this.alert.warn('ID школы не установлен');
+      return;
+    }
+
     if (!confirm('Вы уверены, что хотите удалить эту школу?')) {
       return;
     }
 
-    this.userService.deleteSchoolGroup(id).subscribe(
+    this.userService.deleteSchoolGroup(this.selectedSchoolId).subscribe(
       response => {
         if (response.success) {
-          console.log('Школа успешно удалена');
+          this.alert.success('Школа успешно удалена');
+          this.closeDialog();
           this.loadSchools(); // Обновляем список после удаления
         } else {
-          console.error('Не удалось удалить школу');
+          this.alert.warn('Не удалось удалить школу');
         }
       },
       error => {
-        console.error('Ошибка при удалении школы:', error);
+        this.alert.error('Ошибка при удалении школы:');
       }
     );
   }
-
 }

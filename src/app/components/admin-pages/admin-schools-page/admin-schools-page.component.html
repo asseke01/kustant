@@ -86,5 +86,6 @@
   </mat-dialog-content>
   <mat-dialog-actions>
     <button class="save-subject" (click)="saveSchoolGroup()">Сақтау</button>
+    <button class="save-subject" *ngIf="selectedModal == 'update'" (click)="deleteSchoolGroup()">Жою</button>
   </mat-dialog-actions>
 </ng-template>

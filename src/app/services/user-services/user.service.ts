@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable, tap} from 'rxjs';
 import {AuthService} from '../auth-services/auth.service';
 import {GetTestResult} from '../../../assets/interfaces/getTestResult';
@@ -13,8 +13,8 @@ export class UserService {
   private authService = inject(AuthService);
 
 
-
-  constructor() { }
+  constructor() {
+  }
 
 
   sendCode(phone: string | null | undefined): Observable<any> {
@@ -39,16 +39,15 @@ export class UserService {
 
   }
 
-  submitStudent(phone:string|null|undefined,
-                code:string|null|undefined,
-                fullname:string|null|undefined,
-                subjects:string|null|undefined,)
-  {
+  submitStudent(phone: string | null | undefined,
+                code: string | null | undefined,
+                fullname: string | null | undefined,
+                subjects: string | null | undefined,) {
     const body = {
       phone_number: phone,
-      code:code,
-      fullname:fullname,
-      subjects:subjects
+      code: code,
+      fullname: fullname,
+      subjects: subjects
     }
 
     return this.http.post<any>(`${this.userUrl}save_learner/`, body).pipe(
@@ -73,7 +72,7 @@ export class UserService {
     );
   }
 
- adminLogin(data: { password: string | null | undefined; username: string | null | undefined }): Observable<any> {
+  adminLogin(data: { password: string | null | undefined; username: string | null | undefined }): Observable<any> {
     return this.http.post<any>(`${this.userUrl}admin/login_api/`, data).pipe(
       tap(response => {
         if (response && response.token) {
@@ -83,19 +82,24 @@ export class UserService {
     );
   }
 
-  getSchool():Observable<any>{
+  getSchool(): Observable<any> {
     return this.http.get(`${this.userUrl}get_school_groups/`);
   }
 
   saveSchool(data: { id?: number; name: string }): Observable<any> {
     return this.http.post(`${this.userUrl}save_school_group/`, data, {
-      headers: { Authorization: `Token ${this.authService.getToken()}` }
+      headers: {Authorization: `Token ${this.authService.getToken()}`}
     });
   }
 
   deleteSchoolGroup(id: number): Observable<any> {
-    const body = { id };
+    const body = {id};
     return this.http.post(`${this.userUrl}delete_school_group/`, body);
+  }
+
+  getLearners(groupId?: number): Observable<any> {
+    const params = groupId ? new HttpParams().set('group_id', groupId) : undefined;
+    return this.http.get(`${this.userUrl}get_learners/`, { params });
   }
 
 

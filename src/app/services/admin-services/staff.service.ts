@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {AuthService} from '../auth-services/auth.service';
 import {Observable} from 'rxjs';
 
@@ -12,18 +12,24 @@ export class StaffService {
   private authService = inject(AuthService);
 
 
-  constructor() { }
+  constructor() {
+  }
 
-  getStaff(type:string): Observable<any> {
+  getStaff(type: string): Observable<any> {
     let params: any = {};
     if (type) {
       params.type = type;
     }
 
-    return this.http.get(`${this.userUrl}get_staffs/`,{params});
+    return this.http.get(`${this.userUrl}get_staffs/`, {params});
   }
 
   saveStaff(data: any): Observable<any> {
-    return this.http.post(`${this.userUrl}save_staff/`, data, );
+    return this.http.post(`${this.userUrl}save_staff/`, data,);
+  }
+
+  getSchoolAdmins(groupId: number): Observable<any> {
+    const params = groupId ? new HttpParams().set('group_id', groupId) : undefined;
+    return this.http.get(`${this.userUrl}get_school_admins/`, {params});
   }
 }

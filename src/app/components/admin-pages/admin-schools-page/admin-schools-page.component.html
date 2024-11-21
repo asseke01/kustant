@@ -1,48 +1,41 @@
-<div class="navbar-container">
-  <h2>Мектептер</h2>
+<div *ngIf="!selectedSchool; else schoolDetails">
 
-  <div class="navbar-menu">
-
-    <div class="search-menu">
-      <input type="text" placeholder="Мектеп аты" [(ngModel)]="searchQuery"
-             (ngModelChange)="updateSearchQuery(searchQuery)">
-      <button class="search-btn" (click)="filterStaff()">Іздеу</button>
+  <div class="navbar-container">
+    <h2>Мектептер</h2>
+    <div class="navbar-menu">
+      <div class="search-menu">
+        <input type="text" placeholder="Мектеп аты" [(ngModel)]="searchQuery"
+               (ngModelChange)="updateSearchQuery(searchQuery)">
+        <button class="search-btn" (click)="filterStaff()">Іздеу</button>
+      </div>
+      <button class="add-btn" (click)="openDialog('250ms', '250ms', 'create')">Мектеп қосу</button>
     </div>
-
-    <button class="add-btn" (click)="openDialog('250ms', '250ms', 'create')">Мектеп қосу</button>
-  </div>
-</div>
-
-<div class="main-container">
-
-  <div class="content-container">
-
-    <div class="table-container">
-      <table>
-        <tr>
-          <th>#</th>
-          <th>Мектеп</th>
-          <th></th>
-        </tr>
-        <tbody>
-        <tr *ngFor="let school of schools; let i = index"
-            (click)="openDialog('250ms', '250ms', 'update', school.id)">
-          <td>{{ i + 1 }}</td>
-          <td>{{ school.name }}</td>
-          <td>
-            <button class="edit-button">
-              <mat-icon class="mat-icon">edit</mat-icon>
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-
-    </div>
-
-
   </div>
 
+  <div class="main-container">
+    <div class="content-container">
+      <div class="table-container">
+        <table>
+          <tr>
+            <th>#</th>
+            <th>Мектеп</th>
+            <th></th>
+          </tr>
+          <tbody>
+          <tr *ngFor="let school of schools; let i = index" (click)="openSchoolDetails(school)">
+            <td>#{{ i + 1 }}</td>
+            <td>{{ school.name }}</td>
+            <td>
+              <button class="edit-button" (click)="openDialog('250ms', '250ms', 'update', school.id)">
+                <mat-icon class="mat-icon">edit</mat-icon>
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <ng-template #dialogTemplate>
@@ -54,38 +47,84 @@
     </button>
   </div>
   <mat-dialog-content>
-
     <ng-container *ngIf="selectedModal == 'create'">
       <form [formGroup]="schoolForm">
-
         <div class="content">
-
           <div class="form-group">
             <label for="name">Мектеп аты</label>
             <input type="text" id="name" name="fio" formControlName="name">
           </div>
-
         </div>
       </form>
     </ng-container>
-
     <ng-container *ngIf="selectedModal == 'update'">
       <form [formGroup]="schoolForm">
-
         <div class="content">
-
           <div class="form-group">
             <label for="name1">Название</label>
             <input type="text" id="name1" name="fio" formControlName="name">
           </div>
-
         </div>
       </form>
     </ng-container>
-
   </mat-dialog-content>
   <mat-dialog-actions>
     <button class="save-subject" (click)="saveSchoolGroup()">Сақтау</button>
     <button class="save-subject" *ngIf="selectedModal == 'update'" (click)="deleteSchoolGroup()">Жою</button>
   </mat-dialog-actions>
+</ng-template>
+
+<ng-template #schoolDetails>
+  <!-- Детализированный просмотр школы -->
+  <div class="navbar-container">
+    <div class="school-details__header">
+      <button class="back-btn" (click)="goBack()"><img src="assets/img/left_arrow_ico.svg" alt="back"></button>
+      <h2>{{ selectedSchool.name }}</h2></div>
+  </div>
+  <div class="main-container">
+    <div class="content-container">
+
+      <div class="action-buttons">
+        <button class="action_button" [class.active]="viewMode === 'admins'" (click)="onViewModeChange('admins')">
+          Админдар
+        </button>
+        <button class="action_button" [class.active]="viewMode === 'students'" (click)="onViewModeChange('students')">
+          Оқушылар
+        </button>
+      </div>
+
+      <div class="table-container">
+        <table *ngIf="viewMode === 'admins'">
+          <tr>
+            <th>#</th>
+            <th>ФИО</th>
+            <th>Телефон</th>
+          </tr>
+          <tbody>
+          <tr *ngFor="let admin of schoolAdmins; let i = index">
+            <td>#{{ i + 1 }}</td>
+            <td>{{ admin.fullname }}</td>
+            <td>{{ admin.phone_number }}</td>
+          </tr>
+          </tbody>
+        </table>
+        <table *ngIf="viewMode === 'students'">
+          <tr>
+            <th>#</th>
+            <th>ФИО</th>
+            <th>Телефон</th>
+            <th>Таңдау пәні</th>
+          </tr>
+          <tbody>
+          <tr *ngFor="let student of learners; let i = index">
+            <td>#{{ i + 1 }}</td>
+            <td>{{ student.fullname }}</td>
+            <td>{{ student.phone_number }}</td>
+            <td>{{ student.subject1_display }} - {{ student.subject2_display }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </ng-template>

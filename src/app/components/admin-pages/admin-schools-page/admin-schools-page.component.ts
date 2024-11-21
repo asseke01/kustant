@@ -7,6 +7,7 @@ import {MatDialog, MatDialogActions, MatDialogContent, MatDialogTitle} from '@an
 import {MatIconButton} from '@angular/material/button';
 import {NgxMaskDirective} from 'ngx-mask';
 import {AlertService} from '../../../services/helper-services/alert.service';
+import {StaffService} from '../../../services/admin-services/staff.service';
 
 @Component({
   selector: 'app-admin-schools-page',
@@ -31,12 +32,18 @@ export class AdminSchoolsPageComponent implements OnInit {
 
   private dialog = inject(MatDialog);
   private userService = inject(UserService);
+  private staffService = inject(StaffService);
   private form = inject(FormBuilder);
   private alert = inject(AlertService);
 
   public searchQuery: string = '';
   public schools: any[] = [];
   public selectedModal: string = '';
+  public selectedSchool: any = null; // Выбранная школа
+  public viewMode: 'admins' | 'students' = 'admins';
+  public learners: any[] = [];
+  public schoolAdmins: any[] = [];
+
 
   public type: string = 'teachers';
   private selectedSchoolId!: number | undefined;
@@ -45,6 +52,14 @@ export class AdminSchoolsPageComponent implements OnInit {
     id: [null],
     name: ['', Validators.required],
   })
+
+  public openSchoolDetails(school: any): void {
+    this.selectedSchool = school;
+    this.viewMode = 'admins';
+    this.schoolAdmins = [];
+    this.learners = [];
+    this.loadSchoolAdmins(school.id); // Загружаем администраторов по умолчанию
+  }
 
 
   ngOnInit() {
@@ -162,5 +177,43 @@ export class AdminSchoolsPageComponent implements OnInit {
         this.alert.error('Ошибка при удалении школы:');
       }
     );
+  }
+
+  public onViewModeChange(mode: 'admins' | 'students'): void {
+    this.viewMode = mode;
+
+
+    if (mode === 'admins') {
+      this.loadSchoolAdmins(this.selectedSchool.id);
+    } else if (mode === 'students') {
+      this.loadLearners(this.selectedSchool.id);
+    }
+  }
+
+  private loadLearners(groupId?: number): void {
+    this.userService.getLearners(groupId).subscribe(
+      data => {
+        this.learners = data.learners;
+      },
+      error => {
+        this.alert.error('Ошибка при загрузке учеников:');
+      }
+    );
+  }
+
+  private loadSchoolAdmins(groupId: number): void {
+    this.staffService.getSchoolAdmins(groupId).subscribe(
+      data => {
+        this.schoolAdmins = data.school_admins;
+      },
+      error => {
+        this.alert.error('Ошибка при загрузке администраторов:');
+      }
+    );
+  }
+
+
+  public goBack(): void {
+    this.selectedSchool = null;
   }
 }

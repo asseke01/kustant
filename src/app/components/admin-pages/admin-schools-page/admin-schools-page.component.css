@@ -190,3 +190,35 @@ table th {
   border-radius: 5px !important;
   background-color: white !important;
 }
+
+.action-buttons {
+  display: flex;
+  gap: 15px
+}
+
+.action_button {
+  background-color: transparent;
+  border-radius: 7px;
+  padding: 5px 15px;
+  border: 1px solid #1D1D42;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+
+.action_button.active {
+  background-color: #1D1D42;
+  color: white;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.school-details__header {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}

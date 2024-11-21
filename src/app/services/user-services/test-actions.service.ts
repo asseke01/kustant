@@ -48,16 +48,8 @@ export class TestActionsService {
     return this.http.get<GetLearnerSpecifiedTests[]>(`${this.userUrl}get_learner_specified_tests/`);
   }
 
-  public getSpecifiedTests(): Observable<GetLearnerSpecifiedTests[]> {
-    return this.http.get<GetLearnerSpecifiedTests[]>(`${this.userUrl}get_specified_tests/`);
-  }
-
   public getCurrentTesting() {
     return this.http.get<GetCurrentTesting>(`${this.userUrl}get_current_testing/`);
-  }
-
-  public getSpecifiedTestResults():Observable<GetSpecifiedTestResults> {
-    return this.http.get<GetSpecifiedTestResults>(this.userUrl + 'get_specified_test_results/');
   }
 
   public finishTest() {

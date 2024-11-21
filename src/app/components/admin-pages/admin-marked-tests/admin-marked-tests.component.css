@@ -1,6 +1,6 @@
 .navbar-container {
   top: 0;
-  position: sticky;
+  /*position: sticky;*/
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -95,6 +95,10 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
+}
+
+.detail-header h1{
+  font-size: 28px;
 }
 
 .detail-header h1,h5{
@@ -235,19 +239,40 @@
   cursor: pointer;
   transition: background-color 0.5s ease, color 0.5s ease;
 }
-
-.save-subject:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.submit-container{
+.dialog-header {
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  align-items: center;
 }
 
-.submit-buttons{
-  display: flex;
-  gap:10px;
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.results-table th,
+.results-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.results-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.custom-results-dialog .mat-mdc-dialog-surface {
+  width: 1060px !important;
+  height: auto !important;
+  max-height: 90vh !important;
+  border-radius: 8px;
+  overflow: auto; /* Если контент превышает высоту, появляется скролл */
 }

@@ -33,9 +33,9 @@
 
         <div class="details-box-right">
           <span class="end-span" (click)="openDialog('250ms', '250ms', 'update', item.id)">
-            <img src="assets/img/pencil.png" height="34" alt="pencil">
+            <img src="assets/img/pencil.png" height="24" alt="pencil">
           </span>
-          <a class="button">Нәтижелер</a>
+          <a class="button" (click)="openResultsDialog(item.id)">Нәтижелер</a>
         </div>
 
       </div>
@@ -170,4 +170,39 @@
     </ng-container>
 
   </mat-dialog-actions>
+</ng-template>
+
+
+<ng-template #resultsDialogTemplate>
+  <div class="dialog-header">
+    <h2 mat-dialog-title>Нәтижелер</h2>
+    <a [href]="excelDownloadLink" target="_blank">Скачать в Excel</a>
+    <button mat-icon-button (click)="closeDialog()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content>
+    <table class="results-table">
+      <thead>
+      <tr>
+        <th>ФИО</th>
+        <th>Бастау уақыты</th>
+        <th>Аяқтау уақыты</th>
+        <th>Балл</th>
+        <th>Қатемен жұмыс</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let result of testResults">
+        <td>{{ result.learner_fullname }}</td>
+        <td>{{ result.started_on || '-' }}</td>
+        <td>{{ result.completed_on || '-' }}</td>
+        <td>{{ result.taken_marks !== null ? result.taken_marks : '-' }}</td>
+        <td>
+          <a href="#">Қатемен жұмыс</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </mat-dialog-content>
 </ng-template>

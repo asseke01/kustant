@@ -26,8 +26,10 @@
             <td>#{{ i + 1 }}</td>
             <td>{{ school.name }}</td>
             <td>
-              <button class="edit-button" (click)="openDialog('250ms', '250ms', 'update', school.id)">
-                <mat-icon class="mat-icon">edit</mat-icon>
+              <button class="edit-button"
+                      (click)="openDialog('250ms', '250ms', 'update', school.id);
+                      $event.stopPropagation()">
+                <img src="assets/img/pencil.png" height="24" alt="pencil">
               </button>
             </td>
           </tr>

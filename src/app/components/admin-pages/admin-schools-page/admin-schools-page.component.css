@@ -1,6 +1,6 @@
 .navbar-container {
   top: 0;
-  position: sticky;
+  /*position: sticky;*/
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -102,8 +102,13 @@ table th {
   cursor: pointer;
 }
 
-.mat-icon:hover {
-  background-color: #d0d0d3;
+.edit-button img {
+  width: 24px;
+  height: 24px;
+}
+
+.edit-button:hover {
+  background-color: #dcdcdf;
   border-radius: 5px;
 }
 

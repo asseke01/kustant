@@ -28,20 +28,24 @@ import {PopupService} from '../../../services/helper-services/popup.service';
   templateUrl: './admin-marked-tests.component.html',
   styleUrl: './admin-marked-tests.component.css'
 })
-export class AdminMarkedTestsComponent implements OnInit{
+export class AdminMarkedTestsComponent implements OnInit {
   @ViewChild('dialogTemplate') dialogTemplate!: TemplateRef<any>;
+  @ViewChild('resultsDialogTemplate') resultsDialogTemplate!: TemplateRef<any>;
+
   private dialog = inject(MatDialog);
   private form = inject(FormBuilder);
   private testService = inject(TestService);
   private userService = inject(UserService);
   private alert = inject(AlertService);
   private popupService = inject(PopupService);
-  selectedModal:string='';
+  selectedModal: string = '';
   status = 'active';
-  test : any[]=[]
+  test: any[] = []
   schools: any[] = [];
   uploadedFile: File | null = null;
   selectedId!: number | undefined;
+  testResults: any[] = [];
+  excelDownloadLink: string = '';
   public userUrl = environment.apiUrl;
 
   public testForm = this.form.group({
@@ -60,14 +64,14 @@ export class AdminMarkedTestsComponent implements OnInit{
     this.loadTest();
   }
 
-  loadTest(){
-    this.testService.getSpecifiedTest(this.status).subscribe(data=>{
-      this.test=data;
+  loadTest() {
+    this.testService.getSpecifiedTest(this.status).subscribe(data => {
+      this.test = data;
     })
   }
 
-  loadSchools(){
-    this.userService.getSchool().subscribe(data=>{
+  loadSchools() {
+    this.userService.getSchool().subscribe(data => {
       this.schools = data;
     })
   }
@@ -110,7 +114,6 @@ export class AdminMarkedTestsComponent implements OnInit{
   }
 
 
-
   closeDialog(): void {
     this.dialog.closeAll();
     this.testForm.reset({
@@ -131,7 +134,6 @@ export class AdminMarkedTestsComponent implements OnInit{
   }
 
 
-
   populateForm(data: any): void {
     this.testForm.patchValue({
       id: data.id || '',
@@ -145,8 +147,8 @@ export class AdminMarkedTestsComponent implements OnInit{
   }
 
 
-  saveTest(type:string) {
-    if(type == 'create'){
+  saveTest(type: string) {
+    if (type == 'create') {
       const formData = new FormData();
       const formValues = this.testForm.value;
 
@@ -173,7 +175,7 @@ export class AdminMarkedTestsComponent implements OnInit{
           this.closeDialog();
         }
       });
-    }else{
+    } else {
       const formData = new FormData();
       const formValues = this.testForm.value;
       formData.append('id', formValues.id || '');
@@ -243,8 +245,28 @@ export class AdminMarkedTestsComponent implements OnInit{
     });
   }
 
+  openResultsDialog(testId: number): void {
+    this.testService.getSpecifiedTestResults(testId).subscribe({
+      next: (response) => {
+        this.testResults = response.testings;
+        this.excelDownloadLink = `/api/test/get_specified_test_results_in_excel/?id=${testId}`;
+        this.dialog.open(this.resultsDialogTemplate, {
+          width: '1060px',
+          height: 'fit-content', // Автоматическая высота в зависимости от контента
+          maxHeight: '90vh', // Ограничение по высоте
+          disableClose: false, // Чтобы можно было закрывать кликом вне модалки
+          panelClass: 'custom-results-dialog', // Пользовательский класс для CSS
+        });
+      },
+      error: () => {
+        this.alert.error('Ошибка при загрузке результатов теста.');
+      }
+    });
+  }
+
+
   public changeStatus(status: string) {
-    if(status === 'archived') {
+    if (status === 'archived') {
       this.status = 'active'
     } else {
       this.status = 'archived';

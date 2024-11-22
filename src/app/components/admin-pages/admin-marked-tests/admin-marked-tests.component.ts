@@ -46,6 +46,7 @@ export class AdminMarkedTestsComponent implements OnInit {
   selectedId!: number | undefined;
   testResults: any[] = [];
   excelDownloadLink: string = '';
+  selectedTestId!: number;
   public userUrl = environment.apiUrl;
 
   public testForm = this.form.group({
@@ -246,23 +247,44 @@ export class AdminMarkedTestsComponent implements OnInit {
   }
 
   openResultsDialog(testId: number): void {
+    this.selectedTestId = testId; // Сохраняем ID текущего теста
     this.testService.getSpecifiedTestResults(testId).subscribe({
       next: (response) => {
         this.testResults = response.testings;
-        this.excelDownloadLink = `/api/test/get_specified_test_results_in_excel/?id=${testId}`;
+        this.excelDownloadLink = `/api/test/get_specified_test_results_in_excel/?id=${testId}`; // Формируем ссылку
         this.dialog.open(this.resultsDialogTemplate, {
           width: '1060px',
-          height: 'fit-content', // Автоматическая высота в зависимости от контента
-          maxHeight: '90vh', // Ограничение по высоте
-          disableClose: false, // Чтобы можно было закрывать кликом вне модалки
-          panelClass: 'custom-results-dialog', // Пользовательский класс для CSS
+          height: 'fit-content',
+          maxHeight: '90vh',
+          disableClose: false,
+          panelClass: 'custom-results-dialog',
         });
       },
       error: () => {
         this.alert.error('Ошибка при загрузке результатов теста.');
-      }
+      },
     });
   }
+
+
+  // downloadExcelForDialog(testId: number): void {
+  //   this.testService.getSpecifiedTestResultsInExcel(testId).subscribe({
+  //     next: (response) => {
+  //       const blob = new Blob([response], {
+  //         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  //       });
+  //       const url = window.URL.createObjectURL(blob);
+  //       const link = document.createElement('a');
+  //       link.href = url;
+  //       link.download = `test_results_${testId}.xlsx`;
+  //       link.click();
+  //       window.URL.revokeObjectURL(url);
+  //     },
+  //     error: () => {
+  //       this.alert.error('Ошибка при скачивании файла.');
+  //     },
+  //   });
+  // }
 
 
   public changeStatus(status: string) {

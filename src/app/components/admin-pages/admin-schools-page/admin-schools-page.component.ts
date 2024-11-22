@@ -101,32 +101,44 @@ export class AdminSchoolsPageComponent implements OnInit {
     }
   }
 
-  public openAdminDialog(enterAnimationDuration: string, exitAnimationDuration: string, admin: any = null): void {
-    this.selectedModal = admin ? 'update' : 'create';
-    this.selectedAdminId = admin?.id || null;
+  public openAdminDialog(enterAnimationDuration: string, exitAnimationDuration: string, adminId?: number): void {
+    this.selectedModal = adminId ? 'update' : 'create';
+    this.selectedAdminId = adminId || null;
 
-    if (this.selectedModal === 'update' && this.selectedAdminId !== null) {
-      this.adminForm.patchValue({
-        id: admin.id,
-        fullname: admin.fullname,
-        phone_number: admin.phone_number,
-        password: admin.password || '' // Пароль только если есть
-      });
+    if (this.selectedModal === 'update' && this.selectedAdminId) {
+      this.staffService.getStaf('school_admins', this.selectedAdminId).subscribe(
+        (adminData) => {
+          this.adminForm.patchValue({
+            id: adminData.id,
+            fullname: adminData.fullname,
+            phone_number: adminData.phone_number,
+            password: adminData.password,
+          });
 
-      this.dialog.open(this.adminDialogTemplate, {
-        width: '600px',
-        enterAnimationDuration,
-        exitAnimationDuration
-      });
+          this.adminForm.get('password')?.disable(); // Отключить поле пароля
+
+          this.dialog.open(this.adminDialogTemplate, {
+            width: '600px',
+            enterAnimationDuration,
+            exitAnimationDuration,
+          });
+        },
+        (error) => {
+          this.alert.error('Ошибка при загрузке данных администратора.');
+        }
+      );
     } else {
       this.adminForm.reset();
+      this.adminForm.get('password')?.enable(); // Включить поле пароля
       this.dialog.open(this.adminDialogTemplate, {
         width: '600px',
         enterAnimationDuration,
-        exitAnimationDuration
+        exitAnimationDuration,
       });
     }
   }
+
+
 
   public closeAdminDialog(): void {
     this.dialog.closeAll();

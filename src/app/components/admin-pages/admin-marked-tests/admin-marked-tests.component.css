@@ -8,32 +8,32 @@
   padding: 27px 30px;
 }
 
-.navbar-container h2{
+.navbar-container h2 {
   padding: 0;
   margin: 0;
   font-size: 22px;
 }
 
-.navbar-menu{
+.navbar-menu {
   display: flex;
   gap: 20px;
 }
 
-.search-menu{
+.search-menu {
   display: flex;
   align-items: center;
 }
 
-.search-menu input{
+.search-menu input {
   border: 1px solid #4A4A4A;
   border-radius: 5px 0 0 5px;
   padding: 5.5px;
   max-width: 100%;
-  width:300px;
+  width: 300px;
 }
 
 
-.add-btn, .search-btn{
+.add-btn, .search-btn {
   padding: 5px 11px;
   border: none;
   background-color: #4A4A4A;
@@ -43,7 +43,7 @@
   cursor: pointer;
 }
 
-.search-btn{
+.search-btn {
   padding: 5px 11px;
   border: none;
   background-color: #4A4A4A;
@@ -52,7 +52,7 @@
   font-size: 16px;
 }
 
-.main-container{
+.main-container {
   padding: 27px 30px;
 }
 
@@ -71,7 +71,7 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.details-box{
+.details-box {
   display: flex;
   justify-content: space-between;
 }
@@ -91,22 +91,22 @@
 }
 
 
-.detail-header{
+.detail-header {
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
 }
 
-.detail-header h1{
+.detail-header h1 {
   font-size: 28px;
 }
 
-.detail-header h1,h5{
+.detail-header h1, h5 {
   margin: 0;
   padding: 0;
 }
 
-.detail-header h5{
+.detail-header h5 {
   font-weight: normal;
 }
 
@@ -117,7 +117,7 @@
   justify-content: space-between;
 }
 
-.details p{
+.details p {
   margin: 0;
   padding: 0;
 }
@@ -183,36 +183,36 @@
 }
 
 
-.dialog-header h2{
+.dialog-header h2 {
   font-weight: 500;
   font-size: 26px;
 }
 
-.form-group{
+.form-group {
   display: flex;
   flex-direction: column;
 }
 
-.form-group input[type="text"], select,input[type="datetime-local"]{
+.form-group input[type="text"], select, input[type="datetime-local"] {
   padding: 8px;
   border: 1px solid #4A4A4A;
   border-radius: 3px;
   font-size: 14px;
 }
 
-.form-group label{
+.form-group label {
   font-weight: 500;
   font-size: 18px;
   margin-bottom: 5px;
   color: black;
 }
 
-.form-inline{
+.form-inline {
   display: flex;
-  gap:10px
+  gap: 10px
 }
 
-.delete-subject{
+.delete-subject {
   text-decoration: none;
   color: red;
   font-weight: 600;
@@ -220,7 +220,7 @@
   cursor: pointer;
 }
 
-.add-subject{
+.add-subject {
   margin-top: 10px;
   text-decoration: none;
   color: green;
@@ -229,7 +229,7 @@
   cursor: pointer;
 }
 
-.save-subject{
+.save-subject {
   padding: 9px 11px;
   border: none;
   background-color: #4A4A4A;
@@ -239,10 +239,21 @@
   cursor: pointer;
   transition: background-color 0.5s ease, color 0.5s ease;
 }
+
 .dialog-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.dialog-header__container {
+  display: flex;
+  align-items: center;
+}
+
+.dialog-header__container a {
+  cursor: pointer;
+  font-size: 15px;
 }
 
 .close-button {

@@ -40,4 +40,10 @@ export class StaffService {
   deleteStaff(data: { prev_type: string; id: number }): Observable<any> {
     return this.http.post<any>(`${this.userUrl}delete_staff/`, data);
   }
+
+  getStaf(type: string, id: number): Observable<any> {
+    return this.http.get(`${this.userUrl}get_staff/`, {
+      params: { type, id },
+    });
+  }
 }

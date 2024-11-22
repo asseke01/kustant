@@ -117,7 +117,7 @@
             <th>Телефон</th>
           </tr>
           <tbody>
-          <tr *ngFor="let admin of schoolAdmins; let i = index" (click)="openAdminDialog('250ms', '250ms', admin)">
+          <tr *ngFor="let admin of schoolAdmins; let i = index" (click)="openAdminDialog('250ms', '250ms', admin.id)">
             <td>#{{ i + 1 }}</td>
             <td>{{ admin.fullname }}</td>
             <td>{{ admin.phone_number }}</td>
@@ -165,9 +165,9 @@
           <input type="text" id="phone_number" formControlName="phone_number" [mask]="'(000) 000 00 00'" prefix="+7 ">
         </div>
         <div *ngIf="selectedAdminId">
-          <div class="form-group">
+          <div class="form-group" *ngIf="selectedAdminId">
             <label for="password">Пароль</label>
-            <input type="text" id="password" formControlName="password" [disabled]="true">
+            <input type="text" id="password" formControlName="password" [attr.disabled]="selectedAdminId ? true : null">
           </div>
         </div>
       </div>

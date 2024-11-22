@@ -139,4 +139,11 @@ export class TestService {
       params: {id: testId}
     });
   }
+  // getSpecifiedTestResultsInExcel(testId: number): Observable<Blob> {
+  //   const params = new HttpParams().set('id', testId.toString());
+  //   return this.http.get(`${this.apiUrl}get_specified_test_results_in_excel/`, {
+  //     params,
+  //     responseType: 'blob', // Файл ожидается в виде бинарных данных
+  //   });
+  // }
 }

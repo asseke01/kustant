@@ -134,9 +134,19 @@ export class TestService {
     return this.http.post(`${this.apiUrl}archive_specified_test/`, {id: testId});
   }
 
-  getSpecifiedTestResults(testId: number) {
-    return this.http.get<any>(`${this.apiUrl}get_specified_test_results/`, {
-      params: {id: testId}
-    });
+  getSpecifiedTestResults(id: number | undefined): Observable<any> {
+    if (id === undefined) {
+      throw new Error("Invalid id: 'undefined' is not allowed.");
+    }
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.get(`${this.apiUrl}get_specified_test_results/`, {params});
+  }
+
+  downloadResult(id: number | undefined): Observable<any> {
+    if (id === undefined) {
+      throw new Error("Invalid id: 'undefined' is not allowed.");
+    }
+    const params = new HttpParams().set('id', id.toString());
+    return this.http.get(`${this.apiUrl}get_specified_test_results_in_excel/`, {params});
   }
 }

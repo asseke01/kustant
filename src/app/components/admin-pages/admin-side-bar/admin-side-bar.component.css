@@ -15,7 +15,7 @@
 .sidebar-container h2{
   display: flex;
   gap:10px;
-  padding:20px 0 0 30px;
+  padding:20px 0 0 15px;
   margin: 0;
   font-size: 22px;
 }
@@ -23,9 +23,9 @@
 .sidebar-container h5{
   display: flex;
   gap:10px;
-  padding:20px 0 0 30px;
+  padding:20px 0 0 15px;
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 h2, li{
@@ -33,15 +33,15 @@ h2, li{
 }
 
 .sidebar-container ul{
-  padding: 0 0 0 30px;
+  padding: 0 0 0 15px;
 }
 
 .sidebar-container li{
   display: flex;
   gap:10px;
   list-style-type: none;
-  padding: 15px 0;
-  font-size: 14px;
+  padding: 10px 0;
+  font-size: 16px;
 }
 
 .active-link {

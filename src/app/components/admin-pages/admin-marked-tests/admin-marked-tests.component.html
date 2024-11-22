@@ -1,63 +1,107 @@
 <div class="navbar-container">
-  <h2>Белгіленген тесттер</h2>
+  <h2 *ngIf="status == 'active'">Белгіленген тесттер</h2>
+  <button class="add-btn" (click)="changeStatus('active')" *ngIf="status == 'archive'">Артқа</button>
 
   <div class="navbar-menu">
 
-    <button class="add-btn" (click)="openDialog('250ms', '250ms', 'create')">Тест белгілеу</button>
-    <button class="add-btn" (click)="changeStatus(status)">{{ status === 'archived' ? 'Артқа' : 'Архив' }}</button>
+    <button class="add-btn" (click)="openDialog('250ms', '250ms', 'create')" *ngIf="status == 'active'">Тест белгілеу</button>
+    <button class="add-btn" (click)="changeStatus('archive')" *ngIf="status == 'active'">Архив</button>
 
   </div>
 </div>
 
 <div class="main-container">
 
-  <div class="grid-container">
-    <div class="profile-box" *ngFor="let item of test">
-      <div class="border"></div>
+  <ng-container *ngIf="status == 'active'">
+    <div class="grid-container">
+      <div class="profile-box" *ngFor="let item of test">
+        <div class="border"></div>
 
-      <div class="details-box">
+        <div class="details-box">
 
-        <div class="details-box-left">
+          <div class="details-box-left">
 
-          <div class="detail-header">
-            <h1>{{ item.name }}</h1>
-            <h5>{{ item.test_type_display }}</h5>
+            <div class="detail-header">
+              <h1>{{ item.name }}</h1>
+              <h5>{{ item.test_type_display }}</h5>
+            </div>
+            <div class="details">
+              <p>Группа: {{ item.group_name }}</p>
+              <p>Уақыты: {{ item.starts_at }}</p>
+              <p>Дедлайн: {{ item.ends_at }}</p>
+            </div>
+
           </div>
-          <div class="details">
-            <p>Группа: {{ item.group_name }}</p>
-            <p>Уақыты: {{ item.starts_at }}</p>
-            <p>Дедлайн: {{ item.ends_at }}</p>
-          </div>
 
-        </div>
-
-        <div class="details-box-right">
+          <div class="details-box-right">
           <span class="end-span" (click)="openDialog('250ms', '250ms', 'update', item.id)">
             <img src="assets/img/pencil.png" height="24" alt="pencil">
           </span>
-          <a class="button" (click)="openResultsDialog(item.id)">Нәтижелер</a>
+            <a class="button" (click)="openDialog('250ms', '250ms', 'result', item.id)">Нәтижелер</a>
+          </div>
+
         </div>
 
       </div>
 
+    </div>
+  </ng-container>
+
+  <ng-container  *ngIf="status == 'archive'">
+    <div class="grid-container">
+      <div class="profile-box" *ngFor="let item of test">
+        <div class="border"></div>
+
+        <div class="details-box">
+
+          <div class="details-box-left">
+
+            <div class="detail-header">
+              <h1>{{ item.name }}</h1>
+              <h5>{{ item.test_type_display }}</h5>
+            </div>
+            <div class="details">
+              <p>Группа: {{ item.group_name }}</p>
+              <p>Уақыты: {{ item.starts_at }}</p>
+              <p>Дедлайн: {{ item.ends_at }}</p>
+            </div>
+
+          </div>
+
+          <div class="details-box-right">
+          <span class="end-span" (click)="openDialog('250ms', '250ms', 'update', item.id)">
+            <img src="assets/img/pencil.png" height="24" alt="pencil">
+          </span>
+            <a class="button" (click)="openDialog('250ms', '250ms', 'result', item.id)" >Нәтижелер</a>
+          </div>
+
+        </div>
+
+      </div>
 
     </div>
-
-  </div>
-
+  </ng-container>
 
 </div>
 
 
 <ng-template #dialogTemplate>
+
   <div class="dialog-header">
     <h2 mat-dialog-title *ngIf="selectedModal=='create'">Тест белгілеу</h2>
     <h2 mat-dialog-title *ngIf="selectedModal=='update'">Қызметкерді жаңарту</h2>
+    <h2 mat-dialog-title *ngIf="selectedModal=='result'">Нәтижелер
+      <a [href]=" userUrl + '/api/test/get_specified_test_results_in_excel/?id=' + selectedId" download style="font-size: 17px;">
+        Excel жуктеу
+      </a>
+    </h2>
     <button mat-icon-button (click)="closeDialog()" class="close-button">
       <mat-icon>close</mat-icon>
     </button>
   </div>
+
   <mat-dialog-content>
+
     <ng-container *ngIf="selectedModal == 'create'">
       <form [formGroup]="testForm">
 
@@ -145,13 +189,38 @@
         </div>
       </form>
     </ng-container>
+    <ng-container *ngIf="selectedModal == 'result'">
+      <div class="table-wrapper">
+
+      <table class="result-table">
+        <thead>
+        <tr>
+          <th >ФИО</th>
+          <th>Бастау уақыты</th>
+          <th>Аяқтау уақыты</th>
+          <th>Балл</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let result of testResults">
+          <td>{{ result.learner_fullname }}</td>
+          <td>{{ result.started_on || '__' }}</td>
+          <td>{{ result.completed_on || '__' }}</td>
+          <td>{{ result.taken_marks || '__' }}</td>
+
+        </tr>
+        </tbody>
+      </table>
+      </div>
+    </ng-container>
 
   </mat-dialog-content>
+
   <mat-dialog-actions>
+
     <ng-container *ngIf="selectedModal == 'create'">
       <button class="save-subject" (click)="saveTest('create')">Сақтау</button>
     </ng-container>
-
     <ng-container *ngIf="selectedModal =='update'">
       <div class="submit-container">
 
@@ -170,39 +239,5 @@
     </ng-container>
 
   </mat-dialog-actions>
-</ng-template>
 
-
-<ng-template #resultsDialogTemplate>
-  <div class="dialog-header">
-    <h2 mat-dialog-title>Нәтижелер</h2>
-    <a [href]="excelDownloadLink" target="_blank">Скачать в Excel</a>
-    <button mat-icon-button (click)="closeDialog()" class="close-button">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-  <mat-dialog-content>
-    <table class="results-table">
-      <thead>
-      <tr>
-        <th>ФИО</th>
-        <th>Бастау уақыты</th>
-        <th>Аяқтау уақыты</th>
-        <th>Балл</th>
-        <th>Қатемен жұмыс</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let result of testResults">
-        <td>{{ result.learner_fullname }}</td>
-        <td>{{ result.started_on || '-' }}</td>
-        <td>{{ result.completed_on || '-' }}</td>
-        <td>{{ result.taken_marks !== null ? result.taken_marks : '-' }}</td>
-        <td>
-          <a href="#">Қатемен жұмыс</a>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-  </mat-dialog-content>
 </ng-template>

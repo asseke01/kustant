@@ -43,9 +43,10 @@ export class AdminMarkedTestsComponent implements OnInit {
   test: any[] = []
   schools: any[] = [];
   uploadedFile: File | null = null;
-  selectedId!: number | undefined;
+  selectedId!: number | undefined ;
   testResults: any[] = [];
   excelDownloadLink: string = '';
+  activeModal: string = 'test';
   public userUrl = environment.apiUrl;
 
   public testForm = this.form.group({
@@ -77,16 +78,12 @@ export class AdminMarkedTestsComponent implements OnInit {
   }
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string, selectedModal: string, id?: number): void {
-    this.loadSchools(); // Загрузка школ
+    this.loadSchools();
     this.selectedModal = selectedModal;
     this.selectedId = id;
 
-    console.log('selectedModal:', selectedModal);
-    console.log('Перед открытием диалога, состояние формы:', this.testForm.value);
-
     if (selectedModal === 'update') {
       this.testService.getSpecifiedTestId(this.selectedId).subscribe((data) => {
-        console.log('Данные для update:', data);
         if (data) {
           this.populateForm(data);
           this.dialog.open(this.dialogTemplate, {
@@ -94,15 +91,24 @@ export class AdminMarkedTestsComponent implements OnInit {
             maxWidth: '40vw',
             enterAnimationDuration,
             exitAnimationDuration,
+            disableClose: true,
           });
         }
       });
-    } else {
-      console.log('Сброс формы для create');
+    } else if(selectedModal === 'create'){
       this.testForm.reset({
         test_type: 'UBT',
-        group_id: '' // Сброс значения group_id
+        group_id: ''
       });
+      this.dialog.open(this.dialogTemplate, {
+        width: '100%',
+        maxWidth: '40vw',
+        enterAnimationDuration,
+        exitAnimationDuration,
+        disableClose: true,
+      });
+    }else{
+      this.loadResult(this.selectedId);
       this.dialog.open(this.dialogTemplate, {
         width: '100%',
         maxWidth: '40vw',
@@ -245,33 +251,23 @@ export class AdminMarkedTestsComponent implements OnInit {
     });
   }
 
-  openResultsDialog(testId: number): void {
-    this.testService.getSpecifiedTestResults(testId).subscribe({
-      next: (response) => {
-        this.testResults = response.testings;
-        this.excelDownloadLink = `/api/test/get_specified_test_results_in_excel/?id=${testId}`;
-        this.dialog.open(this.resultsDialogTemplate, {
-          width: '1060px',
-          height: 'fit-content', // Автоматическая высота в зависимости от контента
-          maxHeight: '90vh', // Ограничение по высоте
-          disableClose: false, // Чтобы можно было закрывать кликом вне модалки
-          panelClass: 'custom-results-dialog', // Пользовательский класс для CSS
-        });
-      },
-      error: () => {
-        this.alert.error('Ошибка при загрузке результатов теста.');
-      }
-    });
+  loadResult(itemId: number | undefined){
+    this.selectedId = itemId;
+    this.testService.getSpecifiedTestResults( this.selectedId).subscribe(data=>{
+      this.testResults = data.testings;
+    })
   }
 
 
   public changeStatus(status: string) {
-    if (status === 'archived') {
-      this.status = 'active'
-    } else {
-      this.status = 'archived';
-    }
+    this.status = status;
     this.loadTest();
   }
+
+  downloadResult(){
+    this.testService.downloadResult(this.selectedId).subscribe({})
+  }
+
+
 
 }

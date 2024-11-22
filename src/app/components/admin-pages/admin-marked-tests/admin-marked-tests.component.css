@@ -251,9 +251,13 @@
   align-items: center;
 }
 
-.dialog-header__container a {
+.download-excel__button {
+  background: none;
+  border: none;
   cursor: pointer;
   font-size: 15px;
+  text-decoration: underline;
+  color: blue;
 }
 
 .close-button {

@@ -275,4 +275,23 @@ export class AdminMarkedTestsComponent implements OnInit {
     this.loadTest();
   }
 
+  downloadExcel(testId: number): void {
+    this.testService.downloadSpecifiedTestResults(testId).subscribe({
+      next: (response) => {
+        const blob = new Blob([response], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `test_results_${testId}.xlsx`;
+        link.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: () => {
+        this.alert.error('Ошибка при скачивании файла.');
+      },
+    });
+  }
+
 }

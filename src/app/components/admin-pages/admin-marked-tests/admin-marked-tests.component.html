@@ -178,7 +178,7 @@
     <div class="dialog-header__container">
       <h2 mat-dialog-title>
         Нәтижелер
-        <a [href]="excelDownloadLink" target="_blank" download style="font-size: 15px;">Скачать в Excel</a>
+        <a class="download-excel__button" (click)="downloadExcel(selectedTestId)">Скачать в Excel</a>
       </h2>
     </div>
     <button mat-icon-button (click)="closeDialog()" class="close-button">

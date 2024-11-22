@@ -1,14 +1,14 @@
 <div class="navbar-container">
-  <h2>Белгіленген тесттер</h2>
+  <h2 *ngIf="status == 'active'">Белгіленген тесттер</h2>
+  <button class="add-btn" (click)="changeStatus('active')" *ngIf="status == 'archive'">Артқа</button>
 
   <div class="navbar-menu">
 
-    <button class="add-btn" (click)="openDialog('250ms', '250ms', 'create')">Тест белгілеу</button>
-    <button class="add-btn" (click)="changeStatus(status)">{{ status === 'archived' ? 'Артқа' : 'Архив' }}</button>
+    <button class="add-btn" (click)="openDialog('250ms', '250ms', 'create')" *ngIf="status == 'active'">Тест белгілеу</button>
+    <button class="add-btn" (click)="changeStatus('archive')" *ngIf="status == 'active'">Архив</button>
 
   </div>
 </div>
-
 <div class="main-container">
 
   <div class="grid-container">
@@ -186,7 +186,7 @@
     </button>
   </div>
   <mat-dialog-content>
-    <table class="results-table">
+    <table class="result-table">
       <thead>
       <tr>
         <th>ФИО</th>

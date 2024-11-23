@@ -149,4 +149,9 @@ export class TestService {
       responseType: 'blob', // Указываем, что ожидаем файл
     });
   }
+
+  getSubjects(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}get_subjects/`, {
+    });
+  }
 }

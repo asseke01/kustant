@@ -11,6 +11,7 @@ import {AlertService} from '../../../services/helper-services/alert.service';
 import {environment} from '../../../../environments/environment';
 import {PopupService} from '../../../services/helper-services/popup.service';
 import {AuthService} from '../../../services/auth-services/auth.service';
+import {Subject} from 'rxjs';
 
 @Component({
   selector: 'app-admin-marked-tests',
@@ -53,27 +54,31 @@ export class AdminMarkedTestsComponent implements OnInit {
   public userUrl = environment.apiUrl;
   public userData: any;
   public role: string = '';
+  subjects: any[] = [];
+  subThemes: any[] = [];
 
   public testForm = this.form.group({
     id: [null],
     name: ['', Validators.required],
     starts_at: ['', Validators.required],
     ends_at: ['', Validators.required],
-    test_type: ['UBT', [Validators.required]],
+    test_type: ['ubt', [Validators.required]],
     group_id: ['', Validators.required],
+    subject: [''],
+    theme_id: [''], // Поле для выбора темы
     excel: ['', [Validators.required]],
     uploaded_excel_file: ['', Validators.required],
-  })
+  });
 
   ngOnInit(): void {
     this.loadUserData();
     this.loadTest();
+    this.loadSubjects();
   }
 
   loadUserData(): void {
     this.userData = this.authService.getUserData()
     this.role = this.userData?.role;
-
   }
 
   loadTest() {
@@ -128,7 +133,7 @@ export class AdminMarkedTestsComponent implements OnInit {
     } else {
       console.log('Сброс формы для create');
       this.testForm.reset({
-        test_type: 'UBT',
+        test_type: 'ubt',
         group_id: '' // Сброс значения group_id
       });
       this.dialog.open(this.dialogTemplate, {
@@ -145,7 +150,7 @@ export class AdminMarkedTestsComponent implements OnInit {
   closeDialog(): void {
     this.dialog.closeAll();
     this.testForm.reset({
-      test_type: 'UBT',
+      test_type: 'ubt',
       group_id: null
     });
   }
@@ -169,8 +174,28 @@ export class AdminMarkedTestsComponent implements OnInit {
       starts_at: data.starts_at || '',
       ends_at: data.ends_at || '',
       group_id: data.group_id || '',
+      test_type: data.test_type || 'ubt',
+      subject: data.subject || '',
+      theme_id: data.theme_id || '', // Устанавливаем существующую тему
       excel: data.excel || '',
       uploaded_excel_file: data.uploaded_excel_file || ''
+    });
+
+    if (data.test_type === 'theme' && data.subject) {
+      this.loadThemes(data.subject); // Загружаем темы для существующего subject
+    }
+
+    // Отслеживаем изменение test_type и subject
+    this.testForm.get('test_type')?.valueChanges.subscribe((value) => {
+      if (value === 'theme' && this.testForm.get('subject')?.value) {
+        this.loadThemes(this.testForm.get('subject')?.value!);
+      }
+    });
+
+    this.testForm.get('subject')?.valueChanges.subscribe((subject) => {
+      if (this.testForm.get('test_type')?.value === 'theme') {
+        this.loadThemes(subject!); // Обновляем список тем при изменении subject
+      }
     });
   }
 
@@ -185,6 +210,14 @@ export class AdminMarkedTestsComponent implements OnInit {
       formData.append('ends_at', formValues.ends_at || '');
       formData.append('test_type', formValues.test_type || '');
       formData.append('group_id', formValues.group_id || '');
+
+      if (formValues.test_type !== 'ubt' && formValues.subject) {
+        formData.append('subject', formValues.subject);
+      }
+
+      if (formValues.test_type === 'theme' && formValues.theme_id) {
+        formData.append('theme_id', formValues.theme_id); // Передаём тему только для theme
+      }
 
       if (this.uploadedFile) {
         formData.append('uploaded_excel_file_key', this.uploadedFile);
@@ -212,6 +245,14 @@ export class AdminMarkedTestsComponent implements OnInit {
       formData.append('ends_at', formValues.ends_at || '');
       formData.append('test_type', formValues.test_type || '');
       formData.append('group_id', formValues.group_id || '');
+
+      if (formValues.test_type !== 'ubt' && formValues.subject) {
+        formData.append('subject', formValues.subject);
+      }
+
+      if (formValues.test_type === 'theme' && formValues.theme_id) {
+        formData.append('theme_id', formValues.theme_id); // Передаём тему только для theme
+      }
 
       if (this.uploadedFile) {
         formData.append('uploaded_excel_file_key', this.uploadedFile);
@@ -317,6 +358,34 @@ export class AdminMarkedTestsComponent implements OnInit {
       },
       error: () => {
         this.alert.error('Ошибка при скачивании файла.');
+      },
+    });
+  }
+
+  loadSubjects(): void {
+    this.testService.getSubjects().subscribe({
+      next: (subjects) => {
+        this.subjects = subjects; // Сохраняем список предметов в переменной
+      },
+      error: () => {
+        this.alert.error('Ошибка загрузки предметов.');
+      }
+    });
+  }
+
+  loadThemes(subject: string): void {
+    if (!subject) {
+      this.subThemes = [];
+      return;
+    }
+
+    this.testService.getSubThemes(subject).subscribe({
+      next: (themes) => {
+        this.subThemes = themes;
+        console.log('Загруженные темы:', themes);
+      },
+      error: () => {
+        this.alert.error('Ошибка при загрузке тем.');
       },
     });
   }

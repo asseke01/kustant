@@ -116,13 +116,13 @@
           </div>
 
           <div class="form-group">
-            <label for="group-update">Мектеп</label>
+            <label for="group-update">{{ role === 'teacher' ? 'Группа' : 'Мектеп' }}</label>
             <select id="group-update" name="group-update" formControlName="group_id">
               <option *ngFor="let school of schools" [value]="school.id">{{ school.name }}</option>
             </select>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" *ngIf="role !== 'teacher'">
             <label for="group-update">Оқушылардың Excel тізімі
               <a href="assets/data/excel_demo.xlsx" target="_blank" style="text-decoration: underline; cursor: pointer">(Үлгі)</a>
             </label>
@@ -153,18 +153,14 @@
     </ng-container>
 
     <ng-container *ngIf="selectedModal =='update'">
-      <div class="submit-container">
 
-        <div class="submit-buttons">
-          <button class="save-subject" (click)="saveTest('update')">Сақтау</button>
-          <button class="save-subject" (click)="onArchieve()">Архивқа салу</button>
-        </div>
+      <div class="submit-buttons">
+        <button class="save-subject" (click)="saveTest('update')">Сақтау</button>
+        <button class="save-subject" (click)="onArchieve()">Архивқа салу</button>
+      </div>
 
-        <div>
-          <button class="save-subject" (click)="onDelete()">Жою</button>
-        </div>
-
-
+      <div>
+        <button class="save-subject" (click)="onDelete()">Жою</button>
       </div>
 
     </ng-container>

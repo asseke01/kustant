@@ -161,8 +161,7 @@
 
 .mat-mdc-dialog-actions {
   display: flex;
-  justify-content: flex-start;
-
+  justify-content: space-between;
 }
 
 ::ng-deep .mat-mdc-dialog-surface {
@@ -290,4 +289,9 @@
   max-height: 90vh !important;
   border-radius: 8px;
   overflow: auto; /* Если контент превышает высоту, появляется скролл */
+}
+
+.submit-buttons {
+  display: flex;
+  gap: 20px;
 }

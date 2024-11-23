@@ -86,6 +86,10 @@ export class UserService {
     return this.http.get(`${this.userUrl}get_school_groups/`);
   }
 
+  getGroups(): Observable<any> {
+    return this.http.get(`${this.userUrl}get_groups/`);
+  }
+
   saveSchool(data: { id?: number; name: string }): Observable<any> {
     return this.http.post(`${this.userUrl}save_school_group/`, data, {
       headers: {Authorization: `Token ${this.authService.getToken()}`}

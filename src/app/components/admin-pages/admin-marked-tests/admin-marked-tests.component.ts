@@ -10,6 +10,7 @@ import {UserService} from '../../../services/user-services/user.service';
 import {AlertService} from '../../../services/helper-services/alert.service';
 import {environment} from '../../../../environments/environment';
 import {PopupService} from '../../../services/helper-services/popup.service';
+import {AuthService} from '../../../services/auth-services/auth.service';
 
 @Component({
   selector: 'app-admin-marked-tests',
@@ -36,8 +37,10 @@ export class AdminMarkedTestsComponent implements OnInit {
   private form = inject(FormBuilder);
   private testService = inject(TestService);
   private userService = inject(UserService);
+  private authService = inject(AuthService);
   private alert = inject(AlertService);
   private popupService = inject(PopupService);
+
   selectedModal: string = '';
   status = 'active';
   test: any[] = []
@@ -48,6 +51,8 @@ export class AdminMarkedTestsComponent implements OnInit {
   excelDownloadLink: string = '';
   selectedTestId!: number;
   public userUrl = environment.apiUrl;
+  public userData: any;
+  public role: string = '';
 
   public testForm = this.form.group({
     id: [null],
@@ -60,9 +65,15 @@ export class AdminMarkedTestsComponent implements OnInit {
     uploaded_excel_file: ['', Validators.required],
   })
 
-
   ngOnInit(): void {
+    this.loadUserData();
     this.loadTest();
+  }
+
+  loadUserData(): void {
+    this.userData = this.authService.getUserData()
+    this.role = this.userData?.role;
+
   }
 
   loadTest() {
@@ -72,13 +83,29 @@ export class AdminMarkedTestsComponent implements OnInit {
   }
 
   loadSchools() {
-    this.userService.getSchool().subscribe(data => {
-      this.schools = data;
-    })
+    if (this.role === 'teacher') {
+      this.userService.getGroups().subscribe({
+        next: (data) => {
+          this.schools = data;
+        },
+        error: (err) => {
+          this.alert.error('Не удалось загрузить группы.');
+        }
+      });
+    } else {
+      this.userService.getSchool().subscribe({
+        next: (data) => {
+          this.schools = data;
+        },
+        error: (err) => {
+          this.alert.error('Не удалось загрузить школы.');
+        }
+      })
+    }
   }
 
   openDialog(enterAnimationDuration: string, exitAnimationDuration: string, selectedModal: string, id?: number): void {
-    this.loadSchools(); // Загрузка школ
+    this.loadSchools();
     this.selectedModal = selectedModal;
     this.selectedId = id;
 
@@ -267,10 +294,10 @@ export class AdminMarkedTestsComponent implements OnInit {
   }
 
   public changeStatus(status: string) {
-    if (status === 'archived') {
+    if (status === 'archive') {
       this.status = 'active'
     } else {
-      this.status = 'archived';
+      this.status = 'archive';
     }
     this.loadTest();
   }

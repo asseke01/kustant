@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
     if (token) {
       return this.verifyToken();
     } else {
-      this.router.navigate(['']);
+      this.redirectToLogin();
       return of(false);
     }
   }
@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
     const token = this.authService.getToken();
 
     if (!token) {
-      this.router.navigate(['']);
+      this.redirectToLogin();
       return of(false);
     }
 
@@ -41,18 +41,22 @@ export class AuthGuard implements CanActivate {
           return true;
         } else {
           this.authService.clearUserData();
-          this.router.navigate(['']);
+          this.redirectToLogin();
           return false;
         }
       }),
       catchError((error) => {
         this.authService.clearUserData();
-        this.router.navigate(['']);
+        this.redirectToLogin();
         return of(false);
       })
     );
   }
 
+
+  private redirectToLogin(): void {
+    this.router.navigate(['/admin-login']);
+  }
 
 }
 

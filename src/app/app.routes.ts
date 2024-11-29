@@ -16,11 +16,14 @@ import {
 import {AuthGuard} from './services/auth-services/auth.guard';
 import {AdminLoginPageComponent} from './components/auth-pages/admin-login-page/admin-login-page.component';
 import {ProfilePageComponent} from './components/user-pages/profile-page/profile-page.component';
-import {TestRequest} from '@angular/common/http/testing';
 import {TestResultPageComponent} from './components/user-pages/test-pages/test-result-page/test-result-page.component';
 import {TestReviewComponent} from './components/user-pages/test-pages/test-review/test-review.component';
 import {AdminMarkedTestsComponent} from './components/admin-pages/admin-marked-tests/admin-marked-tests.component';
 import {AdminSchoolsPageComponent} from './components/admin-pages/admin-schools-page/admin-schools-page.component';
+import {AnalyticsPagesComponent} from './components/analytics-pages/analytics-pages.component';
+import {
+  AnalyticsDashboardComponent
+} from './components/analytics-pages/analytics-dashboard/analytics-dashboard.component';
 
 export const routes: Routes = [
 
@@ -29,9 +32,6 @@ export const routes: Routes = [
   },
   {
     path: 'login', component: LoginPageComponent
-  },
-  {
-    path: 'admin-login', component: AdminLoginPageComponent
   },
   {
     path: 'main', component: MainPageComponent, canActivate: [AuthGuard]
@@ -52,7 +52,9 @@ export const routes: Routes = [
   {
     path: 'test-review/:test_id', component: TestReviewComponent, canActivate: [AuthGuard]
   },
-
+  {
+    path: 'admin-login', component: AdminLoginPageComponent
+  },
 
   {
     path: 'admin', component: AdminPagesComponent, canActivate: [AuthGuard],
@@ -83,6 +85,11 @@ export const routes: Routes = [
       }
     ]
   },
-  {path: '**', redirectTo: '', pathMatch: 'full'},
-
+  {    path: 'analytic', component: AnalyticsPagesComponent,
+    children: [
+      {
+        path: 'dashboard', component: AnalyticsDashboardComponent
+      }
+  ]
+  },
 ];

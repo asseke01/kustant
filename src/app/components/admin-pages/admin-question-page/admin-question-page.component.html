@@ -3,22 +3,24 @@
   <hr style="transform: scaleY(0.3);">
 
   <div class="navbar-menu">
-    <div class="select" >
+    <div class="select">
       <span>Пән: {{ getDisplayName(selectedSubject) }} </span>
       <span> <i class="bi bi-caret-down-fill"></i>  </span>
-      <select id="subject1" [(ngModel)]="selectedSubject" >
-        <option *ngFor="let item of subjects" [value]="item.name">{{ item.displayName }}</option>
+      <select id="subject1" [(ngModel)]="selectedSubject" (change)="onSubjectChange()">
+        <option *ngFor="let item of subjects" [value]="item.name">
+          {{ item.displayName }}
+        </option>
       </select>
     </div>
 
     <div class="button-container">
 
       <div class="search-menu">
-        <input type="text" placeholder="ФИО/Телефон (формат +7 (xxx) xxx xx xx)" >
+        <input type="text" placeholder="ФИО/Телефон (формат +7 (xxx) xxx xx xx)">
         <button class="search-btn">Іздеу</button>
       </div>
 
-      <button class="plus-button" (click)="openDialog('250ms', '250ms','select-type')" >Сұрақ қосу</button>
+      <button class="plus-button" (click)="openDialog('250ms', '250ms','select-type')">Сұрақ қосу</button>
     </div>
 
   </div>
@@ -29,25 +31,29 @@
   <div class="content-container">
 
     <div class="action-buttons">
-      <button class="action-button" [class.active]="selectedValue === 'has_one_answer'" (click)="changeType('has_one_answer')">Бір жауапты</button>
-      <button class="action-button" [class.active]="selectedValue === 'has_many_answers'" (click)="changeType('has_many_answers')">Көп жауапты</button>
+      <button class="action-button" [class.active]="selectedValue === 'has_one_answer'"
+              (click)="changeType('has_one_answer')">Бір жауапты
+      </button>
+      <button class="action-button" [class.active]="selectedValue === 'has_many_answers'"
+              (click)="changeType('has_many_answers')">Көп жауапты
+      </button>
       <button class="action-button">Сәйкестендіру</button>
       <button class="action-button">Контекст</button>
     </div>
 
     <div class="action-buttons">
 
-      <div class="select" >
+      <div class="select">
         <span>Пән: {{ getDisplayTheme(selectedSubTheme) }} </span>
         <span> <i class="bi bi-caret-down-fill"></i>  </span>
-        <select id="subTheme" [(ngModel)]="selectedSubTheme" >
+        <select id="subTheme" [(ngModel)]="selectedSubTheme">
           <option [ngValue]="undefined" selected>Барлығы</option>
           <option *ngFor="let item of subThemes" [value]="item.id">{{ item.theme_name }} {{ item.name }}</option>
         </select>
       </div>
 
-      <div class="select" >
-        <span>{{selectedText}}</span>
+      <div class="select">
+        <span>{{ selectedText }}</span>
         <span> <i class="bi bi-caret-down-fill"></i>  </span>
         <select (change)="onSelectionChange($event)">
           <option value="all">Барлығы</option>
@@ -71,10 +77,11 @@
           <th>Деңгейі</th>
         </tr>
         <tbody>
-        <tr *ngFor="let question of questionsData; let i = index" >
+        <tr *ngFor="let question of questionsData; let i = index" (click)="openEditDialog(question, '250ms', '250ms')">
           <td>{{ i + 1 + offset }}</td>
           <td>{{ question.help_text }}</td>
-          <td [ngClass]="{'accepted-status': question.status === 'accepted', 'not-accepted-status': question.status !== 'accepted'}">
+          <td
+            [ngClass]="{'accepted-status': question.status === 'accepted', 'not-accepted-status': question.status !== 'accepted'}">
             {{ question.status_display }}
           </td>
           <td>{{ question.lvl_display }}</td>
@@ -97,7 +104,7 @@
   <div class="dialog-header">
     <h2 mat-dialog-title *ngIf="selectedType == 'select-type'">Тип таңдау</h2>
     <h2 mat-dialog-title *ngIf="selectedType !== 'select-type'">Сұрақ қосу</h2>
-    <button mat-icon-button  class="close-button">
+    <button mat-icon-button class="close-button">
       <mat-icon (click)="closeDialog()">close</mat-icon>
     </button>
   </div>
@@ -168,19 +175,19 @@
           </div>
 
           <div class="form-group">
-            <label for="text">Текст</label>
+            <label for="text1">Текст</label>
             <quill-editor
-              id="text"
-              formControlName = 'text'
+              id="text1"
+              formControlName='text'
               [modules]="quillModules"
               placeholder=''>
             </quill-editor>
           </div>
 
           <div class="form-group">
-            <label for="level">Пән</label>
+            <label for="level1">Пән</label>
             <select
-              id="level"
+              id="level1"
               formControlName="lvl">
               <option value="A">A</option>
               <option value="B">B</option>
@@ -191,7 +198,8 @@
           <div formArrayName="answers" class="answers">
 
             <label for="subTheme">Жауаптар</label>
-            <div *ngFor="let answer of answers.controls; let i = index" [formGroupName]="i" class="form-group answer-item">
+            <div *ngFor="let answer of answers.controls; let i = index" [formGroupName]="i"
+                 class="form-group answer-item">
 
               <div [id]="'toolbar-' + i" class="toolbar">
                 <button class="ql-image"></button>
@@ -210,7 +218,8 @@
               </div>
             </div>
 
-            <span (click)="addAnswer()" *ngIf="answers.length != maxAnswers" class="add-question">"Е" жауабын қосу</span>
+            <span (click)="addAnswer()" *ngIf="answers.length != maxAnswers"
+                  class="add-question">"Е" жауабын қосу</span>
           </div>
 
         </div>
@@ -250,7 +259,7 @@
             <label for="text-many">Текст</label>
             <quill-editor
               id="text-many"
-              formControlName = 'text'
+              formControlName='text'
               [modules]="quillModules"
               placeholder=''>
             </quill-editor>
@@ -270,7 +279,8 @@
           <div formArrayName="answers" class="answers">
 
             <label for="subTheme">Жауаптар</label>
-            <div *ngFor="let answer of answersMany.controls; let i = index" [formGroupName]="i" class="form-group answer-item">
+            <div *ngFor="let answer of answersMany.controls; let i = index" [formGroupName]="i"
+                 class="form-group answer-item">
 
               <div [id]="'toolbar-' + i" class="toolbar">
                 <button class="ql-image"></button>
@@ -318,7 +328,7 @@
             <label for="text-context">Контекст</label>
             <quill-editor
               id="text-context"
-              formControlName = 'text'
+              formControlName='text'
               [modules]="quillModules"
               placeholder=''>
             </quill-editor>
@@ -327,9 +337,10 @@
           <hr class="question-divider">
 
           <div formArrayName="questions" class="answers">
-            <div *ngFor="let question of questions.controls; let qIndex = index" [formGroupName]="qIndex" class="question-item">
+            <div *ngFor="let question of questions.controls; let qIndex = index" [formGroupName]="qIndex"
+                 class="question-item">
 
-              <label for="question-text">#{{qIndex + 1}} Сұрақ</label>
+              <label for="question-text">#{{ qIndex + 1 }} Сұрақ</label>
               <div class="form-group">
                 <div id="toolbox-{{ qIndex }}">
                   <button class="ql-bold"></button>
@@ -352,7 +363,7 @@
               </div>
 
               <div formArrayName="answers" class="answers">
-                <label for="answers"># {{qIndex + 1}} Жауаптар</label>
+                <label for="answers"># {{ qIndex + 1 }} Жауаптар</label>
                 <div *ngFor="let answer of getAnswers(qIndex).controls; let aIndex = index"
                      id="answers"
                      [formGroupName]="aIndex"
@@ -414,7 +425,7 @@
             <label for="text-context-match">Контекст</label>
             <quill-editor
               id="text-context-match"
-              formControlName = 'text'
+              formControlName='text'
               [modules]="quillModules"
               placeholder=''>
             </quill-editor>
@@ -430,14 +441,14 @@
                   <span style="float: left; font-weight: 700;font-size: 14px;">Сұрақ #{{ i + 1 }} </span>
                   <button class="ql-image" style="float: right"></button>
                 </div>
-              <quill-editor formControlName="question" [modules]="getMatchConfig(i)"></quill-editor>
+                <quill-editor formControlName="question" [modules]="getMatchConfig(i)"></quill-editor>
               </div>
 
               <div class="form-group">
                 <div id="toolbox-answer-{{ i  }}">
                   <span style="float: left; font-weight: 700;font-size: 14px;">Сұрақтың жауабы</span>
                 </div>
-              <quill-editor formControlName="answer" [modules]="getMatchAnswerConfig(i)"></quill-editor>
+                <quill-editor formControlName="answer" [modules]="getMatchAnswerConfig(i)"></quill-editor>
               </div>
 
             </div>
@@ -470,11 +481,111 @@
     </ng-container>
 
 
-
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button class="save-subject" *ngIf="selectedType !== 'select-type' && selectedType == 'one-question'" (click)="onSubmit()">Сақтау</button>
-    <button class="save-subject" *ngIf="selectedType !== 'select-type'&& selectedType == 'many-question'" (click)="onSubmitMany()">Сақтау</button>
-    <button class="save-subject" *ngIf="selectedType !== 'select-type'&& selectedType == 'context-question'" (click)="onSubmitContext()">Сақтау</button>
+    <button class="save-subject" *ngIf="selectedType !== 'select-type' && selectedType == 'one-question'"
+            (click)="onSubmit()">Сақтау
+    </button>
+    <button class="save-subject" *ngIf="selectedType !== 'select-type'&& selectedType == 'many-question'"
+            (click)="onSubmitMany()">Сақтау
+    </button>
+    <button class="save-subject" *ngIf="selectedType !== 'select-type'&& selectedType == 'context-question'"
+            (click)="onSubmitContext()">Сақтау
+    </button>
   </mat-dialog-actions>
 </ng-template>
+
+<ng-template #editDialogTemplate>
+  <div class="dialog-header">
+    <h2 mat-dialog-title>Сұрақты өзгерту</h2>
+    <button mat-icon-button class="close-button" (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <mat-dialog-content>
+    <form [formGroup]="editOneQuestionForm">
+      <div class="content">
+        <!-- Пән -->
+        <div class="form-group">
+          <label for="subject2">Пән</label>
+          <select id="subject2" formControlName="subject">
+            <option *ngFor="let item of subjects" [value]="item.name">{{ item.displayName }}</option>
+          </select>
+        </div>
+
+        <!-- Тақырыпша -->
+        <div class="form-group">
+          <label for="subThemeForm1">Тақырыпша</label>
+          <select id="subThemeForm1" formControlName="theme_id">
+            <option *ngFor="let item of subThemes" [value]="item.id">{{ item.theme_name }} {{ item.name }}</option>
+          </select>
+        </div>
+
+        <!-- Іздеу тексті -->
+        <div class="form-group">
+          <label for="help_text1">Іздеу тексті</label>
+          <input type="text" id="help_text1" formControlName="help_text">
+        </div>
+
+        <!-- Текст -->
+        <div class="form-group">
+          <label for="text">Текст</label>
+          <quill-editor
+            id="text"
+            formControlName="text"
+            [modules]="quillModules"
+            placeholder="Мәтін енгізіңіз"
+          ></quill-editor>
+        </div>
+
+        <!-- Деңгейі -->
+        <div class="form-group">
+          <label for="level">Деңгей</label>
+          <select id="level" formControlName="lvl">
+            <option value="a">A</option>
+            <option value="b">B</option>
+            <option value="c">C</option>
+          </select>
+        </div>
+
+        <!-- Жауаптар -->
+        <div formArrayName="answers" class="answers">
+          <label for="answers">Жауаптар</label>
+          <div
+            *ngFor="let answer of editAnswers.controls; let i = index"
+            [formGroupName]="i"
+            class="form-group answer-item"
+          >
+            <div [id]="'toolbar-' + i" class="toolbar">
+              <button class="ql-image"></button>
+              <button style="width: 20px" (click)="setCorrectAnswer(i)">
+                <i class="bi bi-check-circle" [class.correct]="answer.get('is_correct')?.value"></i>
+              </button>
+            </div>
+
+            <quill-editor
+              formControlName="text"
+              [modules]="getEditorConfig(i)"
+              placeholder="Введите текст"
+            ></quill-editor>
+
+            <div *ngIf="i === (editAnswers.length - 1) && i === 4" class="delete-fifth-answer">
+              <span class="delete-text" (click)="removeAnswerFromEditForm(i)">"E" жауабын жою</span>
+            </div>
+
+          </div>
+          <span *ngIf="editAnswers.length != maxAnswers" (click)="addAnswerToEditForm()" class="add-question">
+            "Е" жауабын қосу
+          </span>
+        </div>
+
+
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button class="save-button" (click)="saveEditedQuestion()">Сақтау</button>
+    <button class="close-button" mat-dialog-close>Жабу</button>
+  </mat-dialog-actions>
+</ng-template>
+

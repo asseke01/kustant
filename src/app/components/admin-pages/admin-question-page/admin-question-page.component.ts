@@ -3,11 +3,19 @@ import {NgClass, NgForOf, NgIf} from "@angular/common";
 import {Form, FormArray, FormBuilder, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {TestService} from '../../../services/admin-services/test.service';
 import {QuestionService} from '../../../services/admin-services/question.service';
-import {MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle
+} from '@angular/material/dialog';
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {AlertService} from '../../../services/helper-services/alert.service';
 import {QuillEditorComponent} from 'ngx-quill';
+import {forkJoin} from 'rxjs';
 
 @Component({
   selector: 'app-admin-question-page',
@@ -24,12 +32,14 @@ import {QuillEditorComponent} from 'ngx-quill';
     MatIcon,
     MatIconButton,
     QuillEditorComponent,
+    MatDialogClose,
   ],
   templateUrl: './admin-question-page.component.html',
   styleUrl: './admin-question-page.component.css'
 })
 export class AdminQuestionPageComponent implements OnInit {
   @ViewChild('dialogTemplate') dialogTemplate!: TemplateRef<any>;
+  @ViewChild('editDialogTemplate') editDialogTemplate!: TemplateRef<any>;
   dialog = inject(MatDialog);
   dialogRef: MatDialogRef<any> | null = null;
   private testService = inject(TestService);
@@ -82,8 +92,10 @@ export class AdminQuestionPageComponent implements OnInit {
   status = 'not_accepted'
   type = 'has_many_answers'
 
-  subThemes:any[]=[];
-  questionsData:any[]=[];
+  subThemes: any[] = [];
+  questionsData: any[] = [];
+  private questionsCache: Map<string, any> = new Map();
+
 
   //ЗАГРУЗКА ДАННЫХ
 
@@ -94,6 +106,27 @@ export class AdminQuestionPageComponent implements OnInit {
 
   }
 
+  clearCacheForSubject(subject: string): void {
+    Array.from(this.questionsCache.keys())
+      .filter(key => key.includes(subject))
+      .forEach(key => this.questionsCache.delete(key));
+  }
+
+  onSubjectChange(): void {
+    this.offset = 0;
+    this.currentPage = 1;
+    this.clearCacheForSubject(this.selectedSubject);
+
+    forkJoin({
+      subThemes: this.testService.getSubThemes(this.selectedSubject),
+      questions: this.questionService.getQuestionsCached(this.selectedValue, this.selectedSubject, undefined, undefined, this.offset, this.limit)
+    }).subscribe(({subThemes, questions}) => {
+      this.subThemes = subThemes;
+      this.questionsData = questions.questions;
+      this.questionCount = questions.total_questions_count;
+    });
+  }
+
   loadSubThemes() {
     this.testService.getSubThemes(this.selectedSubject).subscribe(data => {
       this.subThemes = data;
@@ -101,7 +134,7 @@ export class AdminQuestionPageComponent implements OnInit {
   }
 
   loadQuestions() {
-    this.questionService.getQuestions(this.selectedValue, this.selectedSubject, undefined, undefined, this.offset, this.limit)
+    this.questionService.getQuestionsCached(this.selectedValue, this.selectedSubject, undefined, undefined, this.offset, this.limit)
       .subscribe(data => {
         this.questionsData = data.questions;
         this.questionCount = data.total_questions_count;
@@ -129,7 +162,6 @@ export class AdminQuestionPageComponent implements OnInit {
     this.selectedValue = newType;
     this.loadQuestions();
   }
-
 
 
   //ЗАГРУЗКА ДАННЫХ
@@ -195,6 +227,10 @@ export class AdminQuestionPageComponent implements OnInit {
         return '80vh';
       case 'many-question':
         return '80vh';
+      case 'has_one_answer':
+        return '80vh'; // Для вопроса с одним ответом
+      case 'has_many_answers':
+        return '80vh'; // Для вопроса с несколькими ответами
       case 'context-question':
         return '80vh';
       case 'match-question':
@@ -205,44 +241,46 @@ export class AdminQuestionPageComponent implements OnInit {
   }
 
   public oneQuestionForm = this.fb.group({
-    subject: [{ value: this.selectedSubject, disabled: true }],
-    help_text:[''],
-    text:[''],
-    lvl:[''],
-    status:[this.status],
-    theme_id:[''],
-    type:[this.type],
+    subject: [{value: this.selectedSubject, disabled: true}],
+    help_text: [''],
+    text: [''],
+    lvl: [''],
+    status: [this.status],
+    theme_id: [''],
+    type: [this.type],
     answers: this.fb.array([])
   })
 
   public manyQuestionForm = this.fb.group({
-    subject: [{ value: this.selectedSubject, disabled: true }],
-    help_text:[''],
-    text:[''],
-    lvl:[''],
-    status:['not_accepted'],
-    theme_id:[''],
-    type:['has_one_answer'],
+    subject: [{value: this.selectedSubject, disabled: true}],
+    help_text: [''],
+    text: [''],
+    lvl: [''],
+    status: ['not_accepted'],
+    theme_id: [''],
+    type: ['has_one_answer'],
     answers: this.fb.array([])
   })
 
   public contextQuestionForm = this.fb.group({
-    help_text:[''],
-    subject: [{ value: this.selectedSubject, disabled: true }],
-    status:['not_accepted'],
-    text:[''],
+    help_text: [''],
+    subject: [{value: this.selectedSubject, disabled: true}],
+    status: ['not_accepted'],
+    text: [''],
     questions: this.fb.array([])
   })
 
   public matchingQuestionForm = this.fb.group({
-    help_text:[''],
-    subject: [{ value: this.selectedSubject, disabled: true }],
-    theme_id:[''],
-    status:['not_accepted'],
-    text:[''],
+    help_text: [''],
+    subject: [{value: this.selectedSubject, disabled: true}],
+    theme_id: [''],
+    status: ['not_accepted'],
+    text: [''],
     questions: this.fb.array([]),
     answers: this.fb.array([])
   })
+
+
 
   get answers(): FormArray {
     return this.oneQuestionForm.get('answers') as FormArray;
@@ -256,11 +294,11 @@ export class AdminQuestionPageComponent implements OnInit {
     return this.contextQuestionForm.get('questions') as FormArray;
   }
 
-  get matchingQuestion():FormArray{
+  get matchingQuestion(): FormArray {
     return this.matchingQuestionForm.get('questions') as FormArray;
   }
 
-  get matchingAnswers():FormArray{
+  get matchingAnswers(): FormArray {
     return this.matchingQuestionForm.get('answers') as FormArray;
   }
 
@@ -319,8 +357,6 @@ export class AdminQuestionPageComponent implements OnInit {
       this.matchingAnswers.removeAt(index);
     }
   }
-
-
 
 
   addAnswer(): void {
@@ -410,6 +446,7 @@ export class AdminQuestionPageComponent implements OnInit {
       }
     };
   }
+
   removeLastAnswer(): void {
     const answersLength = this.answers.length;
     if (answersLength > 0) {
@@ -430,7 +467,7 @@ export class AdminQuestionPageComponent implements OnInit {
     const currentText = this.answers.at(index).get('text')?.value || '';
 
     if (currentText !== content) {
-      this.answers.at(index).get('text')?.setValue(content, { emitEvent: false });
+      this.answers.at(index).get('text')?.setValue(content, {emitEvent: false});
     }
   }
 
@@ -444,21 +481,21 @@ export class AdminQuestionPageComponent implements OnInit {
     }
 
     const correctAnswers = this.answersMany.controls
-      .map((control, idx) => ({ control, idx }))
+      .map((control, idx) => ({control, idx}))
       .filter(item => item.control.get('is_correct')?.value);
 
     const correctAnswersCount = correctAnswers.length;
     const isCurrentlyCorrect = currentControl.get('is_correct')?.value;
 
     if (isCurrentlyCorrect) {
-      currentControl.patchValue({ is_correct: false });
+      currentControl.patchValue({is_correct: false});
     } else {
       if (correctAnswersCount < 3) {
-        currentControl.patchValue({ is_correct: true });
+        currentControl.patchValue({is_correct: true});
       } else {
         const lastCorrectAnswerIndex = correctAnswers[correctAnswersCount - 1].idx;
-        this.answersMany.controls[lastCorrectAnswerIndex].patchValue({ is_correct: false });
-        currentControl.patchValue({ is_correct: true });
+        this.answersMany.controls[lastCorrectAnswerIndex].patchValue({is_correct: false});
+        currentControl.patchValue({is_correct: true});
       }
     }
   }
@@ -470,7 +507,7 @@ export class AdminQuestionPageComponent implements OnInit {
     const currentText = this.answersMany.at(index).get('text')?.value || '';
 
     if (currentText !== content) {
-      this.answersMany.at(index).get('text')?.setValue(content, { emitEvent: false });
+      this.answersMany.at(index).get('text')?.setValue(content, {emitEvent: false});
     }
   }
 
@@ -478,7 +515,7 @@ export class AdminQuestionPageComponent implements OnInit {
     const content = event.html || '';
     const currentQuestion = this.questions.at(qIndex);
     if (currentQuestion.get('text')?.value !== content) {
-      currentQuestion.get('text')?.setValue(content, { emitEvent: false });
+      currentQuestion.get('text')?.setValue(content, {emitEvent: false});
     }
   }
 
@@ -486,7 +523,7 @@ export class AdminQuestionPageComponent implements OnInit {
     const content = event.html || '';
     const currentAnswer = (this.questions.at(qIndex).get('answers') as FormArray).at(aIndex);
     if (currentAnswer.get('text')?.value !== content) {
-      currentAnswer.get('text')?.setValue(content, { emitEvent: false });
+      currentAnswer.get('text')?.setValue(content, {emitEvent: false});
     }
   }
 
@@ -496,11 +533,11 @@ export class AdminQuestionPageComponent implements OnInit {
 
     answers.controls.forEach((control, index) => {
       if (index !== aIndex) {
-        control.patchValue({ is_correct: false });
+        control.patchValue({is_correct: false});
       }
     });
 
-    currentAnswer.patchValue({ is_correct: true });
+    currentAnswer.patchValue({is_correct: true});
   }
 
   removeFifthAnswer(qIndex: number): void {
@@ -522,7 +559,7 @@ export class AdminQuestionPageComponent implements OnInit {
   }
 
 
-  onSubmit(){
+  onSubmit() {
     if (this.oneQuestionForm.invalid) {
       this.alert.warn('Форма содержит ошибки');
       return;
@@ -533,9 +570,9 @@ export class AdminQuestionPageComponent implements OnInit {
         if (response.success) {
           this.alert.success('Данные успешно сохранены');
           this.oneQuestionForm.reset();
-          this.oneQuestionForm.patchValue({ subject: this.selectedSubject });
-          this.manyQuestionForm.patchValue({ subject: this.selectedSubject });
-          this.contextQuestionForm.patchValue({ subject: this.selectedSubject });
+          this.oneQuestionForm.patchValue({subject: this.selectedSubject});
+          this.manyQuestionForm.patchValue({subject: this.selectedSubject});
+          this.contextQuestionForm.patchValue({subject: this.selectedSubject});
           this.closeDialog();
         }
       },
@@ -549,7 +586,7 @@ export class AdminQuestionPageComponent implements OnInit {
     );
   }
 
-  onSubmitMany(){
+  onSubmitMany() {
     if (this.manyQuestionForm.invalid) {
       this.alert.warn('Форма содержит ошибки');
       return;
@@ -560,9 +597,9 @@ export class AdminQuestionPageComponent implements OnInit {
         if (response.success) {
           this.alert.success('Данные успешно сохранены');
           this.manyQuestionForm.reset();
-          this.oneQuestionForm.patchValue({ subject: this.selectedSubject });
-          this.manyQuestionForm.patchValue({ subject: this.selectedSubject });
-          this.contextQuestionForm.patchValue({ subject: this.selectedSubject });
+          this.oneQuestionForm.patchValue({subject: this.selectedSubject});
+          this.manyQuestionForm.patchValue({subject: this.selectedSubject});
+          this.contextQuestionForm.patchValue({subject: this.selectedSubject});
           this.closeDialog();
         }
       },
@@ -576,7 +613,7 @@ export class AdminQuestionPageComponent implements OnInit {
     );
   }
 
-  onSubmitContext(){
+  onSubmitContext() {
 
 
     if (this.contextQuestionForm.invalid) {
@@ -589,9 +626,9 @@ export class AdminQuestionPageComponent implements OnInit {
       (response) => {
         if (response.success) {
           this.alert.success('Данные успешно сохранены');
-          this.oneQuestionForm.patchValue({ subject: this.selectedSubject });
-          this.manyQuestionForm.patchValue({ subject: this.selectedSubject });
-          this.contextQuestionForm.patchValue({ subject: this.selectedSubject });
+          this.oneQuestionForm.patchValue({subject: this.selectedSubject});
+          this.manyQuestionForm.patchValue({subject: this.selectedSubject});
+          this.contextQuestionForm.patchValue({subject: this.selectedSubject});
           this.closeDialog();
           this.contextQuestionForm.reset();
         }
@@ -608,14 +645,142 @@ export class AdminQuestionPageComponent implements OnInit {
 
   closeDialog(): void {
     this.oneQuestionForm.reset();
-    this.oneQuestionForm.patchValue({ subject: this.selectedSubject });
-    this.manyQuestionForm.patchValue({ subject: this.selectedSubject });
-    this.contextQuestionForm.patchValue({ subject: this.selectedSubject });
+    this.oneQuestionForm.patchValue({subject: this.selectedSubject});
+    this.manyQuestionForm.patchValue({subject: this.selectedSubject});
+    this.contextQuestionForm.patchValue({subject: this.selectedSubject});
 
     this.dialog.closeAll();
   }
 
-  //Контроль формы
+  public editOneQuestionForm = this.fb.group({
+    id: [''], // Поле для хранения ID вопроса
+    subject: [{value: this.selectedSubject, disabled: true}],
+    help_text: [''],
+    text: [''],
+    lvl: [''],
+    status: [this.status],
+    theme_id: [''],
+    type: ['has_one_answer'], // Зафиксированный тип
+    answers: this.fb.array([])
+  });
+
+  get editAnswers(): FormArray {
+    return this.editOneQuestionForm.get('answers') as FormArray;
+  }
+
+  addAnswerToEditForm(): void {
+    const answersArray = this.editAnswers; // Используем геттер editAnswers
+    if (answersArray.length < this.maxAnswers) {
+      answersArray.push(
+        this.fb.group({
+          text: [''],
+          is_correct: [false],
+        })
+      );
+    }
+  }
+
+  removeAnswerFromEditForm(index: number): void {
+    if (this.editAnswers.length > 1) {
+      this.editAnswers.removeAt(index);
+    } else {
+      this.alert.warn('Нельзя удалить последний ответ.');
+    }
+  }
+
+
+  openEditDialog(question: any, enterAnimationDuration: string, exitAnimationDuration: string): void {
+    this.editOneQuestionForm.reset(); // Сброс формы
+    this.editOneQuestionForm.patchValue({ id: question.id }); // Установить ID вопроса
+
+    // Загружаем данные вопроса через API
+    this.questionService.getStandardQuestion(question.id).subscribe(
+      (data) => {
+        // Устанавливаем основные поля в форме
+        this.editOneQuestionForm.patchValue({
+          subject: this.selectedSubject,
+          help_text: data.help_text,
+          text: data.text,
+          lvl: data.lvl,
+          status: data.status_display,
+          theme_id: data.sub_theme_id,
+          type: data.type, // Тип вопроса
+        });
+
+        // Очистить FormArray для ответов
+        const answersArray = this.editAnswers;
+        answersArray.clear();
+
+        // Добавить ответы из данных
+        data.answers.forEach((answer: any) => {
+          answersArray.push(
+            this.fb.group({
+              text: [answer.text], // Текст ответа
+              is_correct: [answer.is_correct], // Флаг правильного ответа
+            })
+          );
+        });
+
+        // Рассчитать высоту модалки на основе типа вопроса
+        const dialogHeight = this.getDialogHeightByType(data.type);
+
+        // Открыть модалку редактирования
+        this.dialogRef = this.dialog.open(this.editDialogTemplate, {
+          maxWidth: '50vw',
+          height: dialogHeight,
+          width: '100%',
+          enterAnimationDuration,
+          exitAnimationDuration,
+          disableClose: true,
+        });
+
+        // Используем setTimeout для ожидания полной отрисовки модалки
+        setTimeout(() => {
+          this.reinitializeEditors();
+        }, 0);
+      },
+      (error) => {
+        this.alert.error('Ошибка загрузки данных о вопросе');
+      }
+    );
+  }
+
+  reinitializeEditors(): void {
+    // Проходимся по ответам и пересоздаем конфигурацию для каждого редактора
+    this.editAnswers.controls.forEach((control, index) => {
+      const editorConfig = this.getEditorConfig(index);
+      const toolbarId = `toolbar-${index}`;
+      const toolbarElement = document.getElementById(toolbarId);
+
+      if (!toolbarElement) {
+        console.error(`Toolbar element with id ${toolbarId} not found`);
+      }
+
+      // Можно добавить логику для обновления настроек редактора, если необходимо
+    });
+  }
+
+
+  saveEditedQuestion(): void {
+    if (this.editOneQuestionForm.invalid) {
+      this.alert.warn('Форма содержит ошибки');
+      return;
+    }
+
+    // Сохраняем данные через API
+    this.questionService.saveQuestion(this.editOneQuestionForm.getRawValue()).subscribe(
+      (response) => {
+        if (response.success) {
+          this.alert.success('Вопрос успешно обновлен');
+          this.closeDialog();
+          this.loadQuestions(); // Обновление таблицы вопросов
+        }
+      },
+      (error) => {
+        this.alert.error('Ошибка при сохранении изменений');
+      }
+    );
+  }
 
 
 }

@@ -20,10 +20,8 @@ import {TestResultPageComponent} from './components/user-pages/test-pages/test-r
 import {TestReviewComponent} from './components/user-pages/test-pages/test-review/test-review.component';
 import {AdminMarkedTestsComponent} from './components/admin-pages/admin-marked-tests/admin-marked-tests.component';
 import {AdminSchoolsPageComponent} from './components/admin-pages/admin-schools-page/admin-schools-page.component';
-import {AnalyticsPagesComponent} from './components/analytics-pages/analytics-pages.component';
-import {
-  AnalyticsDashboardComponent
-} from './components/analytics-pages/analytics-dashboard/analytics-dashboard.component';
+
+import {AdminAnalyticPageComponent} from './components/admin-pages/admin-analytic-page/admin-analytic-page.component';
 
 export const routes: Routes = [
 
@@ -63,6 +61,9 @@ export const routes: Routes = [
         path: 'employee', component: AdminEmployeePageComponent
       },
       {
+        path: 'analytic', component: AdminAnalyticPageComponent
+      },
+      {
         path: 'learner', component: AdminLearnerPageComponent
       },
       {
@@ -84,12 +85,5 @@ export const routes: Routes = [
         path: 'schools', component: AdminSchoolsPageComponent
       }
     ]
-  },
-  {    path: 'analytic', component: AnalyticsPagesComponent,
-    children: [
-      {
-        path: 'dashboard', component: AnalyticsDashboardComponent
-      }
-  ]
-  },
+  }
 ];

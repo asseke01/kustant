@@ -399,3 +399,7 @@ select{
   cursor: pointer;
 }
 
+.actions {
+  display: flex;
+  gap: 15px;
+}

@@ -400,16 +400,18 @@ export class AdminQuestionPageComponent implements OnInit {
     }
   }
 
-  getEditorConfig(index: number) {
+  getEditorConfig(index: number, type: 'one' | 'many' = 'one') {
+    const toolbarId = type === 'many' ? `#toolbar-many-${index}` : `#toolbar-${index}`;
     return {
       toolbar: {
-        container: '#toolbar-' + index,
+        container: toolbarId,
       },
       history: {
         userOnly: true,
       },
     };
   }
+
 
   getContextConfig(qIndex: number, aIndex: number) {
     return {
@@ -664,8 +666,24 @@ export class AdminQuestionPageComponent implements OnInit {
     answers: this.fb.array([])
   });
 
+  public editManyQuestionForm = this.fb.group({
+    id: [''], // Поле для хранения ID вопроса
+    subject: [{value: this.selectedSubject, disabled: true}],
+    help_text: [''],
+    text: [''],
+    lvl: [''],
+    status: [this.status],
+    theme_id: [''],
+    type: ['has_many_answers'], // Зафиксированный тип
+    answers: this.fb.array([]), // Фиксированные ответы
+  });
+
   get editAnswers(): FormArray {
     return this.editOneQuestionForm.get('answers') as FormArray;
+  }
+
+  get editManyAnswers(): FormArray {
+    return this.editManyQuestionForm.get('answers') as FormArray;
   }
 
   addAnswerToEditForm(): void {
@@ -688,99 +706,174 @@ export class AdminQuestionPageComponent implements OnInit {
     }
   }
 
+  toggleCorrectAnswer(index: number): void {
+    const answers = this.editAnswers;
+    const currentControl = answers.at(index);
+
+    if (currentControl.get('is_correct')?.value) {
+      // Если ответ уже выбран, снимаем выбор
+      currentControl.patchValue({ is_correct: false });
+    } else {
+      // Сбрасываем выбор у других ответов
+      answers.controls.forEach((control, i) => {
+        control.patchValue({ is_correct: i === index });
+      });
+    }
+  }
+
+  toggleCorrectManyAnswer(index: number): void {
+    const answers = this.editManyAnswers;
+    const maxCorrectAnswers = 3; // Максимальное количество правильных ответов
+    const selectedIndices: number[] = []; // Список выбранных индексов
+
+    // Собираем текущие выбранные индексы
+    answers.controls.forEach((control, i) => {
+      if (control.get('is_correct')?.value) {
+        selectedIndices.push(i);
+      }
+    });
+
+    const isCurrentlyCorrect = answers.at(index).get('is_correct')?.value;
+
+    if (isCurrentlyCorrect) {
+      // Если текущий ответ уже выбран, снимаем выбор
+      answers.at(index).patchValue({ is_correct: false });
+    } else {
+      if (selectedIndices.length < maxCorrectAnswers) {
+        // Если выбрано меньше 3, добавляем новый правильный ответ
+        answers.at(index).patchValue({ is_correct: true });
+      } else {
+        // Если уже выбрано 3 ответа, заменяем самый старый
+        const oldestIndex = selectedIndices.shift(); // Удаляем самый старый индекс
+        if (oldestIndex !== undefined) {
+          answers.at(oldestIndex).patchValue({ is_correct: false }); // Снимаем с него выбор
+        }
+        answers.at(index).patchValue({ is_correct: true }); // Устанавливаем новый
+      }
+    }
+  }
+
+
 
   openEditDialog(question: any, enterAnimationDuration: string, exitAnimationDuration: string): void {
-    this.editOneQuestionForm.reset(); // Сброс формы
-    this.editOneQuestionForm.patchValue({ id: question.id }); // Установить ID вопроса
+    // Сброс форм
+    this.editOneQuestionForm.reset();
+    this.editManyQuestionForm.reset();
 
-    // Загружаем данные вопроса через API
+    // Получаем данные вопроса
     this.questionService.getStandardQuestion(question.id).subscribe(
       (data) => {
-        // Устанавливаем основные поля в форме
-        this.editOneQuestionForm.patchValue({
-          subject: this.selectedSubject,
-          help_text: data.help_text,
-          text: data.text,
-          lvl: data.lvl,
-          status: data.status_display,
-          theme_id: data.sub_theme_id,
-          type: data.type, // Тип вопроса
-        });
+        this.selectedValue = data.type; // Устанавливаем тип вопроса
 
-        // Очистить FormArray для ответов
-        const answersArray = this.editAnswers;
-        answersArray.clear();
+        if (data.type === 'has_one_answer') {
+          this.editOneQuestionForm.patchValue({
+            id: data.id,
+            subject: this.selectedSubject,
+            help_text: data.help_text,
+            text: data.text,
+            lvl: data.lvl,
+            status: data.status_display,
+            theme_id: data.sub_theme_id,
+            type: data.type,
+          });
 
-        // Добавить ответы из данных
-        data.answers.forEach((answer: any) => {
-          answersArray.push(
-            this.fb.group({
-              text: [answer.text], // Текст ответа
-              is_correct: [answer.is_correct], // Флаг правильного ответа
-            })
-          );
-        });
+          const answersArray = this.editAnswers;
+          answersArray.clear();
+          data.answers.forEach((answer: any) => {
+            answersArray.push(this.fb.group({ text: [answer.text], is_correct: [answer.is_correct] }));
+          });
+        } else if (data.type === 'has_many_answers') {
+          this.editManyQuestionForm.patchValue({
+            id: data.id,
+            subject: this.selectedSubject,
+            help_text: data.help_text,
+            text: data.text,
+            lvl: data.lvl,
+            status: data.status_display,
+            theme_id: data.sub_theme_id,
+            type: data.type,
+          });
 
-        // Рассчитать высоту модалки на основе типа вопроса
-        const dialogHeight = this.getDialogHeightByType(data.type);
+          const answersArray = this.editManyAnswers;
+          answersArray.clear();
+          data.answers.forEach((answer: any) => {
+            answersArray.push(this.fb.group({ text: [answer.text], is_correct: [answer.is_correct] }));
+          });
+        }
 
-        // Открыть модалку редактирования
+        // Открываем модалку
         this.dialogRef = this.dialog.open(this.editDialogTemplate, {
           maxWidth: '50vw',
-          height: dialogHeight,
+          height: '80vh',
           width: '100%',
           enterAnimationDuration,
           exitAnimationDuration,
           disableClose: true,
         });
 
-        // Используем setTimeout для ожидания полной отрисовки модалки
+        // Реинициализация редакторов
         setTimeout(() => {
           this.reinitializeEditors();
         }, 0);
       },
       (error) => {
-        this.alert.error('Ошибка загрузки данных о вопросе');
+        this.alert.error('Ошибка загрузки данных вопроса');
       }
     );
   }
 
+
   reinitializeEditors(): void {
-    // Проходимся по ответам и пересоздаем конфигурацию для каждого редактора
-    this.editAnswers.controls.forEach((control, index) => {
-      const editorConfig = this.getEditorConfig(index);
-      const toolbarId = `toolbar-${index}`;
+    this.editManyAnswers.controls.forEach((_, index) => {
+      const toolbarId = `toolbar-many-${index}`;
       const toolbarElement = document.getElementById(toolbarId);
 
       if (!toolbarElement) {
         console.error(`Toolbar element with id ${toolbarId} not found`);
+      } else {
+        console.log(`Toolbar element with id ${toolbarId} successfully found.`);
       }
-
-      // Можно добавить логику для обновления настроек редактора, если необходимо
     });
   }
 
 
+
   saveEditedQuestion(): void {
-    if (this.editOneQuestionForm.invalid) {
+    const selectedForm =
+      this.selectedValue === 'has_one_answer'
+        ? this.editOneQuestionForm
+        : this.editManyQuestionForm;
+
+    if (selectedForm.invalid) {
       this.alert.warn('Форма содержит ошибки');
       return;
     }
 
-    // Сохраняем данные через API
-    this.questionService.saveQuestion(this.editOneQuestionForm.getRawValue()).subscribe(
+    if (this.selectedValue === 'has_many_answers') {
+      const correctAnswersCount = this.editManyAnswers.controls.filter(
+        (control) => control.get('is_correct')?.value
+      ).length;
+      if (correctAnswersCount > 3) {
+        this.alert.warn('Можно выбрать не более 3 правильных ответов.');
+        return;
+      }
+    }
+
+    // Отправка данных на сервер
+    this.questionService.saveQuestion(selectedForm.getRawValue()).subscribe(
       (response) => {
         if (response.success) {
-          this.alert.success('Вопрос успешно обновлен');
+          this.alert.success('Вопрос успешно сохранен');
           this.closeDialog();
-          this.loadQuestions(); // Обновление таблицы вопросов
+          window.location.reload();
         }
       },
       (error) => {
-        this.alert.error('Ошибка при сохранении изменений');
+        this.alert.error('Ошибка сохранения вопроса');
       }
     );
   }
+
 
 
 }

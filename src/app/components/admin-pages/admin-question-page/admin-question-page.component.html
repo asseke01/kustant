@@ -37,26 +37,37 @@
       <button class="action-button" [class.active]="selectedValue === 'has_many_answers'"
               (click)="changeType('has_many_answers')">Көп жауапты
       </button>
-      <button class="action-button">Сәйкестендіру</button>
-      <button class="action-button">Контекст</button>
+      <button
+        class="action-button"
+        [class.active]="selectedValue === 'match-question'"
+        (click)="changeType('match-question')">
+        Сәйкестендіру
+      </button>
+      <button
+        class="action-button"
+        [class.active]="selectedValue === 'context-question'"
+        (click)="changeType('context-question')">
+        Контекст
+      </button>
+
     </div>
 
     <div class="action-buttons">
 
-      <div class="select">
-        <span>Пән: {{ getDisplayTheme(selectedSubTheme) }} </span>
+      <div class="select" *ngIf="selectedValue !== 'context-question'">
+        <span>Тақырыпша: {{ getDisplayTheme(selectedSubTheme) }} </span>
         <span> <i class="bi bi-caret-down-fill"></i>  </span>
-        <select id="subTheme" [(ngModel)]="selectedSubTheme">
+        <select id="subTheme" [(ngModel)]="selectedSubTheme" (change)="onSubThemeChange()">
           <option [ngValue]="undefined" selected>Барлығы</option>
           <option *ngFor="let item of subThemes" [value]="item.id">{{ item.theme_name }} {{ item.name }}</option>
         </select>
       </div>
 
       <div class="select">
-        <span>{{ selectedText }}</span>
+        <span>Статус: {{ selectedText }}</span>
         <span> <i class="bi bi-caret-down-fill"></i>  </span>
-        <select (change)="onSelectionChange($event)">
-          <option value="all">Барлығы</option>
+        <select id="status" (change)="onStatusChange($event)">
+          <option value="all" selected>Барлығы</option>
           <option value="not_accepted">Қабылданбаған</option>
           <option value="accepted">Қабылданған</option>
         </select>
@@ -74,10 +85,10 @@
           <th>#</th>
           <th>Сұрақ</th>
           <th>Статус</th>
-          <th>Деңгейі</th>
+          <th *ngIf="selectedValue==='has_one_answer' || selectedValue === 'has_many_answers'">Деңгейі</th>
         </tr>
         <tbody>
-        <tr *ngFor="let question of questionsData; let i = index" (click)="openEditDialog(question, '250ms', '250ms')">
+        <tr *ngFor="let question of questionsData; let i = index" class="table-click" (click)="openEditDialog(question, '250ms', '250ms')">
           <td>{{ i + 1 + offset }}</td>
           <td>{{ question.help_text }}</td>
           <td

@@ -28,6 +28,7 @@ button{
   display: flex;
   position: relative;
   align-items: center;
+  gap: 5px;
 }
 
 .select-themes{
@@ -51,6 +52,7 @@ button{
   height: 100%;
   top: 0;
   left: 0;
+  cursor: pointer;
 }
 
 .search-menu{
@@ -156,6 +158,9 @@ table td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+}
+.table-click {
+  cursor: pointer;
 }
 
 .accepted-status {

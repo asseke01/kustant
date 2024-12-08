@@ -134,12 +134,51 @@ export class AdminQuestionPageComponent implements OnInit {
   }
 
   loadQuestions() {
-    this.questionService.getQuestionsCached(this.selectedValue, this.selectedSubject, undefined, undefined, this.offset, this.limit)
-      .subscribe(data => {
+    this.questionService.getQuestionsCached(
+      this.selectedValue,
+      this.selectedSubject,
+      this.selectedSubTheme, // Передаем подтему (undefined, если не выбрано)
+      this.selectedText !== 'Барлығы' ? this.selectedText : undefined, // Передаем статус (undefined, если "Барлығы")
+      this.offset,
+      this.limit
+    ).subscribe(data => {
+      this.questionsData = data.questions;
+      this.questionCount = data.total_questions_count;
+    });
+  }
+
+  loadContextQuestions(): void {
+    this.questionService.getContextQuestions(
+      this.selectedSubject,
+      this.selectedText !== 'Барлығы' ? this.selectedText : undefined // Передаем только статус
+    ).subscribe(
+      data => {
         this.questionsData = data.questions;
         this.questionCount = data.total_questions_count;
-      });
+      },
+      error => {
+        this.alert.error('Ошибка загрузки контекстных вопросов');
+      }
+    );
   }
+
+
+  loadMatchingQuestions(): void {
+    this.questionService.getMatchingQuestions(
+      this.selectedSubject,
+      this.selectedSubTheme, // Передаем подтему
+      this.selectedText !== 'Барлығы' ? this.selectedText : undefined // Передаем статус
+    ).subscribe(
+      data => {
+        this.questionsData = data.questions;
+        this.questionCount = data.total_questions_count;
+      },
+      error => {
+        this.alert.error('Ошибка загрузки матчинг вопросов');
+      }
+    );
+  }
+
 
   nextPage() {
     if (this.questionCount !== undefined && (this.offset + this.limit < this.questionCount)) {
@@ -158,11 +197,19 @@ export class AdminQuestionPageComponent implements OnInit {
     }
   }
 
-  changeType(newType: string) {
+  changeType(newType: string): void {
+    this.selectedSubTheme = undefined;
+    this.selectedText = 'Барлығы';
     this.selectedValue = newType;
-    this.loadQuestions();
-  }
 
+    if (newType === 'context-question') {
+      this.loadContextQuestions();
+    } else if (newType === 'match-question') {
+      this.loadMatchingQuestions();
+    } else {
+      this.loadQuestions(); // Загружаем стандартные вопросы
+    }
+  }
 
   //ЗАГРУЗКА ДАННЫХ
 
@@ -279,7 +326,6 @@ export class AdminQuestionPageComponent implements OnInit {
     questions: this.fb.array([]),
     answers: this.fb.array([])
   })
-
 
 
   get answers(): FormArray {
@@ -616,8 +662,6 @@ export class AdminQuestionPageComponent implements OnInit {
   }
 
   onSubmitContext() {
-
-
     if (this.contextQuestionForm.invalid) {
       this.alert.warn('Форма содержит ошибки');
       return;
@@ -712,11 +756,11 @@ export class AdminQuestionPageComponent implements OnInit {
 
     if (currentControl.get('is_correct')?.value) {
       // Если ответ уже выбран, снимаем выбор
-      currentControl.patchValue({ is_correct: false });
+      currentControl.patchValue({is_correct: false});
     } else {
       // Сбрасываем выбор у других ответов
       answers.controls.forEach((control, i) => {
-        control.patchValue({ is_correct: i === index });
+        control.patchValue({is_correct: i === index});
       });
     }
   }
@@ -737,22 +781,21 @@ export class AdminQuestionPageComponent implements OnInit {
 
     if (isCurrentlyCorrect) {
       // Если текущий ответ уже выбран, снимаем выбор
-      answers.at(index).patchValue({ is_correct: false });
+      answers.at(index).patchValue({is_correct: false});
     } else {
       if (selectedIndices.length < maxCorrectAnswers) {
         // Если выбрано меньше 3, добавляем новый правильный ответ
-        answers.at(index).patchValue({ is_correct: true });
+        answers.at(index).patchValue({is_correct: true});
       } else {
         // Если уже выбрано 3 ответа, заменяем самый старый
         const oldestIndex = selectedIndices.shift(); // Удаляем самый старый индекс
         if (oldestIndex !== undefined) {
-          answers.at(oldestIndex).patchValue({ is_correct: false }); // Снимаем с него выбор
+          answers.at(oldestIndex).patchValue({is_correct: false}); // Снимаем с него выбор
         }
-        answers.at(index).patchValue({ is_correct: true }); // Устанавливаем новый
+        answers.at(index).patchValue({is_correct: true}); // Устанавливаем новый
       }
     }
   }
-
 
 
   openEditDialog(question: any, enterAnimationDuration: string, exitAnimationDuration: string): void {
@@ -780,7 +823,7 @@ export class AdminQuestionPageComponent implements OnInit {
           const answersArray = this.editAnswers;
           answersArray.clear();
           data.answers.forEach((answer: any) => {
-            answersArray.push(this.fb.group({ text: [answer.text], is_correct: [answer.is_correct] }));
+            answersArray.push(this.fb.group({text: [answer.text], is_correct: [answer.is_correct]}));
           });
         } else if (data.type === 'has_many_answers') {
           this.editManyQuestionForm.patchValue({
@@ -797,7 +840,7 @@ export class AdminQuestionPageComponent implements OnInit {
           const answersArray = this.editManyAnswers;
           answersArray.clear();
           data.answers.forEach((answer: any) => {
-            answersArray.push(this.fb.group({ text: [answer.text], is_correct: [answer.is_correct] }));
+            answersArray.push(this.fb.group({text: [answer.text], is_correct: [answer.is_correct]}));
           });
         }
 
@@ -837,7 +880,6 @@ export class AdminQuestionPageComponent implements OnInit {
   }
 
 
-
   saveEditedQuestion(): void {
     const selectedForm =
       this.selectedValue === 'has_one_answer'
@@ -874,6 +916,30 @@ export class AdminQuestionPageComponent implements OnInit {
     );
   }
 
+  onSubThemeChange(): void {
+    this.offset = 0;
+    this.currentPage = 1;
+    if (this.selectedValue === 'match-question') {
+      this.loadMatchingQuestions();
+    } else {
+      this.loadQuestions();
+    }
+  }
+
+  onStatusChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    this.selectedText = selectElement.options[selectElement.selectedIndex].value;
+    this.offset = 0;
+    this.currentPage = 1;
+
+    if (this.selectedValue === 'context-question') {
+      this.loadContextQuestions();
+    } else if (this.selectedValue === 'match-question') {
+      this.loadMatchingQuestions();
+    } else {
+      this.loadQuestions();
+    }
+  }
 
 
 }

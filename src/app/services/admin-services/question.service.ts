@@ -61,4 +61,27 @@ export class QuestionService {
     });
   }
 
+  getContextQuestions(subject: string, status?: string): Observable<any> {
+    let params = new HttpParams().set('subject', subject);
+    if (status) {
+      params = params.set('status', status);
+    }
+    return this.http.get<any>(`${this.apiUrl}get_contexts/`, {params});
+  }
+
+  getMatchingQuestions(subject: string, themeId?: number, status?: string): Observable<any> {
+    let params = new HttpParams().set('subject', subject);
+
+    if (themeId !== undefined) {
+      params = params.set('theme_id', themeId.toString());
+    }
+
+    if (status) {
+      params = params.set('status', status);
+    }
+
+    return this.http.get<any>(`${this.apiUrl}get_matchings/`, {params});
+  }
+
+
 }

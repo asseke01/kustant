@@ -9,7 +9,7 @@
 }
 
 .block {
-  max-width: 1800px;
+  max-width: 1780px;
   margin: 0 auto;
 
 }
@@ -24,33 +24,52 @@
 .navbar-container{
   display: flex;
   justify-content: space-between;
-  cursor: pointer;
 }
 
 .testant-icon{
   width: 160px;
-  margin-right: 66px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item-left, .item-right{
+  animation: fadeIn 0.8s ease-in-out forwards;
+}
+
+.nav-text-details{
+  animation: fadeIn 1.3s ease-in-out forwards;
 }
 
 .item-left{
+  cursor: pointer;
   display: flex;
   gap:66px;
   align-items: center;
   font-size: 21px;
 }
 
+.item-left span{
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.item-left span:hover {
+  color: #4BA2DA;
+  transform: translateY(-3px);
+}
+
 .item-right{
   display: flex;
   gap: 15px;
   align-items: center;
-  font-size: 21px;
 }
 
 .button{
+  font-size: 22px;
   border-radius: 12px;
   width: fit-content;
-  padding: 10px 30px;
+  padding: 12px 30px;
   font-weight: 300;
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
 .grey{
@@ -60,6 +79,18 @@
 .blue{
   color: white;
   background-color: #4BA2DA;
+}
+
+.button:hover {
+  transform: scale(1.05);
+}
+
+.grey:hover {
+  background-color: #e0e0e0;
+}
+
+.blue:hover {
+  background-color: #3a92c8;
 }
 
 .nav-text{
@@ -87,17 +118,12 @@
 }
 
 .gradient-text {
-  background: linear-gradient(90deg, #E8AA59 0%, #9184F7 100%);
+  background: linear-gradient(90deg, #FFAA33, #E8AA59, #9184F7, #4BA2DA, #FF33AA);
   -webkit-background-clip: text;
+  background-size: 500%;
   -webkit-text-fill-color: transparent;
-  display: inline; /* Оставляем текст в потоке строки */
-}
-
-
-.gradient-text {
-  background: linear-gradient(90deg, #E8AA59 0%, #9184F7 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  display: inline;
+  animation: gradientAnimation 4s infinite ease-in-out;
 }
 
 .testant-button{
@@ -123,7 +149,14 @@
   padding: 12px 30px;
   color: white;
   font-size: 21px;
-  background-color: rgba(75, 162, 218, 0.7);
+  background-color: rgba(75, 162, 218, 0.9);
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.testant-test-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(75, 162, 218, 0.7);
 }
 
 
@@ -143,6 +176,14 @@
   padding: 20px;
   text-align: end;
   color: white;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.card.visible-card {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .purple {
@@ -208,6 +249,7 @@
 .orange p{
   width: 289px;
   font-size: 25px;
+  text-align: center;
 }
 .light-blue {
   display: flex;
@@ -276,7 +318,7 @@
   margin-bottom: 10px;
 }
 
-.avatars img {
+.avatars img{
   width: 30px;
   height: 30px;
   border-radius: 50%;
@@ -308,6 +350,20 @@
   align-items: center;
   width: 561px;
   height: 661px;
+  animation: fadeIn 1s ease-in-out;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease, transform 1s ease;
+}
+
+.school-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.school-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 7px rgba(0, 0, 0, 0.10);
 }
 
 .school-card h1{
@@ -353,4 +409,35 @@
   border: none;
   background-color: #915FFE;
   color: white;
+}
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 50% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  75% {
+    background-position: 50% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }

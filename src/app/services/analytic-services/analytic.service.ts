@@ -30,5 +30,9 @@ export class AnalyticService {
     return this.http.get(`${this.userUrl}get_load_info/`);
   }
 
+  getSchoolInfo(){
+    return this.http.get(`${this.userUrl}get_school_analytics/`);
+  }
+
 
 }

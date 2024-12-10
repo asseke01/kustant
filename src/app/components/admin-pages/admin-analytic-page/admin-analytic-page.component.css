@@ -5,6 +5,7 @@
   align-items: center;
   background-color: white;
   padding: 27px 30px;
+  z-index: 999;
 }
 
 .navbar-container h2 {
@@ -298,7 +299,7 @@ analysis-box {
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
-  gap: 30px;
+  gap: 10px;
   align-items: center;
 }
 
@@ -310,8 +311,15 @@ analysis-box {
 
 .chart-container {
   position: relative;
-  width: 250px;
-  height: 250px;
+  width: 400px;
+  height: 350px;
+  margin: 0 auto 20px;
+}
+
+.pie-container {
+  position: relative;
+  width: 450px;
+  height: 400px;
   margin: 0 auto 20px;
 }
 

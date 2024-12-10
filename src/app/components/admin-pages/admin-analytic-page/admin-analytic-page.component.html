@@ -61,7 +61,7 @@
 
       <div class="graph-box">
         <div  class="graph">
-          <h1>Использование платформы</h1>
+          <h3>Использование платформы</h3>
           <div class="details-box">
             <ul class="chart-legend">
               <li>
@@ -78,7 +78,7 @@
               </li>
             </ul>
 
-            <div class="chart-container" *ngIf="chartData.datasets[0].data.length">
+            <div class="chart-container" >
               <canvas baseChart
                       [data]="chartData"
                       [options]="chartOptions"
@@ -104,36 +104,41 @@
 
       <div class="graph-box">
         <div  class="graph">
-          <h1>Оценки учеников</h1>
+          <h3>Оценки учеников</h3>
           <div class="details-box">
             <ul class="chart-legend">
               <li>
-                <span class="legend-color" style="background-color: #C3BFFA;"></span>
-                45% ученик 100 - 120 балл
+                <span class="legend-color" style="background-color: #CDA4DE;"></span>
+                0-20 баллов: {{sortedMarks['0-19'] || 0}} учеников
               </li>
               <li>
-                <span class="legend-color" style="background-color: #A7EC9B;"></span>
-                30% ученик 90 - 100 балл
+                <span class="legend-color" style="background-color: #F9D27AFF;"></span>
+                20-40 баллов: {{sortedMarks['20-39'] || 0}} учеников
               </li>
               <li>
-                <span class="legend-color" style="background-color: #FDB44B;"></span>
-                10% ученик 80 - 90 балл
+                <span class="legend-color" style="background-color: #F79393FF;"></span>
+                40-60 баллов: {{sortedMarks['40-59'] || 0}} учеников
               </li>
               <li>
-                <span class="legend-color" style="background-color: #FF6B6B;"></span>
-                5% ученик 70 - 80 балл
+                <span class="legend-color" style="background-color: #fac8e6;"></span>
+                60-80 баллов: {{sortedMarks['60-79'] || 0}} учеников
               </li>
               <li>
-                <span class="legend-color" style="background-color: #F8A5FF;"></span>
-                3% ученик 60 - 70 балл
+                <span class="legend-color" style="background-color: #ffebf2;"></span>
+                80-100 баллов: {{sortedMarks['80-99'] || 0}} учеников
+              </li>
+              <li>
+                <span class="legend-color" style="background-color: #B3E683FF;"></span>
+                100-140 баллов: {{sortedMarks['100-140'] || 0}} учеников
               </li>
             </ul>
 
-            <div class="chart-container">
-              <canvas baseChart
-                      [data]="chartData"
-                      [options]="chartOptions"
-                      [type]="'doughnut'">
+            <div class="pie-container">
+              <canvas
+                baseChart
+                [data]="pieChartData"
+                [options]="pieChartOptions"
+                [type]="'pie'">
               </canvas>
             </div>
           </div>

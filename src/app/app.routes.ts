@@ -22,6 +22,7 @@ import {AdminMarkedTestsComponent} from './components/admin-pages/admin-marked-t
 import {AdminSchoolsPageComponent} from './components/admin-pages/admin-schools-page/admin-schools-page.component';
 
 import {AdminAnalyticPageComponent} from './components/admin-pages/admin-analytic-page/admin-analytic-page.component';
+import {CorpMainPageComponent} from './components/user-pages/corp-main-page/corp-main-page.component';
 
 export const routes: Routes = [
 
@@ -30,6 +31,9 @@ export const routes: Routes = [
   },
   {
     path: 'login', component: LoginPageComponent
+  },
+  {
+    path: 'corp', component:CorpMainPageComponent
   },
   {
     path: 'main', component: MainPageComponent, canActivate: [AuthGuard]

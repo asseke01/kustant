@@ -11,7 +11,7 @@ import {
   BarController,
   BarElement,
   Tooltip,
-  Legend, ChartData, ChartOptions, DoughnutController, ArcElement, TooltipItem,
+  Legend, ChartData, ChartOptions, DoughnutController, ArcElement, TooltipItem, registerables,
 } from 'chart.js';
 import {NgClass, NgIf} from '@angular/common';
 import {AnalyticService} from '../../../services/analytic-services/analytic.service';
@@ -30,6 +30,9 @@ Chart.register(
   DoughnutController,
   ArcElement
 );
+
+Chart.register(...registerables);
+
 @Component({
   selector: 'app-admin-analytic-page',
   standalone: true,
@@ -50,6 +53,8 @@ export class AdminAnalyticPageComponent implements OnInit{
 
   viewDetail:boolean=true;
   dashboard :any = {};
+  sortedMarks :any = {};
+  schoolInfo :any = {};
   type:string = 'year';
   rawData :any = {};
 
@@ -134,7 +139,7 @@ export class AdminAnalyticPageComponent implements OnInit{
     },
   };
 
-  chartData: any = {}
+  chartData: any = {};
   chartOptions: ChartOptions<'doughnut'> = {
     responsive: true,
     maintainAspectRatio: false,
@@ -148,7 +153,6 @@ export class AdminAnalyticPageComponent implements OnInit{
         callbacks: {
           label: (tooltipItem: TooltipItem<'doughnut'>) => {
             const value = tooltipItem.raw;
-            const label = tooltipItem.label;
             return `Кол. учеников: ${value}`;
           },
         },
@@ -161,15 +165,35 @@ export class AdminAnalyticPageComponent implements OnInit{
     },
   };
 
+  public pieChartData!: { datasets: { backgroundColor: string[]; data: number[] }[]; labels: string[] };
 
+  public pieChartOptions: ChartOptions<'pie'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        callbacks: {
+          label: (tooltipItem) => {
+            const label = tooltipItem.label || '';
+            const value = tooltipItem.raw || '';
+            return `Кол.во учеников: ${value} `;
+          }
+        }
+      }
+    }
+  };
 
 
   ngOnInit() {
     this.loadDashboard();
     this.loadYears(this.type);
     this.loadChartData();
-  }
+    // this.loadSchoolInfo();
 
+  }
 
 
   loadChartData(): void {
@@ -196,19 +220,23 @@ export class AdminAnalyticPageComponent implements OnInit{
   }
 
 
-
-
-
   loadDashboard(){
     this.analyticService.getDashboard().subscribe(data=>{
       this.dashboard = data;
+      console.log(this.dashboard);
+      this.loadMarks();
+    })
+  }
+
+  loadSchoolInfo(){
+    this.analyticService.getSchoolInfo().subscribe(data=>{
+      this.schoolInfo = data;
     })
   }
 
   onTypeChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     const selectedValue = target.value;
-    this.loaderService.show();
 
     this.loadYears(selectedValue);
   }
@@ -240,6 +268,27 @@ export class AdminAnalyticPageComponent implements OnInit{
       }
     );
   }
+
+
+  loadMarks() {
+    if (this.dashboard && this.dashboard.sorted_marks) {
+      this.sortedMarks = this.dashboard.sorted_marks;
+
+      const labels = Object.keys(this.sortedMarks).map(range => `${range} баллов`);
+      const data = Object.values(this.sortedMarks) as number[];
+
+      this.pieChartData = {
+        labels: labels,
+        datasets: [
+          {
+            data: data,
+            backgroundColor: ['#CDA4DE', '#B3E683', '#F9D27A', '#F79393', '#FAC8E6', '#FFEBF2', '#D0F2F4'],
+          }
+        ]
+      };
+    }
+  }
+
 
   changeView(view: boolean): void {
     this.viewDetail = view;

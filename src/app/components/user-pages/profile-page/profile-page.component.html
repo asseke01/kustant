@@ -18,6 +18,22 @@
 
       <div class="profile-box">
         <div class="title">
+          <h1>Баланс</h1>
+          <span>Баланста 0 тг</span>
+        </div>
+        <div class="details">
+          <a class="exit-button"
+             *ngIf="!isPaymentPending"
+             (click)="openDialog('250ms', '250ms')">Баланс толтыру</a>
+
+          <a class="exit-button"
+             *ngIf="isPaymentPending"
+             (click)="checkPaymentStatus()">Төлемді тексеру</a>
+        </div>
+      </div>
+
+      <div class="profile-box">
+        <div class="title">
           <h1>ҰБТ Рекорд</h1>
           <span>Username: {{ ubtRecord }} балл</span>
         </div>
@@ -65,11 +81,37 @@
         </div>
 
       </div>
-
     </div>
+  </div>
+</div>
 
+<ng-template #dialogTemplate>
+  <div class="dialog-header">
+    <h2 mat-dialog-title>Баланс толтыру</h2>
+    <button mat-icon-button class="close-button">
+      <mat-icon (click)="closeDialog()">close</mat-icon>
+    </button>
   </div>
 
-</div>
+  <mat-dialog-content>
+    <div class="dialog-content">
+      <label for="summ">Сумма: </label>
+      <input id="summ" type="number" placeholder="Сумма" [(ngModel)]="paySum">
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <div class="actions">
+
+      <button class="back-btn">Артқа</button>
+      <button
+        class="pay-btn"
+        mat-dialog-close
+        (click)="doPay()">Толтыру
+      </button>
+
+    </div>
+  </mat-dialog-actions>
+</ng-template>
 
 <app-user-footer></app-user-footer>

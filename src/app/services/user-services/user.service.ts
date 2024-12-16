@@ -106,6 +106,14 @@ export class UserService {
     return this.http.get(`${this.userUrl}get_learners/`, { params });
   }
 
+  createOrder(amount: number) {
+    const body = { amount };
+    return this.http.post('http://127.0.0.1:8000/api/order/make_order/', body);
+  }
 
+  checkOrder(invoiceId: string): Observable<any> {
+    const body = { invoice_id: invoiceId };
+    return this.http.post('http://127.0.0.1:8000/api/order/check_order/', body);
+  }
 
 }

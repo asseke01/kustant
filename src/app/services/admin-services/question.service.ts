@@ -55,6 +55,10 @@ export class QuestionService {
     return this.http.post(`${this.apiUrl}save_context/`, data,);
   }
 
+  saveMatchingQuestion(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}save_matching/`, data);
+  }
+
   getStandardQuestion(questionId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}get_question/`, {
       params: {question_id: questionId},
@@ -66,6 +70,7 @@ export class QuestionService {
     if (status) {
       params = params.set('status', status);
     }
+
     return this.http.get<any>(`${this.apiUrl}get_contexts/`, {params});
   }
 
@@ -81,6 +86,16 @@ export class QuestionService {
     }
 
     return this.http.get<any>(`${this.apiUrl}get_matchings/`, {params});
+  }
+
+  getMatchingQuestion(matchingId: number): Observable<any> {
+    const params = new HttpParams().set('matching_id', matchingId.toString());
+    return this.http.get<any>(`${this.apiUrl}get_matching/`, { params });
+  }
+
+  getContextQuestion(contextId: number): Observable<any> {
+    const params = new HttpParams().set('context_id', contextId.toString());
+    return this.http.get<any>(`${this.apiUrl}get_context/`, { params });
   }
 
 

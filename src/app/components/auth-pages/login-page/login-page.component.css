@@ -1,4 +1,4 @@
-.main-container{
+.main-container {
   display: flex;
   gap: 55px;
   padding: 25px;
@@ -7,7 +7,7 @@
   min-height: calc(100vh - 50px);
 }
 
-.image-container{
+.image-container {
   background-color: rgba(0, 0, 0, 0.4);
   background-blend-mode: darken;
   background-size: cover;
@@ -36,13 +36,13 @@
 
 }
 
-.image-container h1{
+.image-container h1 {
   margin: 0;
   letter-spacing: 1px;
   font-size: 48px;
 }
 
-.image-container{
+.image-container {
   background-color: rgba(0, 0, 0, 0.3);
   background-blend-mode: darken;
   background-size: cover;
@@ -71,12 +71,12 @@
 
 }
 
-.image-container h1{
+.image-container h1 {
   margin: 0;
   letter-spacing: 1px;
 }
 
-.image-container p{
+.image-container p {
   font-size: 19px;
   opacity: 0.85;
   font-family: Gilroy-Bold, serif;
@@ -102,7 +102,6 @@
 }
 
 
-
 .back-container {
   display: flex;
   gap: 10px;
@@ -110,7 +109,7 @@
   cursor: pointer;
 }
 
-.back-container span{
+.back-container span {
   font-size: 22px;
 }
 
@@ -146,13 +145,13 @@
 
 }
 
-.submit input, select{
+.submit input, select {
   padding: 15px;
   border: none;
   border-radius: 8px;
   font-size: 22px;
   width: 80%;
-  height:62px;
+  height: 62px;
   box-sizing: border-box;
   outline: none;
   background-color: #ffffff;
@@ -160,18 +159,15 @@
 
 .submit select {
   appearance: none;
-  background-image:
-    linear-gradient(45deg, transparent 50%, white 50%),
-    linear-gradient(135deg, white 50%, transparent 50%),
-    linear-gradient(to right, #f0f0f0, #f0f0f0);
-  background-position:
-    calc(100% - 25px) calc(1em + 3px),
-    calc(100% - 18px) calc(1em + 3px),
-    100% 0;
-  background-size:
-    7px 7px,
-    7px 7px,
-    2.5em 3.5em;
+  background-image: linear-gradient(45deg, transparent 50%, white 50%),
+  linear-gradient(135deg, white 50%, transparent 50%),
+  linear-gradient(to right, #f0f0f0, #f0f0f0);
+  background-position: calc(100% - 25px) calc(1em + 3px),
+  calc(100% - 18px) calc(1em + 3px),
+  100% 0;
+  background-size: 7px 7px,
+  7px 7px,
+  2.5em 3.5em;
   background-repeat: no-repeat;
 }
 
@@ -183,13 +179,37 @@
   border: 1px solid red;
 }
 
+.grade-options {
+  display: flex;
+  gap: 20px;
+}
+
+.class_number__btn {
+  padding: 19px 23px;
+  margin: 0;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid white;
+  transition: 0.25s;
+  cursor: pointer;
+  font-size: 18px;
+  color: #d5d5d5;
+}
+
+
+.class_number__btn.active {
+  color: #00b0ea;
+  border-color: #00b0ea;
+  font-weight: bold;
+}
+
 .button-wrapper {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.submit button {
+.button-wrapper button {
   margin-top: 30px;
   padding: 12px;
   background-color: #00B0EA;
@@ -201,7 +221,7 @@
   cursor: pointer;
 }
 
-.submit button:hover {
+.button-wrapper button:hover {
   background-color: #007acc;
 }
 
@@ -214,12 +234,16 @@
   animation: spin 1s linear infinite;
   display: inline-block;
   margin-top: 20px;
-  margin-left:10px;
+  margin-left: 10px;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .submit button[disabled] {
@@ -228,7 +252,7 @@
   opacity: 0.7;
 }
 
-.logo{
+.logo {
   position: absolute;
   bottom: 16px;
   left: 0;
@@ -237,11 +261,21 @@
 
 
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  75% {
+    transform: translateX(-5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .shake {
@@ -255,7 +289,7 @@
     height: 98vh;
   }
 
-  .form-container{
+  .form-container {
     margin: 0 25px;
   }
 
@@ -263,7 +297,7 @@
     display: none;
   }
 
-  .logo{
+  .logo {
     position: absolute;
     bottom: 16px;
     left: 0;
@@ -271,7 +305,7 @@
   }
 
   .submit button {
-    width:30%;
+    width: 30%;
   }
 }
 
@@ -282,7 +316,7 @@
   }
 
   .form {
-    width:350px
+    width: 350px
   }
 
   .form h1 {

@@ -56,15 +56,15 @@ export class ProfilePageComponent implements OnInit {
   private router = inject(Router)
 
   public userData: any;
+  private learnerId!: number;
   public ubtRecord!: number;
   public passedTests: GetPassedTests[] = [];
-  public maxUbtScore: number = 140; // Max possible score for UBT
+  public maxUbtScore: number = 140;
   public paySum!: number;
-  public isPaymentPending: boolean = false; // Состояние ожидания оплаты
-  private invoiceId: string | null = null; // ID транзакции для проверки
+  public isPaymentPending: boolean = false;
+  private invoiceId: string | null = null;
 
   get ubtRecordPercentage(): string {
-    // Return "0%" if ubtRecord is undefined to avoid NaN
     if (this.ubtRecord == null || isNaN(this.ubtRecord)) {
       return '0%';
     }
@@ -85,6 +85,7 @@ export class ProfilePageComponent implements OnInit {
 
   ngOnInit(): void {
     this.userData = this.authService.getUserData()
+    this.learnerId = this.userData.id
     this.getLearnerCurrentTestingExist()
     this.getUbtRecord()
     this.getPassedTests()
@@ -99,13 +100,13 @@ export class ProfilePageComponent implements OnInit {
   }
 
   private getUbtRecord() {
-    this.testingService.getUbtRecord().subscribe(data => {
+    this.testingService.getUbtRecord(this.learnerId).subscribe(data => {
       this.ubtRecord = data;
     })
   }
 
   private getPassedTests() {
-    this.testingService.getPassedTests().subscribe(data => {
+    this.testingService.getPassedTests(this.learnerId).subscribe(data => {
       this.passedTests = data;
     })
   }

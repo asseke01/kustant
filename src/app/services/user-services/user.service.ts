@@ -42,12 +42,14 @@ export class UserService {
   submitStudent(phone: string | null | undefined,
                 code: string | null | undefined,
                 fullname: string | null | undefined,
-                subjects: string | null | undefined,) {
+                subjects: string | null | undefined,
+                class_number: number | null | undefined,) {
     const body = {
       phone_number: phone,
       code: code,
       fullname: fullname,
-      subjects: subjects
+      subjects: subjects,
+      class_number: class_number
     }
 
     return this.http.post<any>(`${this.userUrl}save_learner/`, body).pipe(

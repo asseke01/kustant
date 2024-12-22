@@ -1,7 +1,6 @@
 <div class="main-container">
 
 
-
   <div class="image-container" [ngStyle]="{'background-image': 'url(' + imageUrl + ')'}">
     <h1>Авторизация</h1>
     <p>Жеке кабинетіңізге кіру сізге нәтижелеріңіз сақталып, прогресіңізді бақылауға мүмкіндік береді.</p>
@@ -15,7 +14,8 @@
     </div>
 
     <ng-container>
-      <form class="form" *ngIf="!isPhoneSubmitted && !isCodeSubmitted" @slideLeftRight (ngSubmit)="onSubmitPhone()" [formGroup]="phoneForm">
+      <form class="form" *ngIf="!isPhoneSubmitted && !isCodeSubmitted" @slideLeftRight (ngSubmit)="onSubmitPhone()"
+            [formGroup]="phoneForm">
         <h1>Авторизация</h1>
         <span>Қош келдіңіз, төмендегі ақпараттарды толтырыңыз.</span>
 
@@ -30,7 +30,6 @@
                  [ngClass]="{'invalid': phoneForm.get('phone')?.invalid && phoneForm.get('phone')?.touched}">
 
 
-
           <div class="button-wrapper">
             <button type="submit" [disabled]="loading">Енгізу</button>
             <div class="loader" *ngIf="loading"></div>
@@ -43,13 +42,14 @@
 
     <ng-container>
 
-      <form class="form" *ngIf="isPhoneSubmitted && !isCodeSubmitted" @slideLeftRight (ngSubmit)="onSubmitCode()" [formGroup]="codeForm">
+      <form class="form" *ngIf="isPhoneSubmitted && !isCodeSubmitted" @slideLeftRight (ngSubmit)="onSubmitCode()"
+            [formGroup]="codeForm">
         <h1>Код</h1>
         <span>SMS хабарламадағы 6 санды кодты жазыңыз.</span>
 
         <div class="submit">
           <label for="code">SMS код</label>
-          <input type="tel" id="code" placeholder="_ _ _ _ _ _" required formControlName ="code" mask="000 000">
+          <input type="tel" id="code" placeholder="_ _ _ _ _ _" required formControlName="code" mask="000 000">
 
           <div class="button-wrapper">
             <button type="submit" [disabled]="loading">Енгізу</button>
@@ -64,16 +64,17 @@
 
     <ng-container>
 
-      <form class="form" *ngIf="isCodeSubmitted" @slideLeftRight (ngSubmit)="onSubmitStudent()" [formGroup]="studentForm">
+      <form class="form" *ngIf="isCodeSubmitted" @slideLeftRight (ngSubmit)="onSubmitStudent()"
+            [formGroup]="studentForm">
         <h1>Ақпарат</h1>
         <span>Төмендегі ақпараттарды толтырыңыз.</span>
 
         <div class="submit">
           <label for="name">Аты-жөні</label>
-          <input type="tel" id="name" placeholder="Аты-жөні" required formControlName ="fullname" >
+          <input type="tel" id="name" placeholder="Аты-жөні" required formControlName="fullname">
 
           <label for="select">Таңдау пәндері</label>
-          <select id="select" formControlName = "subjects">
+          <select id="select" formControlName="subjects">
             <option value="physics-math" selected>Физика-Математика</option>
             <option value="chemistry-biology">Химия-Биология</option>
             <option value="biology-geography">Биология-География</option>
@@ -89,6 +90,18 @@
             <option value="general_eng-en_lang">General English-Шетел тілі</option>
           </select>
 
+          <label for="grade">Сынып</label>
+          <div id="grade" class="grade-options">
+            <button
+              type="button"
+              [ngClass]="{'active': activeGrade === grade}"
+              class="class_number__btn"
+              *ngFor="let grade of [8, 9, 10, 11]"
+              (click)="setActiveGrade(grade)">
+              {{ grade }}
+            </button>
+          </div>
+
           <div class="button-wrapper">
             <button type="submit" [disabled]="loading">Тіркелу</button>
             <div class="loader" *ngIf="loading"></div>
@@ -99,7 +112,6 @@
       </form>
 
     </ng-container>
-
 
 
     <img src="assets/img/login_loco_ico.svg" class="logo">

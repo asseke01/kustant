@@ -8,6 +8,7 @@
         <div class="title">
           <h1>Салем, {{ userData.fullname }}</h1>
           <span>Таңдау пәндері: {{ userData.subject1 }}-{{ userData.subject2 }}</span>
+          <span *ngIf="userData.class_number">Сынып:  {{ userData.class_number }} сынып</span>
         </div>
 
         <div class="details">

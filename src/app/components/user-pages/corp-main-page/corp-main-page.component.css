@@ -12,13 +12,13 @@
 .block {
   max-width: 1780px;
   margin: 0 auto;
-
 }
 
 .first-block-container{
   background-image: url("/assets/img/bck_testant.png");
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: -70px center;
   padding-top: 61px;
 }
 
@@ -599,13 +599,14 @@
 }
 
 .nav-items {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
+  display: none;
+
 }
 
 .nav-items.hidden {
-  display: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
 }
 
 

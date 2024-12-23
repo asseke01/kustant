@@ -93,6 +93,88 @@
   font-size: 24px;
 }
 
+.record-container {
+  display: flex;
+  margin-top: 30px;
+  gap: 20px;
+}
+
+.records-cards{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 40px;
+}
+
+.records-card {
+  width: 100%;
+  padding: 31px;
+  border-radius: 25px;
+  background-color: #1D1D42;
+}
+
+.first-record{
+  background: #F0EEFF;
+}
+
+.second-record{
+  background: #E8F3FA;
+}
+
+.third-record{
+  background: #E8F3FA;
+}
+
+.fourth-record{
+  background: #E8F3FA;
+}
+
+.records-card h2{
+  padding: 0;
+  margin: 0;
+  color: black;
+  font-weight: normal;
+  font-size: 26px;
+}
+
+.records-card h1{
+  padding: 0;
+  margin: 0;
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 55px
+}
+
+.record-user{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background-color: white;
+  border-radius: 15px;
+  margin-top: 15px;
+  padding: 15px;
+}
+
+.username{
+  display: flex;
+  flex-direction: column;
+}
+
+.username-name{
+  font-size: 18px;
+  font-weight: normal;
+}
+.username-subject{
+  font-size: 18px;
+  font-weight: normal;
+  color: #B5B5B5;
+}
+
+.photo{
+  border-radius: 50%;
+  background-color: orange;
+  padding: 10px;
+}
+
 
 @media (max-width: 950px) {
   .main-container {

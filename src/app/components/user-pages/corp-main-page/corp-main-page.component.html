@@ -12,7 +12,7 @@
 
       <div class="item-right">
         <span class="button grey">Мектеп қосу</span>
-        <span class="button blue">Жүйеге кіру</span>
+        <span class="button blue" (click)="referToMain()">Жүйеге кіру</span>
       </div>
 
       <div class="burger-menu" (click)="toggleMenu()">
@@ -27,7 +27,7 @@
           <span>Тест түрлері</span>
           <span>FAQ</span>
           <span >Мектеп қосу</span>
-          <span>Жүйеге кіру</span>
+          <span (click)="referToMain()"> Жүйеге кіру</span>
         </div>
       </div>
 
@@ -38,7 +38,7 @@
         <span class="testant-button">&#64;testant.kz</span>
         <h1>ҰБТ форматындағы <span class="gradient-text">ең үздік</span> тестілеу жүйесі</h1>
         <span class="testant-text">Жүйеде 15,000 астам ҰБТ сұрақтары бар. <br>Жүйеге тегін тіркеліп, ҰБТ-ға бізбен бірге дайындалыңыз.</span>
-        <span class="testant-test-button">Тест тапсыру</span>
+        <span class="testant-test-button" routerLink="login">Тест тапсыру</span>
       </div>
     </div>
 

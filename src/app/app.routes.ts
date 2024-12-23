@@ -24,18 +24,19 @@ import {AdminSchoolsPageComponent} from './components/admin-pages/admin-schools-
 import {AdminAnalyticPageComponent} from './components/admin-pages/admin-analytic-page/admin-analytic-page.component';
 import {CorpMainPageComponent} from './components/user-pages/corp-main-page/corp-main-page.component';
 import {PayPageComponent} from './components/user-pages/pay-page/pay-page.component';
+import {UnauthGuard} from './services/auth-services/unauth.guard';
 
 export const routes: Routes = [
 
   {
-    path: '', component: StartPageComponent,
+    path: '', component: CorpMainPageComponent, canActivate:[UnauthGuard]
   },
   {
     path: 'login', component: LoginPageComponent
   },
-  {
-    path: 'corp', component: CorpMainPageComponent
-  },
+  // {
+  //   path: 'corp', component: CorpMainPageComponent
+  // },
   {
     path: 'main', component: MainPageComponent, canActivate: [AuthGuard]
   },

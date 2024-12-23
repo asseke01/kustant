@@ -57,4 +57,12 @@ export class NavBarComponent implements OnInit {
         break;
     }
   }
+
+  referToMain(){
+    if(this.userData != null){
+      this.router.navigate(['main'])
+    }else{
+      this.router.navigate([''])
+    }
+  }
 }

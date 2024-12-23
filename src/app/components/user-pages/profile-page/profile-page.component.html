@@ -6,11 +6,11 @@
 
       <div class="profile-container">
         <img src="assets/img/profile-ico.png" alt="profile">
-        <span class="profile-name">Мақсат Ирисбеков</span>
-        <span class="profile-number">+7 708 115 6454</span>
+        <span class="profile-name">{{userData.fullname}}</span>
+        <span class="profile-number">{{userData.phone_number}}</span>
         <div class="subjects">
-          <span>Математика</span>
-          <span>Физика</span>
+          <span>{{userData.subject1}}</span>
+          <span>{{userData.subject2}}</span>
         </div>
         <span class="profile-number">Сынып: 10</span>
         <button class="profile-change">Ақпаратты өзгерту</button>
@@ -23,9 +23,9 @@
         </div>
         <div class="ref-submit">
           <labeL>Сілтеме</labeL>
-          <input placeholder="https://caldi.kz/dsbfskcnds">
+          <input #refInput [placeholder]="userData.referralId" [ngModel]="userData.referralId">
         </div>
-        <button class="ref-button">Сілтемені көшіру</button>
+        <button class="ref-button" (click)="copyReferral(refInput.value)">Сілтемені көшіру</button>
       </div>
 
     </div>
@@ -128,27 +128,27 @@
 
       </div>
 
-      <div class="right-second-row-container">
+<!--      <div class="right-second-row-container">-->
 
-        <div class="second-price-container">
-          <div class="tab">Ұсынамыз</div>
+<!--        <div class="second-price-container">-->
+<!--          <div class="tab">Ұсынамыз</div>-->
 
-            <img src="assets/img/offer-logo.svg" alt="logo" width="40">
+<!--            <img src="assets/img/offer-logo.svg" alt="logo" width="40">-->
 
-            <div class="price-text">
-              <h1>Айлық</h1>
-              <div class="price">
-                <h1>2.890 тг</h1>
-                <h2>4.890 тг</h2>
-              </div>
-              <span>1 айға TestAnt жүйесін тегін пайдалану</span>
-            </div>
+<!--            <div class="price-text">-->
+<!--              <h1>Айлық</h1>-->
+<!--              <div class="price">-->
+<!--                <h1>2.890 тг</h1>-->
+<!--                <h2>4.890 тг</h2>-->
+<!--              </div>-->
+<!--              <span>1 айға TestAnt жүйесін тегін пайдалану</span>-->
+<!--            </div>-->
 
-          <button class="second-submit">Сатып алу</button>
+<!--          <button class="second-submit">Сатып алу</button>-->
 
-        </div>
+<!--        </div>-->
 
-      </div>
+<!--      </div>-->
 
     </div>
 
@@ -233,5 +233,35 @@
 <!--  </div>-->
 
 <!--</div>-->
+
+
+<!--<ng-template #dialogTemplate>-->
+<!--  <div class="dialog-header">-->
+<!--    <h2 mat-dialog-title>Баланс толтыру</h2>-->
+<!--    <button mat-icon-button class="close-button">-->
+<!--      <mat-icon (click)="closeDialog()">close</mat-icon>-->
+<!--    </button>-->
+<!--  </div>-->
+
+<!--  <mat-dialog-content>-->
+<!--    <div class="dialog-content">-->
+<!--      <label for="summ">Сумма: </label>-->
+<!--      <input id="summ" type="number" placeholder="Сумма" [(ngModel)]="paySum">-->
+<!--    </div>-->
+<!--  </mat-dialog-content>-->
+
+<!--  <mat-dialog-actions>-->
+<!--    <div class="actions">-->
+
+<!--      <button class="back-btn">Артқа</button>-->
+<!--      <button-->
+<!--        class="pay-btn"-->
+<!--        mat-dialog-close-->
+<!--        (click)="doPay()">Толтыру-->
+<!--      </button>-->
+
+<!--    </div>-->
+<!--  </mat-dialog-actions>-->
+<!--</ng-template>-->
 
 <app-user-footer></app-user-footer>

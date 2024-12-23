@@ -1,5 +1,14 @@
-import {ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
-import {AfterViewInit, Component, ElementRef, HostListener, inject, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  TemplateRef,
+  HostListener,
+  inject,
+  OnInit,
+  ViewChild,
+  ChangeDetectorRef
+} from '@angular/core';
 import {NavBarComponent} from "../../helpers/navbar/nav-bar.component";
 import {MatProgressBar} from '@angular/material/progress-bar';
 import {UserService} from '../../../services/user-services/user.service';
@@ -21,6 +30,7 @@ import {
 import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {FormsModule} from '@angular/forms';
+import {Clipboard, ClipboardModule} from '@angular/cdk/clipboard';
 
 @Component({
   selector: 'app-profile-page',
@@ -38,14 +48,14 @@ import {FormsModule} from '@angular/forms';
     MatDialogActions,
     MatDialogClose,
     MatDialogContent,
-    FormsModule
+    FormsModule,
+    ClipboardModule
   ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.css'
 })
 export class ProfilePageComponent implements OnInit, AfterViewInit{
-export class ProfilePageComponent implements OnInit {
-  @ViewChild('dialogTemplate') dialogTemplate!: TemplateRef<any>;
+  // @ViewChild('dialogTemplate') dialogTemplate!: TemplateRef<any>;
 
   private dialog = inject(MatDialog);
   private dialogRef: MatDialogRef<any> | null = null;
@@ -55,7 +65,8 @@ export class ProfilePageComponent implements OnInit {
   private authService = inject(AuthService)
   private testingService = inject(TestingService)
   private cdr = inject(ChangeDetectorRef)
-  private router = inject(Router)
+  private router = inject(Router);
+  private clipboard = inject(Clipboard);
 
   public userData: any;
   private learnerId!: number;
@@ -117,16 +128,16 @@ export class ProfilePageComponent implements OnInit {
     this.router.navigate(['test-result', id]);
   }
 
-  openDialog(enterAnimationDuration: string, exitAnimationDuration: string,) {
-
-    this.dialogRef = this.dialog.open(this.dialogTemplate, {
-      maxWidth: '30vw',
-      width: '100%',
-      enterAnimationDuration,
-      exitAnimationDuration,
-      disableClose: true
-    });
-  }
+  // openDialog(enterAnimationDuration: string, exitAnimationDuration: string,) {
+  //
+  //   this.dialogRef = this.dialog.open(this.dialogTemplate, {
+  //     maxWidth: '30vw',
+  //     width: '100%',
+  //     enterAnimationDuration,
+  //     exitAnimationDuration,
+  //     disableClose: true
+  //   });
+  // }
 
   closeDialog(): void {
     this.dialog.closeAll();
@@ -186,25 +197,27 @@ export class ProfilePageComponent implements OnInit {
     const container = this.tableContainer.nativeElement;
 
     const updateGradientVisibility = () => {
-      const isScrollable = container.scrollHeight > container.clientHeight; // Проверяем, есть ли прокрутка
-      const scrollPosition = container.scrollTop; // Текущее положение прокрутки
-      const scrollThreshold = container.scrollHeight - container.clientHeight * 1.55; // Граница (20% от высоты)
+      const isScrollable = container.scrollHeight > container.clientHeight;
+      const scrollPosition = container.scrollTop;
+      const scrollThreshold = container.scrollHeight - container.clientHeight * 1.55;
 
       if (isScrollable && scrollPosition < scrollThreshold) {
-        container.classList.add('overflow-active'); // Показываем градиент
+        container.classList.add('overflow-active');
       } else {
-        container.classList.remove('overflow-active'); // Скрываем градиент
+        container.classList.remove('overflow-active');
       }
     };
 
-    // Проверка при загрузке
     updateGradientVisibility();
 
-    // Обновление при скролле
     container.addEventListener('scroll', updateGradientVisibility);
 
-    // Обновление при изменении размера окна
     window.addEventListener('resize', updateGradientVisibility);
+  }
+
+  copyReferral(referralLink: string): void {
+    this.clipboard.copy(referralLink);
+    this.alert.success('Сілтеме көшірілді!');
   }
 
 }

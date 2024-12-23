@@ -722,6 +722,17 @@ export class AdminQuestionPageComponent implements OnInit {
     answers: this.fb.array([]), // Фиксированные ответы
   });
 
+  public editMatchingQuestionForm = this.fb.group({
+    id: [''], // ID для редактирования
+    subject: [{ value: this.selectedSubject, disabled: true }],
+    help_text: [''],
+    text: [''],
+    status: [this.status],
+    theme_id: [''],
+    questions: this.fb.array([]), // Массив вопросов сопоставления
+    answers: this.fb.array([]), // Массив неправильных ответов
+  });
+
   get editAnswers(): FormArray {
     return this.editOneQuestionForm.get('answers') as FormArray;
   }
@@ -729,6 +740,26 @@ export class AdminQuestionPageComponent implements OnInit {
   get editManyAnswers(): FormArray {
     return this.editManyQuestionForm.get('answers') as FormArray;
   }
+
+  get editMatchingQuestions(): FormArray {
+    return this.editMatchingQuestionForm.get('questions') as FormArray;
+  }
+
+  get editMatchingAnswers(): FormArray {
+    return this.editMatchingQuestionForm.get('answers') as FormArray;
+  }
+
+  addEditMatchingAnswer(): void {
+    const answerGroup = this.fb.group({
+      text: [''],
+    });
+    this.editMatchingAnswers.push(answerGroup);
+  }
+
+  removeEditMatchingAnswer(index: number): void {
+    this.editMatchingAnswers.removeAt(index);
+  }
+
 
   addAnswerToEditForm(): void {
     const answersArray = this.editAnswers; // Используем геттер editAnswers
@@ -767,10 +798,8 @@ export class AdminQuestionPageComponent implements OnInit {
 
   toggleCorrectManyAnswer(index: number): void {
     const answers = this.editManyAnswers;
-    const maxCorrectAnswers = 3; // Максимальное количество правильных ответов
-    const selectedIndices: number[] = []; // Список выбранных индексов
-
-    // Собираем текущие выбранные индексы
+    const maxCorrectAnswers = 3;
+    const selectedIndices: number[] = [];
     answers.controls.forEach((control, i) => {
       if (control.get('is_correct')?.value) {
         selectedIndices.push(i);
@@ -780,90 +809,172 @@ export class AdminQuestionPageComponent implements OnInit {
     const isCurrentlyCorrect = answers.at(index).get('is_correct')?.value;
 
     if (isCurrentlyCorrect) {
-      // Если текущий ответ уже выбран, снимаем выбор
       answers.at(index).patchValue({is_correct: false});
     } else {
       if (selectedIndices.length < maxCorrectAnswers) {
-        // Если выбрано меньше 3, добавляем новый правильный ответ
         answers.at(index).patchValue({is_correct: true});
       } else {
-        // Если уже выбрано 3 ответа, заменяем самый старый
-        const oldestIndex = selectedIndices.shift(); // Удаляем самый старый индекс
+        const oldestIndex = selectedIndices.shift();
         if (oldestIndex !== undefined) {
-          answers.at(oldestIndex).patchValue({is_correct: false}); // Снимаем с него выбор
+          answers.at(oldestIndex).patchValue({is_correct: false});
         }
-        answers.at(index).patchValue({is_correct: true}); // Устанавливаем новый
+        answers.at(index).patchValue({is_correct: true});
       }
     }
   }
 
 
   openEditDialog(question: any, enterAnimationDuration: string, exitAnimationDuration: string): void {
-    // Сброс форм
     this.editOneQuestionForm.reset();
     this.editManyQuestionForm.reset();
+    this.matchingQuestionForm.reset();
+    this.contextQuestionForm.reset();
 
-    // Получаем данные вопроса
-    this.questionService.getStandardQuestion(question.id).subscribe(
-      (data) => {
-        this.selectedValue = data.type; // Устанавливаем тип вопроса
+    switch (this.selectedValue) {
+      case 'has_one_answer':
+        this.questionService.getStandardQuestion(question.id).subscribe(
+          (data) => {
+            this.selectedValue = data.type;
+            this.editOneQuestionForm.patchValue({
+              id: data.id,
+              subject: this.selectedSubject,
+              help_text: data.help_text,
+              text: data.text,
+              lvl: data.lvl,
+              status: data.status_display,
+              theme_id: data.sub_theme_id,
+              type: data.type,
+            });
 
-        if (data.type === 'has_one_answer') {
-          this.editOneQuestionForm.patchValue({
-            id: data.id,
-            subject: this.selectedSubject,
-            help_text: data.help_text,
-            text: data.text,
-            lvl: data.lvl,
-            status: data.status_display,
-            theme_id: data.sub_theme_id,
-            type: data.type,
-          });
+            const answersArray = this.editAnswers;
+            answersArray.clear();
+            data.answers.forEach((answer: any) => {
+              answersArray.push(this.fb.group({ text: [answer.text], is_correct: [answer.is_correct] }));
+            });
 
-          const answersArray = this.editAnswers;
-          answersArray.clear();
-          data.answers.forEach((answer: any) => {
-            answersArray.push(this.fb.group({text: [answer.text], is_correct: [answer.is_correct]}));
-          });
-        } else if (data.type === 'has_many_answers') {
-          this.editManyQuestionForm.patchValue({
-            id: data.id,
-            subject: this.selectedSubject,
-            help_text: data.help_text,
-            text: data.text,
-            lvl: data.lvl,
-            status: data.status_display,
-            theme_id: data.sub_theme_id,
-            type: data.type,
-          });
+            this.openDialogTemplate(enterAnimationDuration, exitAnimationDuration, 'has_one_answer');
+          },
+          (error) => {
+            this.alert.error('Ошибка загрузки данных вопроса');
+          }
+        );
+        break;
 
-          const answersArray = this.editManyAnswers;
-          answersArray.clear();
-          data.answers.forEach((answer: any) => {
-            answersArray.push(this.fb.group({text: [answer.text], is_correct: [answer.is_correct]}));
-          });
-        }
+      case 'has_many_answers':
+        this.questionService.getStandardQuestion(question.id).subscribe(
+          (data) => {
+            this.selectedValue = data.type;
+            this.editManyQuestionForm.patchValue({
+              id: data.id,
+              subject: this.selectedSubject,
+              help_text: data.help_text,
+              text: data.text,
+              lvl: data.lvl,
+              status: data.status_display,
+              theme_id: data.sub_theme_id,
+              type: data.type,
+            });
 
-        // Открываем модалку
-        this.dialogRef = this.dialog.open(this.editDialogTemplate, {
-          maxWidth: '50vw',
-          height: '80vh',
-          width: '100%',
-          enterAnimationDuration,
-          exitAnimationDuration,
-          disableClose: true,
-        });
+            const answersArray = this.editManyAnswers;
+            answersArray.clear();
+            data.answers.forEach((answer: any) => {
+              answersArray.push(this.fb.group({ text: [answer.text], is_correct: [answer.is_correct] }));
+            });
 
-        // Реинициализация редакторов
-        setTimeout(() => {
-          this.reinitializeEditors();
-        }, 0);
-      },
-      (error) => {
-        this.alert.error('Ошибка загрузки данных вопроса');
-      }
-    );
+            this.openDialogTemplate(enterAnimationDuration, exitAnimationDuration, 'has_many_answers');
+          },
+          (error) => {
+            this.alert.error('Ошибка загрузки данных вопроса');
+          }
+        );
+        break;
+
+      case 'context-question':
+        this.questionService.getContextQuestion(question.id).subscribe(
+          (data) => {
+            this.contextQuestionForm.patchValue({
+              help_text: data.help_text,
+              subject: this.selectedSubject,
+              text: data.text,
+              status: data.status_display,
+            });
+
+            const questionsArray = this.questions;
+            questionsArray.clear();
+            data.questions.forEach((question: any) => {
+              const questionGroup = this.fb.group({
+                text: [question.question],
+                answers: this.fb.array([]),
+              });
+
+              this.initializeContextAnswers(questionsArray.length, 5);
+              questionsArray.push(questionGroup);
+            });
+
+            this.openDialogTemplate(enterAnimationDuration, exitAnimationDuration, 'context-question');
+          },
+          (error) => {
+            this.alert.error('Ошибка загрузки данных контекста');
+          }
+        );
+        break;
+
+      case 'match-question':
+        this.questionService.getMatchingQuestion(question.id).subscribe(
+          (data) => {
+            this.matchingQuestionForm.patchValue({
+              help_text: data.help_text,
+              subject: this.selectedSubject,
+              text: data.text,
+              status: data.status_display,
+            });
+
+            const questionsArray = this.matchingQuestion;
+            questionsArray.clear();
+            data.questions.forEach((matchQuestion: any) => {
+              questionsArray.push(this.fb.group({
+                question: [matchQuestion.question],
+                answer: [matchQuestion.answer],
+              }));
+            });
+
+            const answersArray = this.matchingAnswers;
+            answersArray.clear();
+            data.answers.forEach((answer: any) => {
+              answersArray.push(this.fb.group({ text: [answer.text] }));
+            });
+
+            this.openDialogTemplate(enterAnimationDuration, exitAnimationDuration, 'match-question');
+          },
+          (error) => {
+            this.alert.error('Ошибка загрузки данных матчинг-вопроса');
+          }
+        );
+        break;
+
+      default:
+        this.alert.error('Неизвестный тип вопроса');
+        break;
+    }
   }
+
+  private openDialogTemplate(enterAnimationDuration: string, exitAnimationDuration: string, type: string): void {
+    this.selectedType = type;
+    const dialogHeight = this.getDialogHeightByType(type);
+
+    this.dialogRef = this.dialog.open(this.editDialogTemplate, {
+      maxWidth: '50vw',
+      height: dialogHeight,
+      width: '100%',
+      enterAnimationDuration,
+      exitAnimationDuration,
+      disableClose: true,
+    });
+    setTimeout(() => {
+      this.reinitializeEditors();
+    }, 0);
+  }
+
 
 
   reinitializeEditors(): void {

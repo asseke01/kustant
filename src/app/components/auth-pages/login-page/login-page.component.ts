@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import {NgClass, NgIf, NgStyle} from '@angular/common';
+import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {animate, group, keyframes, state, style, transition, trigger} from '@angular/animations';
 import {AlertService} from '../../../services/helper-services/alert.service';
 import {Router} from '@angular/router';
@@ -17,6 +17,7 @@ import {UserService} from '../../../services/user-services/user.service';
     NgStyle,
     NgClass,
     NgxMaskDirective,
+    NgForOf,
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.css',
@@ -49,6 +50,12 @@ export class LoginPageComponent {
   isPhoneSubmitted = false;
   isCodeSubmitted = false;
   imageUrl = '/assets/img/auth_ico.svg';
+  activeGrade: number | null = null;
+
+  setActiveGrade(grade: number): void {
+    this.activeGrade = grade;
+    this.studentForm.patchValue({grade});
+  }
 
   constructor() {
   }
@@ -63,7 +70,8 @@ export class LoginPageComponent {
 
   public studentForm = this.form.group({
       fullname: [''],
-      subjects: ['']
+      subjects: [''],
+      grade: [0]
     }
   )
 
@@ -167,6 +175,7 @@ export class LoginPageComponent {
     if (this.studentForm.valid) {
       this.loading = true
 
+
       let code = this.codeForm.get('code')?.value;
 
       if (code) {
@@ -185,8 +194,10 @@ export class LoginPageComponent {
 
       let fullname = this.studentForm.get('fullname')?.value;
       let subjects = this.studentForm.get('subjects')?.value;
+      const class_number = this.studentForm.get('grade')?.value;
 
-      this.userService.submitStudent(phone, code, fullname, subjects).subscribe(response => {
+
+      this.userService.submitStudent(phone, code, fullname, subjects, class_number).subscribe(response => {
           this.loading = false;
           this.router.navigate(['main'])
           this.alert.success('Успешно зарегестрирован!');

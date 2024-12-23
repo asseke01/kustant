@@ -577,6 +577,7 @@
 }
 
 .test-box {
+  max-width: 688px;
   background: white;
   border-radius: 15px;
   padding: 33px;
@@ -592,7 +593,9 @@
 .details {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: start;
+  gap: 10px;
 }
 
 .progress {
@@ -652,7 +655,7 @@
 
 .title span {
   width: 92%;
-  font-size: 14px;
+  font-size: 16.5px;
   letter-spacing: 0.5px;
   line-height: 24px;
   font-family: Gilroy-Regular, sans-serif;
@@ -720,6 +723,66 @@
   font-family: Gilroy-Regular, sans-serif;
 }
 
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialog-header h2 {
+  font-weight: 600;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.back-btn {
+  color: #5d5d5d;
+  padding: 6px 15px;
+  border-radius: 1.5px;
+  background: none;
+  border: 1px solid #5d5d5d;
+  font-size: 16px;
+}
+
+.pay-btn {
+  background-color: #5d5d5d;
+  color: white;
+  padding: 6px 15px;
+  border-radius: 1.5px;
+  border: 1px solid #5d5d5d;
+  font-size: 16px;
+}
+
+::ng-deep .mat-mdc-dialog-actions {
+  justify-content: flex-start !important;
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dialog-content input {
+  width: 85%;
+  border-radius: 8px;
+  outline: none;
+  background: whitesmoke;
+  padding: 10px 15px;
+  font-size: 15px;
+  border: 1px solid #e5e5e5;
+}
+
 @media (max-width: 1100px) {
   .profile-box .details {
     flex-direction: column;
@@ -727,7 +790,9 @@
     gap: 10px;
   }
 }
-@media (max-width: 800px) {}
+
+@media (max-width: 800px) {
+}
 
 @media (max-width: 630px) {
 

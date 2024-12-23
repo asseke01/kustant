@@ -51,11 +51,16 @@ export class TestingService {
     return this.http.get<{ current_testing_exists: boolean }>(`${this.apiUrl}get_learner_current_testing_existing/`);
   }
 
-  public getUbtRecord() {
-    return this.http.get<any>(`${this.apiUrl}get_ubt_record/`);
+  public getUbtRecord(learnerId: number): Observable<number> {
+    const params = new HttpParams().set('learner_id', learnerId);
+    return this.http.get<number>(`${this.apiUrl}get_ubt_record/`, { params });
   }
 
-  public getPassedTests(): Observable<GetPassedTests[]> {
-    return this.http.get<GetPassedTests[]>(`${this.apiUrl}get_passed_tests/`);
+
+  public getPassedTests(learnerId: number, limit: number = 0): Observable<GetPassedTests[]> {
+    const params = new HttpParams()
+      .set('learner_id', learnerId)
+      .set('limit', limit);
+    return this.http.get<GetPassedTests[]>(`${this.apiUrl}get_passed_tests/`, { params });
   }
 }

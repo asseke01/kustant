@@ -1,26 +1,116 @@
 <div class="white-container">
   <div class="nav-bar">
-    <a class="logo-container" href="">
-      <img src="assets/img/logo_ico.svg" alt="logo">
-    </a>
 
-    <div class="burger-menu" [class.burger-active]="isMenuOpen" (click)="toggleMenu()">
-      <div class="bar"></div>
-      <div class="bar"></div>
-      <div class="bar"></div>
+    <div class="left-container">
+      <a class="logo-container" href="">
+        <img src="assets/img/logo_container.svg" alt="logo">
+      </a>
+
+      <div class="burger-menu" [class.burger-active]="isMenuOpen" (click)="toggleMenu()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+
+      <div class="links-container">
+        <a>Тесттер</a>
+        <a>Нәтижелер</a>
+        <a>Магазин</a>
+      </div>
     </div>
 
-    <div class="links-container" [class.active]="isMenuOpen">
-      <img src="assets/img/logo_ico.svg" alt="logo" *ngIf="isMenuOpen">
-      <a class="links" routerLink="/main">Тақырыптық тесттер</a>
-      <a class="links" href="/profile#results">Нәтижелерім</a>
-      <ng-container *ngIf="userData; else loginLink">
-        <a class="links auth" routerLink="../profile">Жеке кабинет</a>
-      </ng-container>
-      <ng-template #loginLink>
-        <a class="links auth" routerLink="login">Кіру</a>
-      </ng-template>
+    <div class="right-container">
+
+      <span class="right-button rating">
+      <img src="assets/img/rating_icon.svg" alt="rating">
+        Рейтинг
+      </span>
+      <span class="right-button balance">Баланс: 0</span>
+      <span class="right-button point">
+        1 x
+      <img src="assets/img/coin_icon.svg" alt="coin">
+      </span>
+      <span class="right-button mission" (click)="toggleDropdown()">
+      <img src="assets/img/gift_box_icon.svg" alt="gift" >
+        Тапсырмалар
+      </span>
+
+      <div class="dropdown-menu" id="dropdownMenu" [ngClass]="{'open': isDropdownOpen}">
+        <div class="task-item">
+          <img src="assets/img/dropdown_coin.svg">
+          <div class="task-item-row">
+            <span>4 рет толық ҰБТ >50 балл алу</span>
+            <div class="progress-bar-container">
+              <div class="progress-bar"
+                   [style.width]="isDropdownOpen ? '80%' : '0%'"
+                   [ngClass]="{'animate': isDropdownOpen}"></div>
+            </div>
+          </div>
+          <div class="task-submit">
+            <button class="task-button">Алу</button>
+
+          </div>
+        </div>
+        <div class="task-item">
+          <img src="assets/img/dropdown_coin.svg">
+          <div class="task-item-row">
+          <span>7 күн қолдану</span>
+          <div class="progress-bar-container">
+            <div class="progress-bar"
+                 [style.width]="isDropdownOpen ? '50%' : '0%'"
+                 [ngClass]="{'open': isDropdownOpen}"></div>
+          </div>
+          </div>
+          <div class="task-submit">
+          <button class="task-button">Алу</button>
+          </div>
+        </div>
+        <div class="task-item">
+          <img src="assets/img/dropdown_coin.svg">
+          <div class="task-item-row">
+          <span>Мат. сау 3 рет 15/15 жинау</span>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: 30%;"></div>
+          </div>
+          </div>
+          <div class="task-submit">
+          <span class="task-info">2/3  <span style="color: #F69918; margin-left: 5px">100XP</span></span>
+          </div>
+        </div>
+        <div class="task-item">
+          <img src="assets/img/dropdown_coin.svg">
+          <div class="task-item-row">
+          <span>2 рет толық ҰБТ > 100 балл алу</span>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: 90%;"></div>
+          </div>
+          </div>
+          <div class="task-submit">
+          <span class="task-info">2/3 1x</span>
+          </div>
+        </div>
+        <a href="#" class="see-all">Барлығын ашу</a>
+      </div>
+
+      <span class="right-button profile" (click)="clickRouter('profile')">
+        Профиль
+      </span>
+
     </div>
+
+
+<!--    <div class="links-container" [class.active]="isMenuOpen">-->
+<!--      <img src="assets/img/logo_ico.svg" alt="logo" *ngIf="isMenuOpen">-->
+<!--      <a class="links" routerLink="/main">Тақырыптық тесттер</a>-->
+<!--      <a class="links" href="/profile#results">Нәтижелерім</a>-->
+<!--      <ng-container *ngIf="userData; else loginLink">-->
+<!--        <a class="links auth" routerLink="../profile">Жеке кабинет</a>-->
+<!--      </ng-container>-->
+<!--      <ng-template #loginLink>-->
+<!--        <a class="links auth" routerLink="login">Кіру</a>-->
+<!--      </ng-template>-->
+<!--    </div>-->
+
   </div>
 
 

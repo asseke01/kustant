@@ -1,75 +1,237 @@
-<div class="main-container" *ngIf="userData">
+<div class="block">
   <app-navbar></app-navbar>
-  <div class="test-container">
-    <h2>Жеке кабинет</h2>
-    <div class="profile-grid-container">
 
-      <div class="profile-box">
-        <div class="title">
-          <h1>Салем, {{ userData.fullname }}</h1>
-          <span>Таңдау пәндері: {{ userData.subject1 }}-{{ userData.subject2 }}</span>
-        </div>
+  <div class="first-block-container">
+    <div class="left-container">
 
-        <div class="details">
-          <a class="exit-button" (click)="onLogout()">Аккаунттан шығу</a>
-          <a class="subject-button"> Таңдау пәндерік өзгерту</a>
+      <div class="profile-container">
+        <img src="assets/img/profile-ico.png" alt="profile">
+        <span class="profile-name">Мақсат Ирисбеков</span>
+        <span class="profile-number">+7 708 115 6454</span>
+        <div class="subjects">
+          <span>Математика</span>
+          <span>Физика</span>
         </div>
+        <span class="profile-number">Сынып: 10</span>
+        <button class="profile-change">Ақпаратты өзгерту</button>
       </div>
 
-      <div class="profile-box">
-        <div class="title">
-          <h1>ҰБТ Рекорд</h1>
-          <span>Username: {{ ubtRecord }} балл</span>
+      <div class="ref-container">
+        <div class="ref-first-row">
+          <h1>Рефералды сілтеме</h1>
+          <span class="question">?</span>
+        </div>
+        <div class="ref-submit">
+          <labeL>Сілтеме</labeL>
+          <input placeholder="https://caldi.kz/dsbfskcnds">
+        </div>
+        <button class="ref-button">Сілтемені көшіру</button>
+      </div>
+
+    </div>
+
+    <div class="right-container">
+
+      <div class="right-first-row-container">
+
+        <div class="first-box">
+          <img src="assets/img/level_one.svg" alt="level">
+          <div class="first-box-row">
+            <h1>Қола деңгейі</h1>
+          </div>
+          <div class="progress-bar-container">
+            <div class="progress-bar" style="width: 100%;"></div>
+          </div>
+          <span class="first-box-count">5000/5000</span>
+          <button class="first-box-button">Келесі деңгейге өту</button>
         </div>
 
-        <div class="progress">
-          <div class="bar">
-            <div class="progress-bar-fill"
-                 [ngStyle]="{ width: ubtRecord ? (ubtRecord / maxUbtScore * 100) + '%' : '0%' }"></div>
-          </div>
-          <div class="points">
-            <div class="point">
-              0
+        <div class="second-box">
+
+          <div class="second-box-row">
+
+            <div class="rating">
+              <span>Рейтинг</span>
+              <h2>#13</h2>
             </div>
-            <p class="text">
-              Рекорд: {{ ubtRecord }} балл
-            </p>
-            <div class="point">
-              140
+            <div class="rating-points">
+              <h2>137 балл</h2>
+              <span class="question">?</span>
             </div>
+
           </div>
+
+          <div class="table-container" #tableContainer>
+            <table class="styled-table">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Аты-жөні</th>
+                <th>Пән</th>
+                <th>Балл</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>#1</td>
+                <td>Ирисбеков Мақсат</td>
+                <td>Физ-Мат</td>
+                <td>138</td>
+              </tr>
+              <tr>
+                <td>#2</td>
+                <td>Айтжанов Серік</td>
+                <td>Гео-Мат</td>
+                <td>137</td>
+              </tr>
+              <tr>
+                <td>#3</td>
+                <td>Қантай Мақсат</td>
+                <td>Физ-Мат</td>
+                <td>137</td>
+              </tr>
+              <tr>
+                <td>#4</td>
+                <td>Амангелді Асылжан</td>
+                <td>Физ-Мат</td>
+                <td>135</td>
+              </tr>
+              <tr>
+                <td>#4</td>
+                <td>Амангелді Асылжан</td>
+                <td>Физ-Мат</td>
+                <td>135</td>
+              </tr>
+              <tr>
+                <td>#4</td>
+                <td>Амангелді Асылжан</td>
+                <td>Физ-Мат</td>
+                <td>135</td>
+              </tr>
+              <tr>
+                <td>#4</td>
+                <td>Амангелді Асылжан</td>
+                <td>Физ-Мат</td>
+                <td>135</td>
+              </tr>
+              <tr class="disabled-row">
+                <td>#5</td>
+                <td>Оралбек Тоқтарбек</td>
+                <td>Джт-Англ</td>
+                <td>134</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
         </div>
+
+      </div>
+
+      <div class="right-second-row-container">
+
+        <div class="second-price-container">
+          <div class="tab">Ұсынамыз</div>
+
+            <img src="assets/img/offer-logo.svg" alt="logo" width="40">
+
+            <div class="price-text">
+              <h1>Айлық</h1>
+              <div class="price">
+                <h1>2.890 тг</h1>
+                <h2>4.890 тг</h2>
+              </div>
+              <span>1 айға TestAnt жүйесін тегін пайдалану</span>
+            </div>
+
+          <button class="second-submit">Сатып алу</button>
+
+        </div>
+
       </div>
 
     </div>
 
   </div>
-
-  <div class="test-container" id="results">
-    <h2>Нәтижелерім</h2>
-    <div class="total-grid-container">
-
-      <div class="test-box" *ngFor="let test of passedTests">
-
-        <div class="title">
-          <p>{{ test.subject_display }}</p>
-          <span>{{ test.test_type_display }}</span>
-        </div>
-
-        <div class="details">
-          <div class="info">
-            <p><span>Басталу уақыты:</span> {{ test.started_on }}</p>
-            <p><span>Балл:</span> {{ test.taken_marks }}/{{ test.over_all_marks }}</p>
-          </div>
-          <a class="show-button" (click)="navigateToTestResults(test.id)">Көру</a>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
 </div>
+
+
+
+
+
+
+<!--<div class="main-container" *ngIf="userData">-->
+<!--  <app-navbar></app-navbar>-->
+<!--  <div class="test-container">-->
+<!--    <h2>Жеке кабинет</h2>-->
+<!--    <div class="profile-grid-container">-->
+
+<!--      <div class="profile-box">-->
+<!--        <div class="title">-->
+<!--          <h1>Салем, {{ userData.fullname }}</h1>-->
+<!--          <span>Таңдау пәндері: {{ userData.subject1 }}-{{ userData.subject2 }}</span>-->
+<!--        </div>-->
+
+<!--        <div class="details">-->
+<!--          <a class="exit-button" (click)="onLogout()">Аккаунттан шығу</a>-->
+<!--          <a class="subject-button"> Таңдау пәндерік өзгерту</a>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div class="profile-box">-->
+<!--        <div class="title">-->
+<!--          <h1>ҰБТ Рекорд</h1>-->
+<!--          <span>Username: {{ ubtRecord }} балл</span>-->
+<!--        </div>-->
+
+<!--        <div class="progress">-->
+<!--          <div class="bar">-->
+<!--            <div class="progress-bar-fill"-->
+<!--                 [ngStyle]="{ width: ubtRecord ? (ubtRecord / maxUbtScore * 100) + '%' : '0%' }"></div>-->
+<!--          </div>-->
+<!--          <div class="points">-->
+<!--            <div class="point">-->
+<!--              0-->
+<!--            </div>-->
+<!--            <p class="text">-->
+<!--              Рекорд: {{ ubtRecord }} балл-->
+<!--            </p>-->
+<!--            <div class="point">-->
+<!--              140-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--  </div>-->
+
+<!--  <div class="test-container" id="results">-->
+<!--    <h2>Нәтижелерім</h2>-->
+<!--    <div class="total-grid-container">-->
+
+<!--      <div class="test-box" *ngFor="let test of passedTests">-->
+
+<!--        <div class="title">-->
+<!--          <p>{{ test.subject_display }}</p>-->
+<!--          <span>{{ test.test_type_display }}</span>-->
+<!--        </div>-->
+
+<!--        <div class="details">-->
+<!--          <div class="info">-->
+<!--            <p><span>Басталу уақыты:</span> {{ test.started_on }}</p>-->
+<!--            <p><span>Балл:</span> {{ test.taken_marks }}/{{ test.over_all_marks }}</p>-->
+<!--          </div>-->
+<!--          <a class="show-button" (click)="navigateToTestResults(test.id)">Көру</a>-->
+<!--        </div>-->
+
+<!--      </div>-->
+
+<!--    </div>-->
+
+<!--  </div>-->
+
+<!--</div>-->
 
 <app-user-footer></app-user-footer>

@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, inject, OnInit, ViewChild} from '@angular/core';
 import {NavBarComponent} from "../../helpers/navbar/nav-bar.component";
 import {MatProgressBar} from '@angular/material/progress-bar';
 import {UserService} from '../../../services/user-services/user.service';
@@ -24,7 +24,7 @@ import {GetPassedTests} from '../../../../assets/interfaces/getPassedTests.inter
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.css'
 })
-export class ProfilePageComponent implements OnInit {
+export class ProfilePageComponent implements OnInit, AfterViewInit{
   private userService = inject(UserService)
   private alert = inject(AlertService)
   private authService = inject(AuthService)
@@ -86,4 +86,32 @@ export class ProfilePageComponent implements OnInit {
   public navigateToTestResults(id: number){
     this.router.navigate(['test-result', id]);
   }
+
+  @ViewChild('tableContainer', { static: false }) tableContainer!: ElementRef;
+
+  ngAfterViewInit() {
+    const container = this.tableContainer.nativeElement;
+
+    const updateGradientVisibility = () => {
+      const isScrollable = container.scrollHeight > container.clientHeight; // Проверяем, есть ли прокрутка
+      const scrollPosition = container.scrollTop; // Текущее положение прокрутки
+      const scrollThreshold = container.scrollHeight - container.clientHeight * 1.55; // Граница (20% от высоты)
+
+      if (isScrollable && scrollPosition < scrollThreshold) {
+        container.classList.add('overflow-active'); // Показываем градиент
+      } else {
+        container.classList.remove('overflow-active'); // Скрываем градиент
+      }
+    };
+
+    // Проверка при загрузке
+    updateGradientVisibility();
+
+    // Обновление при скролле
+    container.addEventListener('scroll', updateGradientVisibility);
+
+    // Обновление при изменении размера окна
+    window.addEventListener('resize', updateGradientVisibility);
+  }
+
 }

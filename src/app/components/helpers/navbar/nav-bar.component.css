@@ -277,6 +277,8 @@
   }
 }
 
+
+
 @media (max-width: 1000px) {
   .auth{
     padding: 8px;
@@ -288,6 +290,7 @@
   .links{
     font-size: 18px;
   }
+
 }
 
 @media(max-width:950px) {
@@ -308,8 +311,16 @@
     z-index: 1000;
   }
 
+  .white-container{
+    border-radius: 0;
+  }
+
   .links-container.active {
     right: 0;
+  }
+
+  .right-button{
+    display: none;
   }
 
   .links {

@@ -175,10 +175,24 @@
   padding: 10px;
 }
 
+@media (max-width: 1024px) {
+  .record-container {
+    display: block;
+  }
+
+  .records-card {
+    margin-top: 15px;
+    width: auto;
+  }
+}
 
 @media (max-width: 950px) {
   .main-container {
     padding: 0;
+  }
+
+  .record-container {
+    padding: 0 25px;
   }
 
   .test-container h2{

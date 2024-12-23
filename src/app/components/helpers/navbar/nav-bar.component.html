@@ -6,13 +6,8 @@
         <img src="assets/img/logo_container.svg" alt="logo">
       </a>
 
-      <div class="burger-menu" [class.burger-active]="isMenuOpen" (click)="toggleMenu()">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-      </div>
 
-      <div class="links-container">
+      <div class="links-container" [class.active]="isMenuOpen">
         <a>Тесттер</a>
         <a>Нәтижелер</a>
         <a>Магазин</a>
@@ -20,6 +15,12 @@
     </div>
 
     <div class="right-container">
+
+      <div class="burger-menu" [class.burger-active]="isMenuOpen" (click)="toggleMenu()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
 
 <!--      <span class="right-button rating">-->
 <!--      <img src="assets/img/rating_icon.svg" alt="rating">-->
@@ -92,7 +93,7 @@
 <!--        <a href="#" class="see-all">Барлығын ашу</a>-->
 <!--      </div>-->
 
-      <span class="right-button profile" (click)="clickRouter('profile')">
+      <span class="right-button profile" (click)="clickRouter('profile')" [class.active]="isMenuOpen">
         Профиль
       </span>
 

@@ -15,6 +15,22 @@
         <span class="button blue">Жүйеге кіру</span>
       </div>
 
+      <div class="burger-menu" (click)="toggleMenu()">
+        <div [ngClass]="{'rotate': isMenuOpen}"></div>
+        <div [ngClass]="{'hidden': isMenuOpen}"></div>
+        <div [ngClass]="{'rotate-reverse': isMenuOpen}"></div>
+      </div>
+
+      <div class="nav-items" [ngClass]="{'show': isMenuOpen}">
+        <div class="nav-item">
+          <span>Мектептерге</span>
+          <span>Тест түрлері</span>
+          <span>FAQ</span>
+          <span >Мектеп қосу</span>
+          <span>Жүйеге кіру</span>
+        </div>
+      </div>
+
     </div>
 
     <div class="nav-text">
@@ -182,6 +198,8 @@
 
   </div>
 </div>
+
+
 
 <app-user-footer></app-user-footer>
 

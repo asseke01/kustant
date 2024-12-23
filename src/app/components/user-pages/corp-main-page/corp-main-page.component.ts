@@ -1,16 +1,26 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, HostListener, inject, OnInit} from '@angular/core';
 import {UserFooterComponent} from '../user-footer/user-footer.component';
+import {RecordService} from '../../../services/record-services/record.service';
+import {NgClass} from '@angular/common';
 
 @Component({
   selector: 'app-corp-main-page',
   standalone: true,
   imports: [
-    UserFooterComponent
+    UserFooterComponent,
+    NgClass
   ],
   templateUrl: './corp-main-page.component.html',
   styleUrl: './corp-main-page.component.css'
 })
-export class CorpMainPageComponent {
+export class CorpMainPageComponent implements OnInit {
+  private recordService = inject(RecordService);
+  records: any[] | null = null;
+  error: string | null = null;
+
+  ngOnInit(): void {
+      this.getRecords();
+  }
   @HostListener('window:scroll', [])
   onWindowScroll() {
     const schoolCards = document.querySelectorAll('.school-card');
@@ -49,4 +59,30 @@ export class CorpMainPageComponent {
       }
     });
   }
+
+  getRecords(): void {
+    this.recordService
+      .getUBTRecords({
+        record_type: 'week',
+        date: '01.12.2024',
+        min_taken_marks: 50,
+        limit: 20,
+        offset: 0
+      })
+      .subscribe({
+        next: (data) => {
+          this.records = data;
+        },
+        error: (err) => {
+          this.error = 'Failed to load records: ' + err.message;
+        }
+      });
+  }
+
+  isMenuOpen = false;
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
 }

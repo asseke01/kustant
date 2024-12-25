@@ -15,7 +15,6 @@ export class RecordService {
   getUBTRecords(params: {
     date?: string;
     record_type: 'week' | 'day' | 'all_time';
-    min_taken_marks: number;
     limit: number;
     offset: number;
   }): Observable<any> {

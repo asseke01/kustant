@@ -36,17 +36,17 @@
 
       <div class="right-first-row-container">
 
-        <div class="first-box">
-          <img src="assets/img/level_one.svg" alt="level">
-          <div class="first-box-row">
-            <h1>Қола деңгейі</h1>
-          </div>
-          <div class="progress-bar-container">
-            <div class="progress-bar" style="width: 100%;"></div>
-          </div>
-          <span class="first-box-count">5000/5000</span>
-          <button class="first-box-button">Келесі деңгейге өту</button>
-        </div>
+<!--        <div class="first-box">-->
+<!--          <img src="assets/img/level_one.svg" alt="level">-->
+<!--          <div class="first-box-row">-->
+<!--            <h1>Қола деңгейі</h1>-->
+<!--          </div>-->
+<!--          <div class="progress-bar-container">-->
+<!--            <div class="progress-bar" style="width: 100%;"></div>-->
+<!--          </div>-->
+<!--          <span class="first-box-count">5000/5000</span>-->
+<!--          <button class="first-box-button">Келесі деңгейге өту</button>-->
+<!--        </div>-->
 
         <div class="second-box">
 
@@ -55,10 +55,11 @@
             <div class="rating">
               <span>Рейтинг</span>
               <h2>#13</h2>
+              <h2 style="margin-left: 30px">137 балл</h2>
+              <span class="question">?</span>
             </div>
             <div class="rating-points">
-              <h2>137 балл</h2>
-              <span class="question">?</span>
+              <a style="color: #00A7DE; text-decoration: underline; cursor: pointer">Барлығын ашу</a>
             </div>
 
           </div>
@@ -73,54 +74,12 @@
                 <th>Балл</th>
               </tr>
               </thead>
-              <tbody>
-              <tr>
-                <td>#1</td>
-                <td>Ирисбеков Мақсат</td>
-                <td>Физ-Мат</td>
-                <td>138</td>
-              </tr>
-              <tr>
-                <td>#2</td>
-                <td>Айтжанов Серік</td>
-                <td>Гео-Мат</td>
-                <td>137</td>
-              </tr>
-              <tr>
-                <td>#3</td>
-                <td>Қантай Мақсат</td>
-                <td>Физ-Мат</td>
-                <td>137</td>
-              </tr>
-              <tr>
-                <td>#4</td>
-                <td>Амангелді Асылжан</td>
-                <td>Физ-Мат</td>
-                <td>135</td>
-              </tr>
-              <tr>
-                <td>#4</td>
-                <td>Амангелді Асылжан</td>
-                <td>Физ-Мат</td>
-                <td>135</td>
-              </tr>
-              <tr>
-                <td>#4</td>
-                <td>Амангелді Асылжан</td>
-                <td>Физ-Мат</td>
-                <td>135</td>
-              </tr>
-              <tr>
-                <td>#4</td>
-                <td>Амангелді Асылжан</td>
-                <td>Физ-Мат</td>
-                <td>135</td>
-              </tr>
-              <tr class="disabled-row">
-                <td>#5</td>
-                <td>Оралбек Тоқтарбек</td>
-                <td>Джт-Англ</td>
-                <td>134</td>
+              <tbody >
+              <tr *ngFor="let item of records; let i = index" [id]="'learner-row-' + (i + 1)" [ngClass]="{'highlight-row': i + 1 === learnerRankedPlace}">
+                <td>{{item.index}}</td>
+                <td>{{item.learner_name }}</td>
+                <td>{{item.subject1}}, {{item.subject2}}</td>
+                <td>{{item.taken_marks}}</td>
               </tr>
               </tbody>
             </table>

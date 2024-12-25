@@ -14,7 +14,7 @@ import {MatProgressBar} from '@angular/material/progress-bar';
 import {UserService} from '../../../services/user-services/user.service';
 import {AlertService} from '../../../services/helper-services/alert.service';
 import {AuthService} from '../../../services/auth-services/auth.service';
-import {NgForOf, NgIf, NgStyle} from '@angular/common';
+import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {UserFooterComponent} from '../user-footer/user-footer.component';
 import {TestingService} from '../../../services/user-services/testing.service';
 import {Router} from '@angular/router';
@@ -31,6 +31,7 @@ import {MatIcon} from '@angular/material/icon';
 import {MatIconButton} from '@angular/material/button';
 import {FormsModule} from '@angular/forms';
 import {Clipboard, ClipboardModule} from '@angular/cdk/clipboard';
+import {RecordService} from '../../../services/record-services/record.service';
 
 @Component({
   selector: 'app-profile-page',
@@ -49,7 +50,8 @@ import {Clipboard, ClipboardModule} from '@angular/cdk/clipboard';
     MatDialogClose,
     MatDialogContent,
     FormsModule,
-    ClipboardModule
+    ClipboardModule,
+    NgClass
   ],
   templateUrl: './profile-page.component.html',
   styleUrl: './profile-page.component.css'
@@ -59,7 +61,7 @@ export class ProfilePageComponent implements OnInit, AfterViewInit{
 
   private dialog = inject(MatDialog);
   private dialogRef: MatDialogRef<any> | null = null;
-
+  private recordService = inject(RecordService);
   private userService = inject(UserService)
   private alert = inject(AlertService)
   private authService = inject(AuthService)
@@ -76,7 +78,8 @@ export class ProfilePageComponent implements OnInit, AfterViewInit{
   public paySum!: number;
   public isPaymentPending: boolean = false;
   private invoiceId: string | null = null;
-
+  records: any[]=[];
+  learnerRankedPlace!: number;
   get ubtRecordPercentage(): string {
     if (this.ubtRecord == null || isNaN(this.ubtRecord)) {
       return '0%';
@@ -102,6 +105,8 @@ export class ProfilePageComponent implements OnInit, AfterViewInit{
     this.getLearnerCurrentTestingExist()
     this.getUbtRecord()
     this.getPassedTests()
+    this.getRecords();
+
   }
 
   private getLearnerCurrentTestingExist() {
@@ -208,6 +213,10 @@ export class ProfilePageComponent implements OnInit, AfterViewInit{
       }
     };
 
+    if (this.learnerRankedPlace && this.records.length > 0) {
+      this.scrollToRankedPlace();
+    }
+
     updateGradientVisibility();
 
     container.addEventListener('scroll', updateGradientVisibility);
@@ -219,5 +228,43 @@ export class ProfilePageComponent implements OnInit, AfterViewInit{
     this.clipboard.copy(referralLink);
     this.alert.success('Сілтеме көшірілді!');
   }
+
+  getRecords(): void {
+    this.recordService
+      .getUBTRecords({
+        record_type: 'all_time',
+        limit: 0,
+        offset: 0
+      })
+      .subscribe({
+        next: (data) => {
+          this.records = data.records;
+          this.learnerRankedPlace = data.learner_ranked_place;
+          console.log('Learner Ranked Place:', this.learnerRankedPlace);
+          setTimeout(() => {
+            this.scrollToRankedPlace(); // Вызываем прокрутку после загрузки данных
+          }, 0); // Используем setTimeout для асинхронной прокрутки
+        },
+        error: (err) => {
+          console.error('Error loading records:', err);
+        }
+      });
+  }
+
+  scrollToRankedPlace(): void {
+    const row = document.getElementById(`learner-row-${this.learnerRankedPlace}`);
+    console.log(`Attempting to scroll to: learner-row-${this.learnerRankedPlace}`);
+    if (row) {
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+      // Добавляем задержку, чтобы убедиться, что прокрутка завершена
+      setTimeout(() => {
+        row.classList.add('highlight-row');  // Добавляем класс для подсветки
+      }, 500); // Задержка 500 мс
+    } else {
+      console.error(`Row with ID learner-row-${this.learnerRankedPlace} not found.`);
+    }
+  }
+
 
 }

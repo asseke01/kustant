@@ -366,7 +366,7 @@
   width: 100%;
   max-height: 260px;
   margin: 20px 0;
-  overflow: auto;
+  overflow-y: auto; /* Это важно для включения вертикальной прокрутки */
   border-radius: 10px;
   scroll-behavior: smooth;
   position: relative;
@@ -406,6 +406,10 @@
   background: rgba(0, 0, 0, 0.05);
 }
 
+.styled-table tbody tr.highlight-row {
+  color: #FFB37E !important; /* Добавляем !important для принудительного применения */
+}
+
 .styled-table {
   width: 100%;
   border-collapse: collapse;
@@ -420,7 +424,6 @@
   padding: 20px;
   font-size: 19px;
   font-weight: normal;
-  color: black;
 }
 
 .styled-table thead th:first-child {
@@ -436,7 +439,6 @@
 .styled-table td {
   padding: 12px 12px 12px 20px;
   font-size: 16px;
-  color: black;
   border-bottom:none;
 }
 

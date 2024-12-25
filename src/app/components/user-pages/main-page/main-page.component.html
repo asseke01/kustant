@@ -5,53 +5,50 @@
   <div class="record-container">
     <div class="records-card first-record">
       <h2>ТестАнт рекордсмені</h2>
-      <h1>139 балл</h1>
+      <h1>{{records[0].taken_marks}} балл</h1>
       <div class="record-user">
-        <div class="photo">
-          photo
-        </div>
+        <!--          <div class="photo">-->
+        <!--            photo-->
+        <!--          </div>-->
         <div class="username">
-          <span class="username-name">Шаймерден Абай</span>
-          <span class="username-subject">Физ-Мат</span>
+          <span class="username-name">{{records[0].learner_name}}</span>
+          <span class="username-subject">{{records[0].subject1}}, {{records[0].subject2}}</span>
         </div>
       </div>
     </div>
     <div class="records-card second-record">
-      <h2>ТестАнт рекордсмені</h2>
-      <h1>139 балл</h1>
+      <h2>№1 апталық рекорд</h2>
+      <h1>{{recordsWeek[0].taken_marks}} балл</h1>
       <div class="record-user">
-        <div class="photo">
-          photo
-        </div>
-        <div class="username">
-          <span class="username-name">Шаймерден Абай</span>
-          <span class="username-subject">Физ-Мат</span>
+        <!--          <div class="photo">-->
+        <!--            photo-->
+        <!--          </div>-->
+        <div *ngIf="recordsWeek.length === 0">Нет данных для отображения</div>
+        <div class="username" *ngIf="recordsWeek.length > 0">
+          <span class="username-name">{{recordsWeek[0].learner_name}}</span>
+          <span class="username-subject">{{recordsWeek[0].subject1}}, {{recordsWeek[0].subject2}}</span>
         </div>
       </div>
     </div>
     <div class="records-card third-record">
-      <h2>ТестАнт рекордсмені</h2>
-      <h1>139 балл</h1>
+      <h2>№2 апталық рекорд</h2>
+      <h1>{{recordsWeek[1].taken_marks}} балл</h1>
       <div class="record-user">
-        <div class="photo">
-          photo
-        </div>
-        <div class="username">
-          <span class="username-name">Шаймерден Абай</span>
-          <span class="username-subject">Физ-Мат</span>
+        <div *ngIf="recordsWeek.length === 0">Нет данных для отображения</div>
+        <div class="username" *ngIf="recordsWeek.length > 0">
+          <span class="username-name">{{recordsWeek[1].learner_name}}</span>
+          <span class="username-subject">{{recordsWeek[1].subject1}}, {{recordsWeek[1].subject2}}</span>
         </div>
       </div>
     </div>
     <div class="records-card fourth-record">
-      <h2>ТестАнт рекордсмені</h2>
-      <h1>139 балл</h1>
+      <h2>№3 апталық рекорд</h2>
+      <h1>{{recordsWeek[2].taken_marks}} балл</h1>
       <div class="record-user">
-        <div class="photo">
-          photo
-        </div>
-        <div class="username">
-          <span class="username-name">Шаймерден Абай</span>
-          <span class="username-subject">Физ-Мат</span>
+        <div *ngIf="recordsWeek.length === 0">Нет данных для отображения</div>
+        <div class="username" *ngIf="recordsWeek.length > 0">
+          <span class="username-name">{{recordsWeek[2].learner_name}}</span>
+          <span class="username-subject">{{recordsWeek[2].subject1}}, {{records[2].subject2}}</span>
         </div>
       </div>
     </div>
